@@ -16,5 +16,32 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script src="https://code.jquery.com/jquery-4.0.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+        <script>
+            var swiper = new Swiper(".mySwiper", {
+                loop: true,
+                autoplay: {
+                    delay: 2000,
+                    disableOnInteraction: false,
+                },
+            });
+        </script>
+        <script>
+            $(document).ready(function () {
+                $(".quest-1 .acc-header").click(function () {
+                    $(".faq-accordion .quest-1").toggleClass("open");
+                });
+                $(".quest-2 .acc-header").click(function () {
+                    $(".faq-accordion .quest-2").toggleClass("open");
+                });
+                $(".quest-3 .acc-header").click(function () {
+                    $(".faq-accordion .quest-3").toggleClass("open");
+                });
+                $(".quest-4 .acc-header").click(function () {
+                    $(".faq-accordion .quest-4").toggleClass("open");
+                });
+            });
+        </script>
   </body>
 </html>
