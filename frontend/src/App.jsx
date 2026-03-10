@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { NavLink, Route, Routes } from "react-router-dom";
 
 import Home from "./container/Home/Home";
 import About from "./container/About/About";
@@ -10,38 +10,22 @@ import Btn2 from "./component/Btn2/Btn2";
 import Counter from "./component/Counter/Counter"; // IMPORT COUNTER!
 import Togglebtn from "./component/Togglebtn/Togglebtn";
 import Disabled from "./component/Disabled/Disabled";
+import Button3 from "./component/Button3/Button3";
+import Userroute from "./component/Admin/Userroute";
+import AdminRoute from "./component/Admin/AdminRoute";
 
 function App() {
   return (
-    <div>
-      <Header />
-
+    
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
+        <Route path="/*" element={<Userroute />} />
+        <Route path="/Admin/*" element={<AdminRoute />} />
       </Routes>
 
-      <Footer />
-
-      <div style={{ padding: "20px", textAlign: "center" }}>
-        <h1>Hello</h1>
-        <Button />
-      </div>
-
-      <Btn2 />
-      <Disabled />
-
-      <div style={{ padding: "20px", textAlign: "center" }}>
-        <h1>My React App</h1>
-        <Counter />
-      </div>
-      <div style={{ textAlign: "center", padding: "50px" }}>
-        <h1>Toggle Button Example</h1>
-        <Togglebtn />
-      </div>
-
-    </div>
+      
+    
   );
 }
+
 
 export default App;

@@ -1,4 +1,6 @@
 import React from 'react';
+import { NavLink, Route, Routes } from "react-router-dom";
+
 
 function Header(props) {
     return (
@@ -6,14 +8,14 @@ function Header(props) {
   <div className="container">
     <div className="top-header">
       <div className="logo">
-        <a href="index.html"><img src="images/logo-main.png" alt="Main Logo" /></a>
+        <NavLink to="/"><img src="images/logo-main.png" alt="Main Logo" /></NavLink>
       </div>
       <nav>
         <ul className="menu">
           <li>
-            <a href="#hro">Home </a>
+            <NavLink to="/">Home </NavLink>
           </li>
-          <li><a href="#abt">About Us</a></li>
+          <li><NavLink to="/about">About Us</NavLink></li>
           <li>
             <a href="#serv">Services</a>
           </li>
