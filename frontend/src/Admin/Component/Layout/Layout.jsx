@@ -1,3 +1,4 @@
+
 import * as React from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -20,6 +21,13 @@ import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import AddLocationIcon from '@mui/icons-material/AddLocation';
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
+import MedicationLiquidIcon from '@mui/icons-material/MedicationLiquid';
+import VaccinesIcon from '@mui/icons-material/Vaccines';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import ImportExportIcon from '@mui/icons-material/ImportExport';
+import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
+import PersonIcon from '@mui/icons-material/Person';
 import Branch from "../Container/Branch/Branch";
 import Doctor from "../Container/Doctor/Doctor";
 import { NavLink } from "react-router-dom";
@@ -119,7 +127,15 @@ export default function Layout({ children }) {
   const alllinks = [
    {icon:<AddLocationIcon />, label: 'Branch',to:'/admin/Branch'},
    {icon:<LocalHospitalIcon />, label: 'hospital',to:'/admin/Doctor'}
+   {icon:<MedicationLiquidIcon />, label: 'hospital',to:'/admin/Insfrastructure'}
+   {icon:<VaccinesIcon />, label: 'hospital',to:'/admin/Vendor'}
+   {icon:<PersonIcon />, label: 'hospital',to:'/admin/Medicine'}
+   {icon:<CleaningServicesIcon />, label: 'hospital',to:'/admin/User'}
+   {icon:<AttachMoneyIcon />, label: 'hospital',to:'/admin/Salary'}
+   {icon:<AccountCircleIcon />, label: 'hospital',to:'/admin/Expence'}
+    {icon:<AccountCircleIcon />, label: 'hospital',to:'/admin/Services'}
   ]
+  
 
   console.log(alllinks)
 
