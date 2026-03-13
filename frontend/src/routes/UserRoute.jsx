@@ -1,9 +1,9 @@
 import React from "react";
-import Header from "../Header/Header";
+import Header from "../component/Header/Header";
 import { Route, Routes } from "react-router-dom";
-import Home from "../../container/Home/Home";
-import About from "../../container/About/About";
-import Footer from "../Footer/Footer";
+import Home from "../container/Home/Home";
+import About from "../container/About/About";
+import Footer from "../component/Footer/Footer";
 
 function Userroute(props) {
   return (
@@ -13,6 +13,7 @@ function Userroute(props) {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
+        
       </Routes>
 
       <Footer />

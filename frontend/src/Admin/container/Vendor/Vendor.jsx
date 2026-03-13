@@ -8,7 +8,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Box from "@mui/material/Box";
 
-function Expence(props) {
+function Vendor(props) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -37,9 +37,9 @@ function Expence(props) {
           alignItems: "center",
         }}
       >
-        <h1>expence</h1>
+        <h1>Vendor</h1>
         <Button variant="outlined" onClick={handleClickOpen}>
-          Add expence
+          Add Vendor
         </Button>
       </Box>
       <React.Fragment>
@@ -50,9 +50,9 @@ function Expence(props) {
                 autoFocus
                 required
                 margin="dense"
-                id="branch"
+                id="name"
                 name="Name"
-                label="branch"
+                label="Name"
                 type="text"
                 fullWidth
                 variant="standard"
@@ -61,9 +61,9 @@ function Expence(props) {
                 autoFocus
                 required
                 margin="dense"
-                id="payment"
+                id="name"
                 name="Name"
-                label="payment"
+                label="Address"
                 type="text"
                 fullWidth
                 variant="standard"
@@ -72,9 +72,9 @@ function Expence(props) {
                 autoFocus
                 required
                 margin="dense"
-                id="type"
+                id="name"
                 name="name"
-                label="paymenttype"
+                label="companyname"
                 type="text"
                 fullWidth
                 variant="standard"
@@ -83,25 +83,35 @@ function Expence(props) {
                 autoFocus
                 required
                 margin="dense"
-                id="amount"
-                name="name"
-                label="amount"
+                id="phone"
+                name="phone"
+                label="mobilnumber"
+                type="mobilenumber  "
+                fullWidth
+                variant="standard"
+              />
+              <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="email"
+                name="email"
+                label="Email"
+                type="email"
+                fullWidth
+                variant="standard"
+              />
+              <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="number"
+                name="number"
+                label="gstnumber"
                 type="number"
                 fullWidth
                 variant="standard"
               />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="dob"
-                name="dob"
-                label="dob"
-                type="date"
-                fullWidth
-                variant="standard"
-              />
-              
             </form>
           </DialogContent>
           <DialogActions>
@@ -116,4 +126,4 @@ function Expence(props) {
   );
 }
 
-export default Doctor;
+export default Vendor;

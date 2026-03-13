@@ -8,7 +8,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Box from "@mui/material/Box";
 
-function Insfrastructure(props) {
+function Services(props) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -37,9 +37,9 @@ function Insfrastructure(props) {
           alignItems: "center",
         }}
       >
-        <h1>Insfrastructure</h1>
+        <h1>Services</h1>
         <Button variant="outlined" onClick={handleClickOpen}>
-          Add Insfrastructure
+          Add services
         </Button>
       </Box>
       <React.Fragment>
@@ -50,9 +50,31 @@ function Insfrastructure(props) {
                 autoFocus
                 required
                 margin="dense"
-                id="name"
+                id="branch"
                 name="Name"
-                label="Name"
+                label="branch"
+                type="text"
+                fullWidth
+                variant="standard"
+              />
+              <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="department"
+                name="Name"
+                label="department"
+                type="text"
+                fullWidth
+                variant="standard"
+              />
+              <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="user"
+                name="name"
+                label="user"
                 type="text"
                 fullWidth
                 variant="standard"
@@ -62,8 +84,8 @@ function Insfrastructure(props) {
                 required
                 margin="dense"
                 id="name"
-                name="Name"
-                label="Description"
+                name="name"
+                label="name"
                 type="text"
                 fullWidth
                 variant="standard"
@@ -72,24 +94,14 @@ function Insfrastructure(props) {
                 autoFocus
                 required
                 margin="dense"
-                id="price"
-                name="Price"
-                label="price"
-                type="price"
+                id="description"
+                name="name"
+                label="description"
+                type="text"
                 fullWidth
                 variant="standard"
               />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="type"
-                name="type"
-                label="type"
-                type="type"
-                fullWidth
-                variant="standard"
-              />
+              
             </form>
           </DialogContent>
           <DialogActions>
@@ -104,4 +116,4 @@ function Insfrastructure(props) {
   );
 }
 
-export default Doctor;
+export default Services;

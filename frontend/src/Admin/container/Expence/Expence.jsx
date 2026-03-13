@@ -7,8 +7,10 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Box from "@mui/material/Box";
+import MenuItem from '@mui/material/MenuItem';
 
-function Vendor(props) {
+
+function Expence(props) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -28,6 +30,26 @@ function Vendor(props) {
     handleClose();
   };
 
+  const type = [
+  {
+    value: 'USD',
+    label: '$',
+  },
+  {
+    value: 'EUR',
+    label: '€',
+  },
+  {
+    value: 'BTC',
+    label: '฿',
+  },
+  {
+    value: 'JPY',
+    label: '¥',
+  },
+];
+
+
   return (
     <div>
       <Box
@@ -37,9 +59,9 @@ function Vendor(props) {
           alignItems: "center",
         }}
       >
-        <h1>Vendor</h1>
+        <h1>expence</h1>
         <Button variant="outlined" onClick={handleClickOpen}>
-          Add Vendor
+          Add expence
         </Button>
       </Box>
       <React.Fragment>
@@ -47,10 +69,29 @@ function Vendor(props) {
           <DialogContent>
             <form onSubmit={handleSubmit} id="subscription-form">
               <TextField
+                id="select your type"
+                select
+                label="type"
+                slotProps={{
+                  select: {
+                    native: true,
+                  },
+                }}
+                helperText="Please select your type"
+                variant="standard"
+              >
+                {type.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </TextField>
+
+              <TextField
                 autoFocus
                 required
                 margin="dense"
-                id="department"
+                id="branch"
                 name="Name"
                 label="branch"
                 type="text"
@@ -61,9 +102,9 @@ function Vendor(props) {
                 autoFocus
                 required
                 margin="dense"
-                id="department"
+                id="payment"
                 name="Name"
-                label="department"
+                label="payment"
                 type="text"
                 fullWidth
                 variant="standard"
@@ -72,9 +113,9 @@ function Vendor(props) {
                 autoFocus
                 required
                 margin="dense"
-                id="role"
+                id="type"
                 name="name"
-                label="role"
+                label="paymenttype"
                 type="text"
                 fullWidth
                 variant="standard"
@@ -83,10 +124,10 @@ function Vendor(props) {
                 autoFocus
                 required
                 margin="dense"
-                id="name"
+                id="amount"
                 name="name"
-                label="name"
-                type="text  "
+                label="amount"
+                type="number"
                 fullWidth
                 variant="standard"
               />
@@ -94,18 +135,7 @@ function Vendor(props) {
                 autoFocus
                 required
                 margin="dense"
-                id="name"
-                name="email"
-                label="email"
-                type="email"
-                fullWidth
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="dobb"
+                id="dob"
                 name="dob"
                 label="dob"
                 type="date"
@@ -113,27 +143,24 @@ function Vendor(props) {
                 variant="standard"
               />
               <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="qualification"
-                name="name"
-                label="qualification"
-                type="text"
-                fullWidth
+                id="standard-select-currency-native"
+                select
+                label="Native select"
+                defaultValue="EUR"
+                slotProps={{
+                  select: {
+                    native: true,
+                  },
+                }}
+                helperText="Please select your currency"
                 variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="name"
-                name="address"
-                label="address"
-                type="text  "
-                fullWidth
-                variant="standard"
-              />
+              >
+                {type.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </TextField>
             </form>
           </DialogContent>
           <DialogActions>
@@ -148,4 +175,4 @@ function Vendor(props) {
   );
 }
 
-export default Doctor;
+export default Expence;

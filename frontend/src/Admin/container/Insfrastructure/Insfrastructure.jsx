@@ -8,7 +8,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Box from "@mui/material/Box";
 
-function Vendor(props) {
+function Insfrastructure(props) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -37,9 +37,9 @@ function Vendor(props) {
           alignItems: "center",
         }}
       >
-        <h1>Vendor</h1>
+        <h1>Insfrastructure</h1>
         <Button variant="outlined" onClick={handleClickOpen}>
-          Add Vendor
+          Add Insfrastructure
         </Button>
       </Box>
       <React.Fragment>
@@ -63,7 +63,7 @@ function Vendor(props) {
                 margin="dense"
                 id="name"
                 name="Name"
-                label="Address"
+                label="Description"
                 type="text"
                 fullWidth
                 variant="standard"
@@ -72,10 +72,10 @@ function Vendor(props) {
                 autoFocus
                 required
                 margin="dense"
-                id="name"
-                name="name"
-                label="companyname"
-                type="text"
+                id="price"
+                name="Price"
+                label="price"
+                type="price"
                 fullWidth
                 variant="standard"
               />
@@ -83,32 +83,10 @@ function Vendor(props) {
                 autoFocus
                 required
                 margin="dense"
-                id="phone"
-                name="phone"
-                label="mobilnumber"
-                type="mobilenumber  "
-                fullWidth
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="email"
-                name="email"
-                label="Email"
-                type="email"
-                fullWidth
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="number"
-                name="number"
-                label="gstnumber"
-                type="number"
+                id="type"
+                name="type"
+                label="type"
+                type="type"
                 fullWidth
                 variant="standard"
               />
@@ -126,4 +104,4 @@ function Vendor(props) {
   );
 }
 
-export default Doctor;
+export default Insfrastructure;

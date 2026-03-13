@@ -8,7 +8,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Box from "@mui/material/Box";
 
-function Services(props) {
+function Salary(props) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -37,9 +37,9 @@ function Services(props) {
           alignItems: "center",
         }}
       >
-        <h1>Services</h1>
+        <h1>salary</h1>
         <Button variant="outlined" onClick={handleClickOpen}>
-          Add services
+          Add salary
         </Button>
       </Box>
       <React.Fragment>
@@ -50,30 +50,8 @@ function Services(props) {
                 autoFocus
                 required
                 margin="dense"
-                id="branch"
-                name="Name"
-                label="branch"
-                type="text"
-                fullWidth
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="department"
-                name="Name"
-                label="department"
-                type="text"
-                fullWidth
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
                 id="user"
-                name="name"
+                name="Name"
                 label="user"
                 type="text"
                 fullWidth
@@ -83,9 +61,9 @@ function Services(props) {
                 autoFocus
                 required
                 margin="dense"
-                id="name"
-                name="name"
-                label="name"
+                id="payment"
+                name="Name"
+                label="payment"
                 type="text"
                 fullWidth
                 variant="standard"
@@ -94,10 +72,32 @@ function Services(props) {
                 autoFocus
                 required
                 margin="dense"
-                id="description"
+                id="type"
                 name="name"
-                label="description"
+                label="paymenttype"
                 type="text"
+                fullWidth
+                variant="standard"
+              />
+              <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="amount"
+                name="name"
+                label="amount"
+                type="number"
+                fullWidth
+                variant="standard"
+              />
+              <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="name"
+                name="status"
+                label="status"
+                type="name"
                 fullWidth
                 variant="standard"
               />
@@ -116,4 +116,4 @@ function Services(props) {
   );
 }
 
-export default Doctor;
+export default Salary;

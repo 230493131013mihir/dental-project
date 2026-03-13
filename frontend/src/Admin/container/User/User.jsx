@@ -8,7 +8,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Box from "@mui/material/Box";
 
-function Salary(props) {
+function User(props) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -37,9 +37,9 @@ function Salary(props) {
           alignItems: "center",
         }}
       >
-        <h1>salary</h1>
+        <h1>Vendor</h1>
         <Button variant="outlined" onClick={handleClickOpen}>
-          Add salary
+          Add Vendor
         </Button>
       </Box>
       <React.Fragment>
@@ -50,9 +50,9 @@ function Salary(props) {
                 autoFocus
                 required
                 margin="dense"
-                id="user"
+                id="department"
                 name="Name"
-                label="user"
+                label="branch"
                 type="text"
                 fullWidth
                 variant="standard"
@@ -61,9 +61,9 @@ function Salary(props) {
                 autoFocus
                 required
                 margin="dense"
-                id="payment"
+                id="department"
                 name="Name"
-                label="payment"
+                label="department"
                 type="text"
                 fullWidth
                 variant="standard"
@@ -72,21 +72,10 @@ function Salary(props) {
                 autoFocus
                 required
                 margin="dense"
-                id="type"
+                id="role"
                 name="name"
-                label="paymenttype"
+                label="role"
                 type="text"
-                fullWidth
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="amount"
-                name="name"
-                label="amount"
-                type="number"
                 fullWidth
                 variant="standard"
               />
@@ -95,13 +84,56 @@ function Salary(props) {
                 required
                 margin="dense"
                 id="name"
-                name="status"
-                label="status"
-                type="name"
+                name="name"
+                label="name"
+                type="text  "
                 fullWidth
                 variant="standard"
               />
-              
+              <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="name"
+                name="email"
+                label="email"
+                type="email"
+                fullWidth
+                variant="standard"
+              />
+              <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="dobb"
+                name="dob"
+                label="dob"
+                type="date"
+                fullWidth
+                variant="standard"
+              />
+              <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="qualification"
+                name="name"
+                label="qualification"
+                type="text"
+                fullWidth
+                variant="standard"
+              />
+              <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="name"
+                name="address"
+                label="address"
+                type="text  "
+                fullWidth
+                variant="standard"
+              />
             </form>
           </DialogContent>
           <DialogActions>
@@ -116,4 +148,4 @@ function Salary(props) {
   );
 }
 
-export default Doctor;
+export default User;

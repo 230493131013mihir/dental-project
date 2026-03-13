@@ -126,4 +126,4 @@ function Medicine(props) {
   );
 }
 
-export default Doctor;
+export default Medicine;
