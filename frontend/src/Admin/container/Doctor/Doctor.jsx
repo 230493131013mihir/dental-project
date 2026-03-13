@@ -4,9 +4,15 @@ import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
 import Box from "@mui/material/Box";
+import { object, string, number, mixed } from "yup";
+import MenuItem from "@mui/material/MenuItem";
+import { Formik, useFormik } from "formik";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+
+import { styled } from "@mui/material/styles";
+
+
 
 function Doctor(props) {
   const [open, setOpen] = React.useState(false);
@@ -28,6 +34,59 @@ function Doctor(props) {
     handleClose();
   };
 
+  let userschema = object({
+    branch: string().required("Please select branch"),
+    name: string().required("Please enter name"),
+    description: string().required("please enter description"),
+    email: string().required("Please Select type"),
+    mobile: string()
+  .required("Please enter mobile number")
+  .matches(/^[0-9]{10}$/, "Mobile number must be 10 digits"),
+    address: string().required("Please Select address"),
+
+  });
+  // console.log(userschema)
+
+  const formik = useFormik({
+    initialValues: {
+      branch: "",
+      name: "",
+      description: "",
+      mobile: "",
+      email: "",
+      address: "",
+    },
+
+    validationSchema: userschema,
+
+    onSubmit: (values) => {
+      alert(JSON.stringify(values, null, 2));
+      console.log(values);
+    },
+  });
+
+  console.log(formik.errors, formik.touched);
+
+  const branch = [
+    {
+      value: "",
+      label: "--select branch--",
+    },
+    {
+      value: "0",
+      label: "branch1",
+    },
+    {
+      value: "1",
+      label: "branch2",
+    },
+    {
+      value: "2",
+      label: "branch3",
+    },
+  ];
+
+
   return (
     <div>
       <Box
@@ -47,8 +106,34 @@ function Doctor(props) {
           <DialogContent>
             <form onSubmit={handleSubmit} id="subscription-form">
               <TextField
-                autoFocus
-                required
+                error={formik.errors.branch && formik.touched.branch}
+                id="branch"
+                select
+                label=""
+                slotProps={{
+                  select: {
+                    native: true,
+                  },
+                }}
+                fullWidth
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.branch}
+                helperText={
+                  formik.errors.branch && formik.errors.branch
+                    ? formik.errors.branch
+                    : ""
+                }
+              >
+                {branch.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </TextField>
+              <TextField
+                error={formik.errors.name && formik.touched.name}
+                
                 margin="dense"
                 id="name"
                 name="Name"
@@ -58,19 +143,26 @@ function Doctor(props) {
                 variant="standard"
               />
               <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="name"
-                name="Name"
+                error={formik.errors.description && formik.touched.description}
+                id="Description"
+                name="description"
                 label="Description"
-                type="text"
+                multiline
+                rows={4}
                 fullWidth
                 variant="standard"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.description}
+                helperText={
+                  formik.errors.description && formik.errors.description
+                    ? formik.errors.description
+                    : ""
+                }
               />
               <TextField
-                autoFocus
-                required
+                error={formik.errors.mobile && formik.touched.mobile}
+                
                 margin="dense"
                 id="mobile"
                 name="mobile"
@@ -80,8 +172,8 @@ function Doctor(props) {
                 variant="standard"
               />
               <TextField
-                autoFocus
-                required
+                error={formik.errors.email && formik.touched.email}
+                
                 margin="dense"
                 id="email"
                 name="email"
@@ -89,6 +181,23 @@ function Doctor(props) {
                 type="email"
                 fullWidth
                 variant="standard"
+              />
+              <TextField
+                error={formik.errors.address && formik.touched.address}
+                id="address"
+                label="address"
+                type="text"
+                multiline
+                maxRows={4}
+                fullWidth
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.address}
+                helperText={
+                  formik.errors.address && formik.errors.address
+                    ? formik.errors.address
+                    : ""
+                }
               />
             </form>
           </DialogContent>

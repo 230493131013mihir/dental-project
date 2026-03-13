@@ -4,10 +4,14 @@ import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
 import Box from "@mui/material/Box";
 import MenuItem from '@mui/material/MenuItem';
+import { Formik, useFormik } from "formik";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+
+import { styled } from "@mui/material/styles";
+import { object } from "yup";
+
 
 
 function Expence(props) {
@@ -30,24 +34,91 @@ function Expence(props) {
     handleClose();
   };
 
-  const type = [
-  {
-    value: 'USD',
-    label: '$',
-  },
-  {
-    value: 'EUR',
-    label: '€',
-  },
-  {
-    value: 'BTC',
-    label: '฿',
-  },
-  {
-    value: 'JPY',
-    label: '¥',
-  },
-];
+  let userschema = object({
+    branch: string().required("Please enter name"),
+    payment: number().required("Please enter amount"),
+    paymenttype: number().required("Please enter amount"),
+    email: string().required("Please Select email"),
+    type: string().required("Please Select type"),
+    amount: number()
+      .required("Enter amount")
+      .positive("Amount must be greater than 0"),
+    date: date().required("Please Select date"),
+
+  });
+  // console.log(userschema)
+
+  const formik = useFormik({
+    initialValues: {
+      branch: "",
+      payment: "",
+      paymenttype: "",
+      email: "",
+      type: "",
+      amount: "",
+      date: "",
+    },
+
+    validationSchema: userschema,
+
+    onSubmit: (values) => {
+      alert(JSON.stringify(values, null, 2));
+      console.log(values);
+    },
+  });
+
+  console.log(formik.errors, formik.touched);
+
+  const branch = [
+    {
+      value: "",
+      label: "--select branch--",
+    },
+    {
+      value: "0",
+      label: "branch1",
+    },
+    {
+      value: "1",
+      label: "branch2",
+    },
+    {
+      value: "2",
+      label: "branch3",
+    },
+  ];
+
+  const payment = [
+    {
+      value: '',
+      label: 'select payment',
+    },
+    {
+      value: '0',
+      label: 'payment',
+    },
+    {
+      value: '1',
+      label: 'payment1',
+    },
+
+  ];
+
+  const paymenttype = [
+    {
+      value: '',
+      label: 'select payment',
+    },
+    {
+      value: '0',
+      label: 'payment type',
+    },
+    {
+      value: '1',
+      label: 'payment type1',
+    },
+
+  ];
 
 
   return (
@@ -68,19 +139,28 @@ function Expence(props) {
         <Dialog open={open} onClose={handleClose}>
           <DialogContent>
             <form onSubmit={handleSubmit} id="subscription-form">
+
               <TextField
-                id="select your type"
+                error={formik.errors.branch && formik.touched.branch}
+                id="branch"
                 select
-                label="type"
+                label=""
                 slotProps={{
                   select: {
                     native: true,
                   },
                 }}
-                helperText="Please select your type"
-                variant="standard"
+                fullWidth
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.branch}
+                helperText={
+                  formik.errors.branch && formik.errors.branch
+                    ? formik.errors.branch
+                    : ""
+                }
               >
-                {type.map((option) => (
+                {branch.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -88,79 +168,89 @@ function Expence(props) {
               </TextField>
 
               <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="branch"
-                name="Name"
-                label="branch"
-                type="text"
-                fullWidth
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
+                error={formik.errors.payment && formik.touched.payment}
                 id="payment"
-                name="Name"
-                label="payment"
-                type="text"
+                select
+                label=""
+                slotProps={{
+                  select: {
+                    native: true,
+                  },
+                }}
                 fullWidth
-                variant="standard"
-              />
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.payment}
+                helperText={
+                  formik.errors.payment && formik.errors.payment
+                    ? formik.errors.payment
+                    : ""
+                }
+              >
+                {payment.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </TextField>
+
               <TextField
-                autoFocus
-                required
+                error={formik.errors.paymenttype && formik.touched.paymenttype}
+                id="paymenttype"
+                select
+                label=""
+                slotProps={{
+                  select: {
+                    native: true,
+                  },
+                }}
+                fullWidth
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.paymenttype}
+                helperText={
+                  formik.errors.paymenttype && formik.errors.paymenttype
+                    ? formik.errors.paymenttype
+                    : ""
+                }
+              >
+                {paymenttype.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </TextField>
+              <TextField
+                error={formik.errors.type && formik.touched.type}
                 margin="dense"
                 id="type"
-                name="name"
-                label="paymenttype"
+                name="type"
+                label="type"
                 type="text"
                 fullWidth
                 variant="standard"
               />
               <TextField
-                autoFocus
-                required
+                error={formik.errors.amount && formik.touched.amount}
                 margin="dense"
                 id="amount"
-                name="name"
+                name="amount"
                 label="amount"
                 type="number"
                 fullWidth
                 variant="standard"
               />
               <TextField
-                autoFocus
-                required
+                error={formik.errors.date && formik.touched.date}
                 margin="dense"
-                id="dob"
-                name="dob"
-                label="dob"
-                type="date"
+                id="date"
+                name="date"
+                label="date"
+                type="text"
                 fullWidth
                 variant="standard"
               />
-              <TextField
-                id="standard-select-currency-native"
-                select
-                label="Native select"
-                defaultValue="EUR"
-                slotProps={{
-                  select: {
-                    native: true,
-                  },
-                }}
-                helperText="Please select your currency"
-                variant="standard"
-              >
-                {type.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
+
             </form>
           </DialogContent>
           <DialogActions>
