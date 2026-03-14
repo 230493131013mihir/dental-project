@@ -10,6 +10,7 @@ import { Formik, useFormik } from "formik";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
+import { date, number, object, string } from "yup";
 
 
 function Medicine(props) {
@@ -23,14 +24,7 @@ function Medicine(props) {
     setOpen(false);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const formJson = Object.fromEntries(formData.entries());
-    const email = formJson.email;
-    console.log(email);
-    handleClose();
-  };
+  
 
   let userschema = object({
     branch: string().required("Please enter branch"),
@@ -143,7 +137,7 @@ function Medicine(props) {
       <React.Fragment>
         <Dialog open={open} onClose={handleClose}>
           <DialogContent>
-            <form onSubmit={handleSubmit} id="subscription-form">
+            <form onSubmit={formik.handleSubmit} id="subscription-form">
               <TextField
                 error={formik.errors.branch && formik.touched.branch}
                 id="branch"
@@ -291,7 +285,7 @@ function Medicine(props) {
                 margin="dense"
                 id="expirydate"
                 name="expirydate"
-                label="Expiry Date"
+                label=""
                 type="date"
                 fullWidth
                 variant="standard"

@@ -10,8 +10,7 @@ import { Formik, useFormik } from "formik";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
-import { object } from "yup";
-
+import { object, string } from "yup";
 
 function Branch(props) {
   const [open, setOpen] = React.useState(false);
@@ -24,24 +23,16 @@ function Branch(props) {
     setOpen(false);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const formJson = Object.fromEntries(formData.entries());
-    const email = formJson.email;
-    console.log(email);
-    handleClose();
-  };
+
 
   let userschema = object({
     name: string().required("Please enter name"),
     description: string().required("please enter description"),
     email: string().required("Please Select type"),
     mobile: string()
-  .required("Please enter mobile number")
-  .matches(/^[0-9]{10}$/, "Mobile number must be 10 digits"),
+      .required("Please enter mobile number")
+      .matches(/^[0-9]{10}$/, "Mobile number must be 10 digits"),
     address: string().required("Please Select address"),
-
   });
   // console.log(userschema)
 
@@ -71,7 +62,8 @@ function Branch(props) {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-        }} >
+        }}
+      >
         <h1>Branch</h1>
         <Button variant="outlined" onClick={handleClickOpen}>
           Add Branch
@@ -80,14 +72,13 @@ function Branch(props) {
 
       <React.Fragment>
         <Dialog open={open} onClose={handleClose}>
-
           <DialogContent>
-            <form onSubmit={handleSubmit} id="subscription-form">
+            <form onSubmit={formik.handleSubmit} id="subscription-form">
               <TextField
                 error={formik.errors.name && formik.touched.name}
                 margin="dense"
                 id="name"
-                name="Name"
+                name="name"
                 label="Name"
                 type="text"
                 fullWidth
@@ -96,32 +87,32 @@ function Branch(props) {
                 onBlur={formik.handleBlur}
                 value={formik.values.name}
                 helperText={
-                  formik.errors.name && formik.errors.name
+                  formik.errors.name && formik.touched.name
                     ? formik.errors.name
                     : ""
                 }
               />
               <TextField
                 error={formik.errors.description && formik.touched.description}
-              id="Description"
-              name="description"
-              label="Description"
-              multiline
-              rows={4}
-              fullWidth
-              variant="standard"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.description}
-              helperText={
-                formik.errors.description && formik.errors.description
-                  ? formik.errors.description
-                  : ""
-              }
+                id="Description"
+                name="description"
+                label="Description"
+                multiline
+                rows={4}
+                fullWidth
+                variant="standard"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.description}
+                helperText={
+                  formik.errors.description && formik.touched.description
+                    ? formik.errors.description
+                    : ""
+                }
               />
 
               <TextField
-              error={formik.errors.email && formik.touched.email}
+                error={formik.errors.email && formik.touched.email}
                 margin="dense"
                 id="name"
                 name="email"
@@ -130,16 +121,16 @@ function Branch(props) {
                 fullWidth
                 variant="standard"
                 onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.email}
-              helperText={
-                formik.errors.email && formik.errors.email
-                  ? formik.errors.email
-                  : ""
-              }
+                onBlur={formik.handleBlur}
+                value={formik.values.email}
+                helperText={
+                  formik.errors.email && formik.touched.email
+                    ? formik.errors.email
+                    : ""
+                }
               />
               <TextField
-              error={formik.errors.mobile && formik.touched.mobile}
+                error={formik.errors.mobile && formik.touched.mobile}
                 margin="dense"
                 id="mobile"
                 name="mobile"
@@ -148,30 +139,31 @@ function Branch(props) {
                 fullWidth
                 variant="standard"
                 onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.mobile}
-              helperText={
-                formik.errors.mobile && formik.errors.mobile
-                  ? formik.errors.mobile
-                  : ""
-              }
+                onBlur={formik.handleBlur}
+                value={formik.values.mobile}
+                helperText={
+                  formik.errors.mobile && formik.touched.mobile
+                    ? formik.errors.mobile
+                    : ""
+                }
               />
               <TextField
-              error={formik.errors.address && formik.touched.address}
+                error={formik.errors.address && formik.touched.address}
                 id="address"
                 label="address"
                 type="text"
                 multiline
-                maxRows={4}
+                                variant="standard"
+                rows={4}
                 fullWidth
                 onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.address}
-              helperText={
-                formik.errors.address && formik.errors.address
-                  ? formik.errors.address
-                  : ""
-              }
+                onBlur={formik.handleBlur}
+                value={formik.values.address}
+                helperText={
+                  formik.errors.address && formik.touched.address
+                    ? formik.errors.address
+                    : ""
+                }
               />
             </form>
           </DialogContent>

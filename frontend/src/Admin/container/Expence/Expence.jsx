@@ -5,14 +5,12 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import Box from "@mui/material/Box";
-import MenuItem from '@mui/material/MenuItem';
+import MenuItem from "@mui/material/MenuItem";
 import { Formik, useFormik } from "formik";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
-import { object } from "yup";
-
-
+import { date, number, object, string } from "yup";
 
 function Expence(props) {
   const [open, setOpen] = React.useState(false);
@@ -25,26 +23,16 @@ function Expence(props) {
     setOpen(false);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const formJson = Object.fromEntries(formData.entries());
-    const email = formJson.email;
-    console.log(email);
-    handleClose();
-  };
-
   let userschema = object({
     branch: string().required("Please enter name"),
     payment: number().required("Please enter amount"),
-    paymenttype: number().required("Please enter amount"),
+    paymenttype: number().required("Please select paymenttype"),
     email: string().required("Please Select email"),
     type: string().required("Please Select type"),
     amount: number()
       .required("Enter amount")
       .positive("Amount must be greater than 0"),
     date: date().required("Please Select date"),
-
   });
   // console.log(userschema)
 
@@ -90,36 +78,35 @@ function Expence(props) {
 
   const payment = [
     {
-      value: '',
-      label: 'select payment',
+      value: "",
+      label: "select payment",
     },
     {
-      value: '0',
-      label: 'payment',
+      value: "0",
+      label: "payment",
     },
     {
-      value: '1',
-      label: 'payment1',
+      value: "1",
+      label: "payment1",
     },
-
   ];
+
+  
 
   const paymenttype = [
     {
-      value: '',
-      label: 'select payment',
+      value: "",
+      label: "select payment-type",
     },
     {
-      value: '0',
-      label: 'payment type',
+      value: "0",
+      label: "online-payment ",
     },
     {
-      value: '1',
-      label: 'payment type1',
+      value: "1",
+      label: "offline-payment",
     },
-
-  ];
-
+  ]; 
 
   return (
     <div>
@@ -130,19 +117,19 @@ function Expence(props) {
           alignItems: "center",
         }}
       >
-        <h1>expence</h1>
+        <h1>Expence</h1>
         <Button variant="outlined" onClick={handleClickOpen}>
-          Add expence
+          Add Expence
         </Button>
       </Box>
       <React.Fragment>
         <Dialog open={open} onClose={handleClose}>
           <DialogContent>
-            <form onSubmit={handleSubmit} id="subscription-form">
-
+            <form onSubmit={formik.handleSubmit} id="subscription-form">
               <TextField
                 error={formik.errors.branch && formik.touched.branch}
                 id="branch"
+                name="branch"
                 select
                 label=""
                 slotProps={{
@@ -151,11 +138,12 @@ function Expence(props) {
                   },
                 }}
                 fullWidth
+                variant="standard"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.branch}
                 helperText={
-                  formik.errors.branch && formik.errors.branch
+                  formik.errors.branch && formik.touched.branch
                     ? formik.errors.branch
                     : ""
                 }
@@ -170,19 +158,21 @@ function Expence(props) {
               <TextField
                 error={formik.errors.payment && formik.touched.payment}
                 id="payment"
+                name="payment"
                 select
                 label=""
                 slotProps={{
                   select: {
-                    native: true,
+                native: true,
                   },
                 }}
                 fullWidth
+                variant="standard"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.payment}
                 helperText={
-                  formik.errors.payment && formik.errors.payment
+                  formik.errors.payment && formik.touched.payment
                     ? formik.errors.payment
                     : ""
                 }
@@ -197,6 +187,7 @@ function Expence(props) {
               <TextField
                 error={formik.errors.paymenttype && formik.touched.paymenttype}
                 id="paymenttype"
+                name="paymenttype"
                 select
                 label=""
                 slotProps={{
@@ -205,11 +196,12 @@ function Expence(props) {
                   },
                 }}
                 fullWidth
+                variant="standard"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.paymenttype}
                 helperText={
-                  formik.errors.paymenttype && formik.errors.paymenttype
+                  formik.errors.paymenttype && formik.touched.paymenttype
                     ? formik.errors.paymenttype
                     : ""
                 }
@@ -229,6 +221,14 @@ function Expence(props) {
                 type="text"
                 fullWidth
                 variant="standard"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.type}
+                helperText={
+                  formik.errors.type && formik.touched.type
+                    ? formik.errors.type
+                    : ""
+                }
               />
               <TextField
                 error={formik.errors.amount && formik.touched.amount}
@@ -239,18 +239,33 @@ function Expence(props) {
                 type="number"
                 fullWidth
                 variant="standard"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.amount}
+                helperText={
+                  formik.errors.amount && formik.touched.amount
+                    ? formik.errors.amount
+                    : ""
+                }
               />
               <TextField
                 error={formik.errors.date && formik.touched.date}
                 margin="dense"
                 id="date"
                 name="date"
-                label="date"
-                type="text"
+                label=""
+                type="date"
                 fullWidth
                 variant="standard"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.date}
+                helperText={
+                  formik.errors.date && formik.touched.date
+                    ? formik.errors.date
+                    : ""
+                }
               />
-
             </form>
           </DialogContent>
           <DialogActions>

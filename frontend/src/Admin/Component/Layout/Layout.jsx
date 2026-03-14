@@ -123,14 +123,14 @@ export default function Layout({ children }) {
 
   const alllinks = [
     { icon: <AddLocationIcon />, label: "Branch", to: "/admin/branch" },
-    { icon: <LocalHospitalIcon />, label: "Department", to: "/admin/doctor" },
-    { icon: <MedicationLiquidIcon />, label: "Insfrastructure", to: "/admin/Insfrastructure"},
-    { icon: <VaccinesIcon />, label: "Vendor", to: "/admin/Vendor" },
-    { icon: <PersonIcon />, label: "Medicine", to: "/admin/Medicine" },
-    { icon: <CleaningServicesIcon />, label: "User", to: "/admin/User" },
-    { icon: <AttachMoneyIcon />, label: "Salary", to: "/admin/Salary" },
-    { icon: <AccountCircleIcon />, label: "Expence", to: "/admin/Expence" },
-    { icon: <AccountCircleIcon />, label: "Services", to: "/admin/Services" },
+    { icon: <LocalHospitalIcon />, label: "Department", to: "/admin/department" },
+    { icon: <MedicationLiquidIcon />, label: "Insfrastructure", to: "/admin/insfrastructure"},
+    { icon: <VaccinesIcon />, label: "Vendor", to: "/admin/vendor" },
+    { icon: <PersonIcon />, label: "Medicine", to: "/admin/medicine" },
+    { icon: <CleaningServicesIcon />, label: "User", to: "/admin/user" },
+    { icon: <AttachMoneyIcon />, label: "Salary", to: "/admin/salary" },
+    { icon: <AccountCircleIcon />, label: "Expence", to: "/admin/expence" },
+    { icon: <AccountCircleIcon />, label: "Services", to: "/admin/services" },
   ];
 
   console.log(alllinks);

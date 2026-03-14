@@ -12,9 +12,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
 
-
-
-function Doctor(props) {
+function Department(props) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -25,25 +23,15 @@ function Doctor(props) {
     setOpen(false);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const formJson = Object.fromEntries(formData.entries());
-    const email = formJson.email;
-    console.log(email);
-    handleClose();
-  };
-
   let userschema = object({
     branch: string().required("Please select branch"),
     name: string().required("Please enter name"),
     description: string().required("please enter description"),
     email: string().required("Please Select type"),
     mobile: string()
-  .required("Please enter mobile number")
-  .matches(/^[0-9]{10}$/, "Mobile number must be 10 digits"),
+      .required("Please enter mobile number")
+      .matches(/^[0-9]{10}$/, "Mobile number must be 10 digits"),
     address: string().required("Please Select address"),
-
   });
   // console.log(userschema)
 
@@ -69,14 +57,6 @@ function Doctor(props) {
 
   const branch = [
     {
-      value: "",
-      label: "--select branch--",
-    },
-    {
-      value: "0",
-      label: "branch1",
-    },
-    {
       value: "1",
       label: "branch2",
     },
@@ -85,7 +65,6 @@ function Doctor(props) {
       label: "branch3",
     },
   ];
-
 
   return (
     <div>
@@ -104,43 +83,48 @@ function Doctor(props) {
       <React.Fragment>
         <Dialog open={open} onClose={handleClose}>
           <DialogContent>
-            <form onSubmit={handleSubmit} id="subscription-form">
+            <form onSubmit={formik.handleSubmit} id="subscription-form">
               <TextField
                 error={formik.errors.branch && formik.touched.branch}
                 id="branch"
-                select
-                label=""
-                slotProps={{
-                  select: {
-                    native: true,
-                  },
-                }}
+                name="branch"
                 fullWidth
+                select
+                variant="standard"
+                label="Select Country"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.branch}
                 helperText={
-                  formik.errors.branch && formik.errors.branch
+                  formik.errors.branch && formik.touched.branch
                     ? formik.errors.branch
                     : ""
                 }
               >
                 {branch.map((option) => (
-                  <option key={option.value} value={option.value}>
+                  <MenuItem key={option.value} value={option.value}>
                     {option.label}
-                  </option>
+                  </MenuItem>
                 ))}
               </TextField>
+
               <TextField
                 error={formik.errors.name && formik.touched.name}
-                
                 margin="dense"
                 id="name"
-                name="Name"
+                name="name"
                 label="Name"
                 type="text"
                 fullWidth
                 variant="standard"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.name}
+                helperText={
+                  formik.errors.name && formik.touched.name
+                    ? formik.errors.name
+                    : ""
+                }
               />
               <TextField
                 error={formik.errors.description && formik.touched.description}
@@ -155,14 +139,13 @@ function Doctor(props) {
                 onBlur={formik.handleBlur}
                 value={formik.values.description}
                 helperText={
-                  formik.errors.description && formik.errors.description
+                  formik.errors.description && formik.touched.description
                     ? formik.errors.description
                     : ""
                 }
               />
               <TextField
                 error={formik.errors.mobile && formik.touched.mobile}
-                
                 margin="dense"
                 id="mobile"
                 name="mobile"
@@ -170,10 +153,17 @@ function Doctor(props) {
                 type="phone"
                 fullWidth
                 variant="standard"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.mobile}
+                helperText={
+                  formik.errors.mobile && formik.touched.mobile
+                    ? formik.errors.mobile
+                    : ""
+                }
               />
               <TextField
                 error={formik.errors.email && formik.touched.email}
-                
                 margin="dense"
                 id="email"
                 name="email"
@@ -181,20 +171,31 @@ function Doctor(props) {
                 type="email"
                 fullWidth
                 variant="standard"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.email}
+                helperText={
+                  formik.errors.email && formik.touched.email
+                    ? formik.errors.email
+                    : ""
+                }
               />
               <TextField
                 error={formik.errors.address && formik.touched.address}
+                margin="dense"
                 id="address"
-                label="address"
+                label=""
                 type="text"
+                name="address"
                 multiline
-                maxRows={4}
+                rows={4}
                 fullWidth
+                variant="standard"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.address}
                 helperText={
-                  formik.errors.address && formik.errors.address
+                  formik.errors.address && formik.touched.address
                     ? formik.errors.address
                     : ""
                 }
@@ -213,4 +214,4 @@ function Doctor(props) {
   );
 }
 
-export default Doctor;
+export default Department;
