@@ -27,7 +27,6 @@ function Expence(props) {
     branch: string().required("Please enter name"),
     payment: number().required("Please enter amount"),
     paymenttype: number().required("Please select paymenttype"),
-    email: string().required("Please Select email"),
     type: string().required("Please Select type"),
     amount: number()
       .required("Enter amount")
