@@ -28,15 +28,15 @@ function Medicine(props) {
 
   let userschema = object({
     branch: string().required("Please enter branch"),
-    vendor: number().required("Please enter vendor"),
-    department: number().required("Please enter department"),
+    vendor: string().required("Please enter vendor"),
+    department: string().required("Please enter department"),
     name: string().required("Please Select name"),
     description: string().required("Please Select description"),
     price: number()
       .required("Enter amount")
       .positive("Amount must be greater than 0"),
     expirydate: date().required("Please Select date"),
-    stock: number().required("Please enter stock")
+    stock: number().required("Please enter stock"),
 
   });
   // console.log(userschema)
@@ -150,7 +150,7 @@ function Medicine(props) {
                 onBlur={formik.handleBlur}
                 value={formik.values.branch}
                 helperText={
-                  formik.errors.branch && formik.errors.branch
+                  formik.errors.branch && formik.touched.branch
                     ? formik.errors.branch
                     : ""
                 }
@@ -173,7 +173,7 @@ function Medicine(props) {
                 onBlur={formik.handleBlur}
                 value={formik.values.vendor}
                 helperText={
-                  formik.errors.vendor && formik.errors.vendor
+                  formik.errors.vendor && formik.touched.vendor
                     ? formik.errors.vendor
                     : ""
                 }
@@ -196,7 +196,7 @@ function Medicine(props) {
                 onBlur={formik.handleBlur}
                 value={formik.values.department}
                 helperText={
-                  formik.errors.department && formik.errors.department
+                  formik.errors.department && formik.touched.department
                     ? formik.errors.department
                     : ""
                 }
@@ -220,7 +220,7 @@ function Medicine(props) {
                 onBlur={formik.handleBlur}
                 value={formik.values.name}
                 helperText={
-                  formik.errors.name && formik.errors.name
+                  formik.errors.name && formik.touched.name
                     ? formik.errors.name
                     : ""
                 }
@@ -239,7 +239,7 @@ function Medicine(props) {
                 onBlur={formik.handleBlur}
                 value={formik.values.description}
                 helperText={
-                  formik.errors.description && formik.errors.description
+                  formik.errors.description && formik.touched.description
                     ? formik.errors.description
                     : ""
                 }
@@ -257,7 +257,7 @@ function Medicine(props) {
                 onBlur={formik.handleBlur}
                 value={formik.values.price}
                 helperText={
-                  formik.errors.price && formik.errors.price
+                  formik.errors.price && formik.touched.price
                     ? formik.errors.price
                     : ""
                 }
@@ -275,7 +275,7 @@ function Medicine(props) {
                 onBlur={formik.handleBlur}
                 value={formik.values.stock}
                 helperText={
-                  formik.errors.stock && formik.errors.stock
+                  formik.errors.stock && formik.touched.stock
                     ? formik.errors.stock
                     : ""
                 }
@@ -294,7 +294,7 @@ function Medicine(props) {
                 onBlur={formik.handleBlur}
                 value={formik.values.expirydate}
                 helperText={
-                  formik.errors.expirydate && formik.errors.expirydate
+                  formik.errors.expirydate && formik.touched.expirydate
                     ? formik.errors.expirydate
                     : ""
                 }

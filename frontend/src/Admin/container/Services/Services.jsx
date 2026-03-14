@@ -7,6 +7,29 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Box from "@mui/material/Box";
+import MenuItem from '@mui/material/MenuItem';
+import { Formik, useFormik } from "formik";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+
+import { styled } from "@mui/material/styles";
+import { object, string } from "yup";
+import User from "../User/User";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { styled } from "@mui/material/styles";
+
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
+
+
 
 function Services(props) {
   const [open, setOpen] = React.useState(false);
@@ -19,14 +42,96 @@ function Services(props) {
     setOpen(false);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const formJson = Object.fromEntries(formData.entries());
-    const email = formJson.email;
-    console.log(email);
-    handleClose();
-  };
+  let userschema = object({
+    branch: string().required("Please enter branch"),
+    User: string().required("Please enter vendor"),
+    department: number().required("Please enter department"),
+    name: string().required("Please Select name"),
+    description: string().required("Please Select description"),
+    servimg: mixed().required("Please Select image"),
+
+
+  });
+  // console.log(userschema)
+
+  const formik = useFormik({
+    initialValues: {
+      branch: "",
+      user: "",
+      department: "",
+      name: "",
+      description: "",
+      servimg: "",
+    },
+
+    validationSchema: userschema,
+
+    onSubmit: (values) => {
+      alert(JSON.stringify(values, null, 2));
+      console.log(values);
+    },
+  });
+
+  console.log(formik.errors, formik.touched);
+
+  const branch = [
+    {
+      value: "",
+      label: "-- Select Branch --",
+    },
+    {
+      value: "0",
+      label: "Branch 1",
+    },
+    {
+      value: "1",
+      label: "Branch 2",
+    },
+    {
+      value: "2",
+      label: "Branch 3",
+    },
+  ];
+
+  const user = [
+    {
+      value: "",
+      label: "-- Select user --",
+    },
+    {
+      value: "0",
+      label: "user 1",
+    },
+    {
+      value: "1",
+      label: "user 2",
+    },
+    {
+      value: "2",
+      label: "user 3",
+    },
+  ];
+
+  const department = [
+    {
+      value: "",
+      label: "-- Select Department --",
+    },
+    {
+      value: "0",
+      label: "Department 1",
+    },
+    {
+      value: "1",
+      label: "Department 2",
+    },
+    {
+      value: "2",
+      label: "Department 3",
+    },
+  ];
+
+
 
   return (
     <div>
@@ -45,63 +150,143 @@ function Services(props) {
       <React.Fragment>
         <Dialog open={open} onClose={handleClose}>
           <DialogContent>
-            <form onSubmit={handleSubmit} id="subscription-form">
+            <form onSubmit={formik.handleSubmit} id="subscription-form">
               <TextField
-                autoFocus
-                required
-                margin="dense"
+                error={formik.errors.branch && formik.touched.branch}
                 id="branch"
-                name="Name"
-                label="branch"
-                type="text"
+                name="branch"
+                select
+                label="Branch"
                 fullWidth
                 variant="standard"
-              />
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.branch}
+                helperText={
+                  formik.errors.branch && formik.touched.branch
+                    ? formik.errors.branch
+                    : ""
+                }
+              >
+                {branch.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
               <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="department"
-                name="Name"
-                label="department"
-                type="text"
-                fullWidth
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                required
-                margin="dense"
+                error={formik.errors.user && formik.touched.user}
                 id="user"
-                name="name"
+                name="user"
+                select
                 label="user"
-                type="text"
                 fullWidth
                 variant="standard"
-              />
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.user}
+                helperText={
+                  formik.errors.user && formik.touched.user
+                    ? formik.errors.user
+                    : ""
+                }
+              >
+                {user.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
               <TextField
-                autoFocus
-                required
+                error={formik.errors.department && formik.touched.department}
+                id="department"
+                name="department"
+                select
+                label="Department"
+                fullWidth
+                variant="standard"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.department}
+                helperText={
+                  formik.errors.department && formik.touched.department
+                    ? formik.errors.department
+                    : ""
+                }
+              >
+                {department.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+              <TextField
+                error={formik.errors.name && formik.touched.name}
                 margin="dense"
                 id="name"
                 name="name"
-                label="name"
+                label="Name"
                 type="text"
                 fullWidth
                 variant="standard"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.name}
+                helperText={
+                  formik.errors.name && formik.touched.name
+                    ? formik.errors.name
+                    : ""
+                }
               />
               <TextField
-                autoFocus
-                required
+                error={formik.errors.description && formik.touched.description}
                 margin="dense"
                 id="description"
-                name="name"
-                label="description"
-                type="text"
+                name="description"
+                label="Description"
+                multiline
+                rows={4}
                 fullWidth
                 variant="standard"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.description}
+                helperText={
+                  formik.errors.description && formik.touched.description
+                    ? formik.errors.description
+                    : ""
+                }
               />
-              
+
+              <br />
+
+              <Button
+                component="label"
+                role={undefined}
+                variant="contained"
+                tabIndex={-1}
+                startIcon={<CloudUploadIcon />}
+              >
+                Upload service image
+                <VisuallyHiddenInput
+                  type="file"
+                  name="servimg"
+                  // onChange={(event) => console.log(event.target.files)}
+                  multiple
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.servimg}
+                ></VisuallyHiddenInput>
+              </Button>
+
+              <br />
+              {formik.errors.servimg && formik.errors.servimg ? (
+                <span className="error">please select service image</span>
+              ) : (
+                ""
+              )}
+
+
             </form>
           </DialogContent>
           <DialogActions>

@@ -1,15 +1,17 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import Layout from '../admin/component/Layout/Layout'
-import Branch from "../admin/container/Branch/Branch";
-import Expence from "../admin/container/Expence/Expence";
-import Insfrastructure from "../admin/container/Insfrastructure/Insfrastructure";
-import Salary from "../admin/container/Salary/Salary";
-import Services from "../admin/container/Services/Services";
-import User from "../admin/container/User/User";
-import Vendor from "../admin/container/Vendor/Vendor";
-import Department from "../admin/container/Department/Department";
-import Medicine from "../admin/container/Medicine/Medicine";
+import Layout from '../Admin/Component/Layout/Layout'
+import Branch from "../Admin/container/Branch/Branch";
+import Expence from "../Admin/container/Expence/Expence";
+import Insfrastructure from "../Admin/container/Insfrastructure/Insfrastructure";
+import Salary from "../Admin/container/Salary/Salary";
+import Services from "../Admin/container/Services/Services";
+import User from "../Admin/container/User/User";
+import Vendor from "../Admin/container/Vendor/Vendor";
+import Department from "../Admin/container/Department/Department";
+import Medicine from "../Admin/container/Medicine/Medicine";
+import Timeslot from "../Admin/container/Timeslot/Timeslot";
+import Treatment from "../Admin/container/Treatment/Treatment";
 
 function AdminRoute(props) {
   return (
@@ -24,6 +26,9 @@ function AdminRoute(props) {
         <Route path="/user" element={<User />} />
         <Route path="/vendor" element={<Vendor />} />
         <Route path="/medicine" element={<Medicine />} />
+
+        <Route path="/treatment" element={<Treatment />} />
+        <Route path="/timeslot" element={<Timeslot />} />
       </Routes>
     </Layout>
   );

@@ -131,6 +131,11 @@ export default function Layout({ children }) {
     { icon: <AttachMoneyIcon />, label: "Salary", to: "/admin/salary" },
     { icon: <AccountCircleIcon />, label: "Expence", to: "/admin/expence" },
     { icon: <AccountCircleIcon />, label: "Services", to: "/admin/services" },
+
+      { icon: <CleaningServicesIcon />, label: "Timeslot", to: "/admin/Timeslot" },
+    { icon: <AttachMoneyIcon />, label: "Treatment", to: "/admin/Treatment" },
+
+    
   ];
 
   console.log(alllinks);

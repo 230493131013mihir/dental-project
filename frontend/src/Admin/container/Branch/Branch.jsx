@@ -114,7 +114,7 @@ function Branch(props) {
               <TextField
                 error={formik.errors.email && formik.touched.email}
                 margin="dense"
-                id="name"
+                id="email"
                 name="email"
                 label="Email Address"
                 type="email"
