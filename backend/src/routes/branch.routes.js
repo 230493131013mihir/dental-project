@@ -4,7 +4,7 @@ const router = express.Router()
 
 
 // GET
-router.get('/getbranch', (req, res) => {
+router.get('/getBranch', (req, res) => {
     res.send('hello world!')
 })
 
@@ -20,7 +20,7 @@ router.post('/addBranch', (req, res) => {
 })
 
 // PUT (Update)
-router.put('/updatebranch/:id',(req,res)=>{
+router.put('/updateBranch/:id',(req,res)=>{
     console.log(req.params.id, req.body)
 
     res.status(200).json({

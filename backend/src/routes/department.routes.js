@@ -4,12 +4,12 @@ const router = express.Router()
 
 
 // GET
-router.get('/getdepartment', (req, res) => {
+router.get('/getDepartment', (req, res) => {
     res.send('hello world!')
 })
 
 // POST
-router.post('/addBranch', (req, res) => {
+router.post('/addDepartment', (req, res) => {
     console.log(req.body)
 
     res.status(200).json({
@@ -20,7 +20,7 @@ router.post('/addBranch', (req, res) => {
 })
 
 // PUT (Update)
-router.put('/updatedepartment/:id',(req,res)=>{
+router.put('/updateDepartment/:id',(req,res)=>{
     console.log(req.params.id, req.body)
 
     res.status(200).json({
@@ -32,7 +32,7 @@ router.put('/updatedepartment/:id',(req,res)=>{
 })
 
 // DELETE
-router.delete('/deletedepartment/:id', (req, res) => {
+router.delete('/deleteDepartment/:id', (req, res) => {
     console.log("Delete ID:", req.params.id)
 
     res.status(200).json({
