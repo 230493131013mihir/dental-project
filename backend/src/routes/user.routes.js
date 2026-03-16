@@ -1,46 +1,20 @@
 
 const express = require('express')
+const { addUser, getUser, updateUser, deleteUser } = require('../controller/user.controller')
 const router = express.Router()
 
 
 // GET
-router.get('/getUser', (req, res) => {
-    res.send('hello world!')
-})
+router.get('/getUser', getUser)
 
 // POST
-router.post('/addUser', (req, res) => {
-    console.log(req.body)
-
-    res.status(200).json({
-        success: true,
-        data: req.body,
-        message: "User added successfully"
-    })
-})
+router.post('/addUser', addUser)
 
 // PUT (Update)
-router.put('/updateUser/:id',(req,res)=>{
-    console.log(req.params.id, req.body)
-
-    res.status(200).json({
-        success:true,
-        id:req.params.id,
-        data:req.body,
-        message:"User updated successfully"
-    })
-})
+router.put('/updateUser/:id', updateUser)
 
 // DELETE
-router.delete('/deleteUser/:id', (req, res) => {
-    console.log("Delete ID:", req.params.id)
-
-    res.status(200).json({
-        success: true,
-        id: req.params.id,
-        message: "User deleted successfully"
-    })
-})
+router.delete('/deleteUser/:id', deleteUser)
 
 
 module.exports = router;

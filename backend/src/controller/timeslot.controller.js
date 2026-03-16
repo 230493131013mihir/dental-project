@@ -1,8 +1,8 @@
 const pool = require("../db/mysql");
 
-const getVendor = async (req, res) => {
+const getTimeslot = async (req, res) => {
   try {
-    const [rows] = await pool.query("SELECT * FROM vendor");
+    const [rows] = await pool.query("SELECT * FROM timeslot");
 
     console.log(rows);
     res.status(200).json({
@@ -20,7 +20,7 @@ const getVendor = async (req, res) => {
   }
 };
 
-const addVendor = async (req, res) => {
+const addTimeslot = async (req, res) => {
   try {
     console.log(req.body);
 
@@ -28,14 +28,14 @@ const addVendor = async (req, res) => {
       req.body;
 
     const [rows, fields, result] = await pool.query(
-      "INSERT INTO vendor(branch_id,payment_id,paymenttype_id,type,amount,date) VALUES(?,?,?,?,?,?)",
+      "INSERT INTO timeslot(branch_id,payment_id,paymenttype_id,type,amount,date) VALUES(?,?,?,?,?,?)",
       [branch_id,payment_id,paymenttype_id,type,amount,date],
     );
 
     res.status(200).json({
       success: true,
       data: req.body,
-      message: "vendor added successfully",
+      message: "timeslot added successfully",
     });
     console.log(rows, fields, result);
   } catch (error) {
@@ -43,26 +43,26 @@ const addVendor = async (req, res) => {
     res.status(500).json({
       success: true,
       data: null,
-      message: "vendor not-added successfully",
+      message: "timeslot not-added successfully",
     });
   }
 };
 
-const updateVendor = () => {
+const updateTimeslot = () => {
   try {
-    console.log("updateVendor");
+    console.log("updateTimeslot");
   } catch (error) {}
 };
 
-const deleteVendor = () => {
+const deleteTimeslot = () => {
   try {
-    console.log("deleteVendor");
+    console.log("deleteTimeslot");
   } catch (error) {}
 };
 
 module.exports = {
-  getVendor,
-  addVendor,
-  updateVendor,
-  deleteVendor,
+  getTimeslot,
+  addTimeslot,
+  updateTimeslot,
+  deleteTimeslot,
 };

@@ -1,46 +1,20 @@
 
 const express = require('express')
+const { addSalary, getSalary, updateSalary, deleteSalary } = require('../controller/salary.controller')
 const router = express.Router()
 
 
 // GET
-router.get('/getSalary', (req, res) => {
-    res.send('hello world!')
-})
+router.get('/getSalary', getSalary)
 
 // POST
-router.post('/addSalary', (req, res) => {
-    console.log(req.body)
-
-    res.status(200).json({
-        success: true,
-        data: req.body,
-        message: "Salary added successfully"
-    })
-})
+router.post('/addSalary', addSalary)
 
 // PUT (Update)
-router.put('/updateSalary/:id',(req,res)=>{
-    console.log(req.params.id, req.body)
-
-    res.status(200).json({
-        success:true,
-        id:req.params.id,
-        data:req.body,
-        message:"Salary updated successfully"
-    })
-})
+router.put('/updateSalary/:id', updateSalary)
 
 // DELETE
-router.delete('/deleteSalary/:id', (req, res) => {
-    console.log("Delete ID:", req.params.id)
-
-    res.status(200).json({
-        success: true,
-        id: req.params.id,
-        message: "Salary deleted successfully"
-    })
-})
+router.delete('/deleteSalary/:id', deleteSalary)
 
 
 module.exports = router;

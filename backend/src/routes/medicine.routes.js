@@ -1,46 +1,20 @@
 
 const express = require('express')
+const { addMedicine, getMedicine, updateMedicine, deleteMedicine } = require('../controller/medicine.controller')
 const router = express.Router()
 
 
 // GET
-router.get('/getMedicine', (req, res) => {
-    res.send('hello world!')
-})
+router.get('/getMedicine', getMedicine)
 
 // POST
-router.post('/addMedicine', (req, res) => {
-    console.log(req.body)
-
-    res.status(200).json({
-        success: true,
-        data: req.body,
-        message: "Medicine added successfully"
-    })
-})
+router.post('/addMedicine', addMedicine)
 
 // PUT (Update)
-router.put('/updateMedicine/:id',(req,res)=>{
-    console.log(req.params.id, req.body)
-
-    res.status(200).json({
-        success:true,
-        id:req.params.id,
-        data:req.body,
-        message:"Medicine updated successfully"
-    })
-})
+router.put('/updateMedicine/:id', updateMedicine)
 
 // DELETE
-router.delete('/deleteMedicine/:id', (req, res) => {
-    console.log("Delete ID:", req.params.id)
-
-    res.status(200).json({
-        success: true,
-        id: req.params.id,
-        message: "Medicine deleted successfully"
-    })
-})
+router.delete('/deleteMedicine/:id', deleteMedicine)
 
 
 module.exports = router;

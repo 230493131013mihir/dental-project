@@ -1,46 +1,20 @@
 
 const express = require('express')
+const { addInsfrastructure, getInsfrastructure, updateInsfrastructure, deleteInsfrastructure } = require('../controller/insfrastructure.controller')
 const router = express.Router()
 
 
 // GET
-router.get('/getInsfrastructure', (req, res) => {
-    res.send('hello world!')
-})
+router.get('/getInsfrastructure', getInsfrastructure)
 
 // POST
-router.post('/addInsfrastructure', (req, res) => {
-    console.log(req.body)
-
-    res.status(200).json({
-        success: true,
-        data: req.body,
-        message: "insfrastructure added successfully"
-    })
-})
+router.post('/addInsfrastructure', addInsfrastructure)
 
 // PUT (Update)
-router.put('/updateInsfrastructure/:id',(req,res)=>{
-    console.log(req.params.id, req.body)
-
-    res.status(200).json({
-        success:true,
-        id:req.params.id,
-        data:req.body,
-        message:"insfrastructure updated successfully"
-    })
-})
+router.put('/updateInsfrastructure/:id', updateInsfrastructure)
 
 // DELETE
-router.delete('/deleteInsfrastructure/:id', (req, res) => {
-    console.log("Delete ID:", req.params.id)
-
-    res.status(200).json({
-        success: true,
-        id: req.params.id,
-        message: "insfrastructure deleted successfully"
-    })
-})
+router.delete('/deleteInsfrastructure/:id', deleteInsfrastructure)
 
 
 module.exports = router;

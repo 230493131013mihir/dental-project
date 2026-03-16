@@ -1,46 +1,20 @@
 
 const express = require('express')
+const { addExpence, getExpence, updateExpence, deleteExpence } = require('../controller/expence.controller')
 const router = express.Router()
 
 
 // GET
-router.get('/getExpence', (req, res) => {
-    res.send('hello world!')
-})
+router.get('/getExpence', getExpence)
 
 // POST
-router.post('/addExpence', (req, res) => {
-    console.log(req.body)
-
-    res.status(200).json({
-        success: true,
-        data: req.body,
-        message: "Expence added successfully"
-    })
-})
+router.post('/addExpence', addExpence)
 
 // PUT (Update)
-router.put('/updateExpence/:id',(req,res)=>{
-    console.log(req.params.id, req.body)
-
-    res.status(200).json({
-        success:true,
-        id:req.params.id,
-        data:req.body,
-        message:"Expence updated successfully"
-    })
-})
+router.put('/updateExpence/:id', updateExpence)
 
 // DELETE
-router.delete('/deleteExpence/:id', (req, res) => {
-    console.log("Delete ID:", req.params.id)
-
-    res.status(200).json({
-        success: true,
-        id: req.params.id,
-        message: "Expence deleted successfully"
-    })
-})
+router.delete('/deleteExpence/:id', deleteExpence)
 
 
 module.exports = router;
