@@ -24,14 +24,12 @@ const addTreatment = async (req, res) => {
   try {
     console.log(req.body);
 
-    const { branch_id,payment_id,paymenttype_id,type,amount,date } =
-      req.body;
+const { appointment_id, disease, date, prescription, amount } = req.body;
 
-    const [rows, fields, result] = await pool.query(
-      "INSERT INTO treatment(branch_id,payment_id,paymenttype_id,type,amount,date) VALUES(?,?,?,?,?,?)",
-      [branch_id,payment_id,paymenttype_id,type,amount,date],
-    );
-
+const [rows] = await pool.query(
+  "INSERT INTO treatment(appointment_id, disease, date, prescription, amount) VALUES (?,?,?,?,?)",
+  [appointment_id, disease, date, prescription, amount]
+);
     res.status(200).json({
       success: true,
       data: req.body,

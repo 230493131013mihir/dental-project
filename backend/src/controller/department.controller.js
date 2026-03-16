@@ -24,14 +24,12 @@ const addDepartment = async (req, res) => {
   try {
     console.log(req.body);
 
-    const { branch,name,email,mobile_no,address,description } =
-      req.body;
+    const { branch_id, name, description, mobile, email, address } = req.body;
 
-    const [rows, fields, result] = await pool.query(
-      "INSERT INTO department(branch,name,email,mobile_no,address,description) VALUES(?,?,?,?,?,?)",
-      [branch,name,email,mobile_no,address,description],
-    );
-
+const [rows] = await pool.query(
+  "INSERT INTO department(branch_id, name, description, mobile, email, address) VALUES (?,?,?,?,?,?)",
+  [branch_id, name, description, mobile, email, address]
+);
     res.status(200).json({
       success: true,
       data: req.body,

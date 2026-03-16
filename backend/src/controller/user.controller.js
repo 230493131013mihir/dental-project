@@ -24,14 +24,12 @@ const addUser = async (req, res) => {
   try {
     console.log(req.body);
 
-    const { branch_id,payment_id,paymenttype_id,type,amount,date } =
-      req.body;
+const { branch_id, department_id, role_id, name, dob, email, qualification, address } = req.body;
 
-    const [rows, fields, result] = await pool.query(
-      "INSERT INTO user(branch_id,payment_id,paymenttype_id,type,amount,date) VALUES(?,?,?,?,?,?)",
-      [branch_id,payment_id,paymenttype_id,type,amount,date],
-    );
-
+const [rows] = await pool.query(
+  "INSERT INTO user(branch_id, department_id, role_id, name, dob, email, qualification, address) VALUES (?,?,?,?,?,?,?,?)",
+  [branch_id, department_id, role_id, name, dob, email, qualification, address]
+);
     res.status(200).json({
       success: true,
       data: req.body,

@@ -24,20 +24,19 @@ const addVendor = async (req, res) => {
   try {
     console.log(req.body);
 
-    const { branch_id,payment_id,paymenttype_id,type,amount,date } =
-      req.body;
+const { name, address, companyname, mobile, email, gstno } = req.body;
 
-    const [rows, fields, result] = await pool.query(
-      "INSERT INTO vendor(branch_id,payment_id,paymenttype_id,type,amount,date) VALUES(?,?,?,?,?,?)",
-      [branch_id,payment_id,paymenttype_id,type,amount,date],
-    );
+const [rows] = await pool.query(
+  "INSERT INTO vendor(name, address, companyname, mobile, email, gstno) VALUES (?,?,?,?,?,?)",
+  [name, address, companyname, mobile, email, gstno]
+);
 
     res.status(200).json({
       success: true,
       data: req.body,
       message: "vendor added successfully",
     });
-    console.log(rows, fields, result);
+    console.log(rows);
   } catch (error) {
      console.log(error);
     res.status(500).json({

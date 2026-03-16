@@ -24,13 +24,12 @@ const addTimeslot = async (req, res) => {
   try {
     console.log(req.body);
 
-    const { branch_id,payment_id,paymenttype_id,type,amount,date } =
-      req.body;
+const { user_id, date, startdate, enddate } = req.body;
 
-    const [rows, fields, result] = await pool.query(
-      "INSERT INTO timeslot(branch_id,payment_id,paymenttype_id,type,amount,date) VALUES(?,?,?,?,?,?)",
-      [branch_id,payment_id,paymenttype_id,type,amount,date],
-    );
+const [rows] = await pool.query(
+  "INSERT INTO timeslot(user_id, date, startdate, enddate) VALUES (?,?,?,?)",
+  [user_id, date, startdate, enddate]
+);
 
     res.status(200).json({
       success: true,
