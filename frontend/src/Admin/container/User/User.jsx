@@ -10,7 +10,7 @@ import { Formik, useFormik } from "formik";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
-import { dob, object, string } from "yup";
+import { date, number, object, string } from "yup";
 
 function User(props) {
   const [open, setOpen] = React.useState(false);
@@ -30,7 +30,7 @@ function User(props) {
     name: string().required("Please Select name"),
     address: string().required("Please Select address"),
     qualification: string().required("Please Select qualification"),
-    dob: dob().required("Please Select date"),
+    dob: date().required("Please Select date"),
     email: string().required("Please Select type"),
 
   });

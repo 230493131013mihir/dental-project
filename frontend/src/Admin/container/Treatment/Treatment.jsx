@@ -25,8 +25,8 @@ function Treatment(props) {
 
     let userschema = object({
         appointmentid: number().required("Please Select id"),
-        date: date().required("Please Select date"),
-        amount: date().required("Please Select startdate"),
+        date4: date().required("Please Select date"),
+        amount: number().required("Please Select startdate"),
         prescription: string().required("Please Select prescription"),
         disease: string().required("Please Select disease"),
 
@@ -39,7 +39,7 @@ function Treatment(props) {
             amount: "",
             prescription: "",
             disease: "",
-            date: "",
+            date4: "",
         },
 
         validationSchema: userschema,
@@ -52,7 +52,7 @@ function Treatment(props) {
 
     console.log(formik.errors, formik.touched);
 
-    const date = [
+    const date4 = [
         {
             value: "",
             label: "--select date--",
@@ -63,7 +63,7 @@ function Treatment(props) {
         },
         {
             value: "1",
-            label: "date2",
+            label: "date4",
         },
         {
             value: "2",
@@ -177,7 +177,7 @@ function Treatment(props) {
                             <TextField
                                 error={formik.errors.date && formik.touched.date}
                                 id="date"
-                                name="date"
+                                name="date4"
                                 fullWidth
                                 select
                                 variant="standard"
@@ -191,7 +191,7 @@ function Treatment(props) {
                                         : ""
                                 }
                             >
-                                {date.map((option) => (
+                                {date4.map((option) => (
                                     <MenuItem key={option.value} value={option.value}>
                                         {option.label}
                                     </MenuItem>

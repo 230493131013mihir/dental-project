@@ -12,10 +12,8 @@ import { Formik, useFormik } from "formik";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
-import { object, string } from "yup";
+import { mixed, number, object, string } from "yup";
 import User from "../User/User";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { styled } from "@mui/material/styles";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -45,7 +43,7 @@ function Services(props) {
   let userschema = object({
     branch: string().required("Please enter branch"),
     User: string().required("Please enter vendor"),
-    department: number().required("Please enter department"),
+    department: string().required("Please enter department"),
     name: string().required("Please Select name"),
     description: string().required("Please Select description"),
     servimg: mixed().required("Please Select image"),
