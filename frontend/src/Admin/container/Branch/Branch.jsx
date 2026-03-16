@@ -4,9 +4,13 @@ import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
 import Box from "@mui/material/Box";
+import MenuItem from "@mui/material/MenuItem";
+import { Formik, useFormik } from "formik";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+
+import { styled } from "@mui/material/styles";
+import { object, string } from "yup";
 
 function Branch(props) {
   const [open, setOpen] = React.useState(false);
@@ -19,14 +23,37 @@ function Branch(props) {
     setOpen(false);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const formJson = Object.fromEntries(formData.entries());
-    const email = formJson.email;
-    console.log(email);
-    handleClose();
-  };
+
+
+  let userschema = object({
+    name: string().required("Please enter name"),
+    description: string().required("please enter description"),
+    email: string().required("Please Select type"),
+    mobile: string()
+      .required("Please enter mobile number")
+      .matches(/^[0-9]{10}$/, "Mobile number must be 10 digits"),
+    address: string().required("Please Select address"),
+  });
+  // console.log(userschema)
+
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      description: "",
+      mobile: "",
+      email: "",
+      address: "",
+    },
+
+    validationSchema: userschema,
+
+    onSubmit: (values) => {
+      alert(JSON.stringify(values, null, 2));
+      console.log(values);
+    },
+  });
+
+  console.log(formik.errors, formik.touched);
 
   return (
     <div>
@@ -35,7 +62,8 @@ function Branch(props) {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-        }} >
+        }}
+      >
         <h1>Branch</h1>
         <Button variant="outlined" onClick={handleClickOpen}>
           Add Branch
@@ -44,45 +72,65 @@ function Branch(props) {
 
       <React.Fragment>
         <Dialog open={open} onClose={handleClose}>
-         
           <DialogContent>
-            <form onSubmit={handleSubmit} id="subscription-form">
+            <form onSubmit={formik.handleSubmit} id="subscription-form">
               <TextField
-                autoFocus
-                required
+                error={formik.errors.name && formik.touched.name}
                 margin="dense"
                 id="name"
-                name="Name"
+                name="name"
                 label="Name"
                 type="text"
                 fullWidth
                 variant="standard"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.name}
+                helperText={
+                  formik.errors.name && formik.touched.name
+                    ? formik.errors.name
+                    : ""
+                }
               />
               <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="name"
-                name="address"
-                label="Address"
-                type="text"
+                error={formik.errors.description && formik.touched.description}
+                id="Description"
+                name="description"
+                label="Description"
+                multiline
+                rows={4}
                 fullWidth
                 variant="standard"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.description}
+                helperText={
+                  formik.errors.description && formik.touched.description
+                    ? formik.errors.description
+                    : ""
+                }
               />
+
               <TextField
-                autoFocus
-                required
+                error={formik.errors.email && formik.touched.email}
                 margin="dense"
-                id="name"
+                id="email"
                 name="email"
                 label="Email Address"
                 type="email"
                 fullWidth
                 variant="standard"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.email}
+                helperText={
+                  formik.errors.email && formik.touched.email
+                    ? formik.errors.email
+                    : ""
+                }
               />
               <TextField
-                autoFocus
-                required
+                error={formik.errors.mobile && formik.touched.mobile}
                 margin="dense"
                 id="mobile"
                 name="mobile"
@@ -90,6 +138,32 @@ function Branch(props) {
                 type="phone"
                 fullWidth
                 variant="standard"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.mobile}
+                helperText={
+                  formik.errors.mobile && formik.touched.mobile
+                    ? formik.errors.mobile
+                    : ""
+                }
+              />
+              <TextField
+                error={formik.errors.address && formik.touched.address}
+                id="address"
+                label="address"
+                type="text"
+                multiline
+                                variant="standard"
+                rows={4}
+                fullWidth
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.address}
+                helperText={
+                  formik.errors.address && formik.touched.address
+                    ? formik.errors.address
+                    : ""
+                }
               />
             </form>
           </DialogContent>

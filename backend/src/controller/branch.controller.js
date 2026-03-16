@@ -1,0 +1,68 @@
+const pool = require("../db/mysql");
+
+const getBranch = async (req, res) => {
+  try {
+    const [rows] = await pool.query("SELECT * FROM branch");
+
+    console.log(rows);
+    res.status(200).json({
+      success: true,
+      data: rows,
+      message: "rows added successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: true,
+      data: null,
+      message: "rows not-added successfully",
+    });
+  }
+};
+
+const addBranch = async (req, res) => {
+  try {
+    console.log(req.body);
+
+    const { name, email, mobile_no, address, description, city, state } =
+      req.body;
+
+    const [rows, fields, result] = await pool.query(
+      "INSERT INTO branch(name,email,mobile_no,address,description,city,state) VALUES(?,?,?,?,?,?,?)",
+      [name, email, mobile_no, address, description, city, state],
+    );
+
+    res.status(200).json({
+      success: true,
+      data: req.body,
+      message: "branch added successfully",
+    });
+    console.log(rows, fields, result);
+  } catch (error) {
+     console.log(error);
+    res.status(500).json({
+      success: true,
+      data: null,
+      message: "branch not-added successfully",
+    });
+  }
+};
+
+const updateBranch = () => {
+  try {
+    console.log("updateBranch");
+  } catch (error) {}
+};
+
+const deleteBranch = () => {
+  try {
+    console.log("deleteBranch");
+  } catch (error) {}
+};
+
+module.exports = {
+  getBranch,
+  addBranch,
+  updateBranch,
+  deleteBranch,
+};

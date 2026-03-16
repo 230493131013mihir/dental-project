@@ -1,46 +1,20 @@
 
 const express = require('express')
+const { addBranch, getBranch, updateBranch, deleteBranch } = require('../controller/branch.controller')
 const router = express.Router()
 
 
 // GET
-router.get('/getBranch', (req, res) => {
-    res.send('hello world!')
-})
+router.get('/getBranch', getBranch)
 
 // POST
-router.post('/addBranch', (req, res) => {
-    console.log(req.body)
-
-    res.status(200).json({
-        success: true,
-        data: req.body,
-        message: "Branch added successfully"
-    })
-})
+router.post('/addBranch', addBranch)
 
 // PUT (Update)
-router.put('/updateBranch/:id',(req,res)=>{
-    console.log(req.params.id, req.body)
-
-    res.status(200).json({
-        success:true,
-        id:req.params.id,
-        data:req.body,
-        message:"Branch updated successfully"
-    })
-})
+router.put('/updateBranch/:id', updateBranch)
 
 // DELETE
-router.delete('/deleteBranch/:id', (req, res) => {
-    console.log("Delete ID:", req.params.id)
-
-    res.status(200).json({
-        success: true,
-        id: req.params.id,
-        message: "Branch deleted successfully"
-    })
-})
+router.delete('/deleteBranch/:id', deleteBranch)
 
 
 module.exports = router;

@@ -27,7 +27,6 @@ function Expence(props) {
     branch: string().required("Please enter name"),
     payment: number().required("Please enter amount"),
     paymenttype: number().required("Please select paymenttype"),
-    email: string().required("Please Select email"),
     type: string().required("Please Select type"),
     amount: number()
       .required("Enter amount")
@@ -49,7 +48,7 @@ function Expence(props) {
 
     validationSchema: userschema,
 
-    onSubmit: (values) => {
+     onSubmit: (values) => {
       alert(JSON.stringify(values, null, 2));
       console.log(values);
     },
@@ -113,6 +112,7 @@ function Expence(props) {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          mt: 2,
         }}
       >
         <h1>Expence</h1>
@@ -128,15 +128,10 @@ function Expence(props) {
                 error={formik.errors.branch && formik.touched.branch}
                 id="branch"
                 name="branch"
-                select
-                label=""
-                slotProps={{
-                  select: {
-                    native: true,
-                  },
-                }}
                 fullWidth
+                select
                 variant="standard"
+                label="Select Branch"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.branch}
@@ -147,9 +142,9 @@ function Expence(props) {
                 }
               >
                 {branch.map((option) => (
-                  <option key={option.value} value={option.value}>
+                  <MenuItem key={option.value} value={option.value}>
                     {option.label}
-                  </option>
+                  </MenuItem>
                 ))}
               </TextField>
 
@@ -157,15 +152,10 @@ function Expence(props) {
                 error={formik.errors.payment && formik.touched.payment}
                 id="payment"
                 name="payment"
-                select
-                label=""
-                slotProps={{
-                  select: {
-                    native: true,
-                  },
-                }}
                 fullWidth
+                select
                 variant="standard"
+                label="Select payment"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.payment}
@@ -176,9 +166,9 @@ function Expence(props) {
                 }
               >
                 {payment.map((option) => (
-                  <option key={option.value} value={option.value}>
+                  <MenuItem key={option.value} value={option.value}>
                     {option.label}
-                  </option>
+                  </MenuItem>
                 ))}
               </TextField>
 
@@ -186,15 +176,10 @@ function Expence(props) {
                 error={formik.errors.paymenttype && formik.touched.paymenttype}
                 id="paymenttype"
                 name="paymenttype"
-                select
-                label=""
-                slotProps={{
-                  select: {
-                    native: true,
-                  },
-                }}
                 fullWidth
+                select
                 variant="standard"
+                label="Select paymenttype"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.paymenttype}
@@ -205,17 +190,18 @@ function Expence(props) {
                 }
               >
                 {paymenttype.map((option) => (
-                  <option key={option.value} value={option.value}>
+                  <MenuItem key={option.value} value={option.value}>
                     {option.label}
-                  </option>
+                  </MenuItem>
                 ))}
               </TextField>
+
               <TextField
                 error={formik.errors.type && formik.touched.type}
                 margin="dense"
                 id="type"
                 name="type"
-                label="type"
+                label="Type"
                 type="text"
                 fullWidth
                 variant="standard"
@@ -228,12 +214,13 @@ function Expence(props) {
                     : ""
                 }
               />
+
               <TextField
                 error={formik.errors.amount && formik.touched.amount}
                 margin="dense"
                 id="amount"
                 name="amount"
-                label="amount"
+                label="Amount"
                 type="number"
                 fullWidth
                 variant="standard"
@@ -246,6 +233,7 @@ function Expence(props) {
                     : ""
                 }
               />
+
               <TextField
                 error={formik.errors.date && formik.touched.date}
                 margin="dense"
