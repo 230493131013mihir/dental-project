@@ -65,9 +65,12 @@ const updateExpence = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      data: req.body,
+      data: { branch_id,payment_id,paymenttype_id,type,amount,date},
       message: "expence update successfully",
     });
+
+     console.log(fields,results);
+     
   } catch (error) {
     console.log(error);
     res.status(500).json({

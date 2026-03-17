@@ -11,6 +11,9 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
 import { object, string } from "yup";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { getBranch } from "../../../redux/slice/branch.slice";
 
 function Branch(props) {
   const [open, setOpen] = React.useState(false);
@@ -22,6 +25,12 @@ function Branch(props) {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getBranch())
+  }, [])
 
 
 
