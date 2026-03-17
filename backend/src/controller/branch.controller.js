@@ -68,18 +68,19 @@ const updateBranch = async (req, res) => {
       branchId,
     );
 
-    const [rows] = await pool.query(
+    const [rows,fields,result] = await pool.query(
       "UPDATE branch SET name = ?,email= ?,mobile_no= ?,address= ?,description= ?,city= ?,state=? WHERE id=?",
       [name, email, mobile_no, address, description, city, state, branchId],
     );
 
     res.status(200).json({
       success: true,
-      data: req.body,
+      data: { name, email, mobile_no, address, description, city, state, id: branchId },
       message: "branch update successfully",
     });
 
-    console.log(rows);
+    console.log(fields,results);
+
   } catch (error) {
     console.log(error);
     res.status(500).json({
