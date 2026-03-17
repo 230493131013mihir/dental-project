@@ -8,14 +8,14 @@ const getExpence = async (req, res) => {
     res.status(200).json({
       success: true,
       data: rows,
-      message: "rows added successfully",
+      message: "expence fetched successfully",
     });
   } catch (error) {
     console.log(error);
     res.status(500).json({
       success: true,
       data: null,
-      message: "rows not-added successfully",
+      message: "expence not-fetched successfully",
     });
   }
 };

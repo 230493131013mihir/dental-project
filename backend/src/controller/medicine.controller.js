@@ -8,14 +8,14 @@ const getMedicine = async (req, res) => {
     res.status(200).json({
       success: true,
       data: rows,
-      message: "rows added successfully",
+      message: "medicine fetched successfully",
     });
   } catch (error) {
     console.log(error);
     res.status(500).json({
       success: true,
       data: null,
-      message: "rows not-added successfully",
+      message: "medicine not-fetched successfully",
     });
   }
 };

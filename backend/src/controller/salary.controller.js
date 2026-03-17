@@ -17,7 +17,7 @@ const getSalary = async (req, res) => {
     res.status(500).json({
       success: false,
       data: null,
-      message: "salary not fetched"
+      message: "salary not fetched successfully"
     });
 
   }

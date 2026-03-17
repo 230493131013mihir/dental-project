@@ -8,14 +8,14 @@ const getVendor = async (req, res) => {
     res.status(200).json({
       success: true,
       data: rows,
-      message: "rows added successfully",
+      message: "vendor fetched successfully",
     });
   } catch (error) {
     console.log(error);
     res.status(500).json({
       success: true,
       data: null,
-      message: "rows not-added successfully",
+      message: "vendot not-fetched successfully",
     });
   }
 };

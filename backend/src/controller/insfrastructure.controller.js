@@ -8,14 +8,14 @@ const getInsfrastructure = async (req, res) => {
         res.status(200).json({
             success: true,
             data: rows,
-            message: "rows added successfully",
+            message: "insfrastructure fetched successfully",
         });
     } catch (error) {
         console.log(error);
         res.status(500).json({
             success: true,
             data: null,
-            message: "rows not-added successfully",
+            message: "insfrastructure not-fetched successfully",
         });
     }
 };
