@@ -37,9 +37,10 @@ const addBranch = async (req, res) => {
       data: req.body,
       message: "branch added successfully",
     });
+
     console.log(rows, fields, result);
   } catch (error) {
-     console.log(error);
+    console.log(error);
     res.status(500).json({
       success: true,
       data: null,
@@ -48,16 +49,71 @@ const addBranch = async (req, res) => {
   }
 };
 
-const updateBranch = () => {
+const updateBranch = async (req, res) => {
   try {
-    console.log("updateBranch");
-  } catch (error) {}
+    console.log(req.body);
+
+    const { name, email, mobile_no, address, description, city, state } =
+      req.body;
+
+    const branchId = req.params.id;
+    console.log(
+      name,
+      email,
+      mobile_no,
+      address,
+      description,
+      city,
+      state,
+      branchId,
+    );
+
+    const [rows] = await pool.query(
+      "UPDATE branch SET name = ?,email= ?,mobile_no= ?,address= ?,description= ?,city= ?,state=? WHERE id=?",
+      [name, email, mobile_no, address, description, city, state, branchId],
+    );
+
+    res.status(200).json({
+      success: true,
+      data: req.body,
+      message: "branch update successfully",
+    });
+
+    console.log(rows);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: true,
+      data: null,
+      message: "branch not-update successfully",
+    });
+  }
 };
 
-const deleteBranch = () => {
+const deleteBranch = async (req, res) => {
   try {
-    console.log("deleteBranch");
-  } catch (error) {}
+    const branchId = req.params.id;
+
+    console.log(branchId);
+
+    const [rows, feilds, result] = await pool.query(
+      "DELETE FROM branch WHERE id=?",
+      [branchId],
+    );
+
+    res.status(200).json({
+      success: true,
+      data: null,
+      message: "branch deleted successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: true,
+      data: null,
+      message: "branch not-deleted successfully",
+    });
+  }
 };
 
 module.exports = {

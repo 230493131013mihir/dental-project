@@ -48,16 +48,60 @@ const addExpence = async (req, res) => {
   }
 };
 
-const updateExpence = () => {
+const updateExpence = async (req, res) => {
   try {
-    console.log("updateExpence");
-  } catch (error) {}
+    console.log("req.body");
+
+    const { branch_id,payment_id,paymenttype_id,type,amount,date} = req.body;
+
+    const expenceId = req.params.id;
+
+    console.log(branch_id,payment_id,paymenttype_id,type,amount,date);
+
+    const [rows] = await pool.query(
+      "UPDATE expence SET branch_id = ?,payment_id= ?,paymenttype_id= ?,type= ?,amount= ?,date= ? WHERE id=?",
+      [branch_id, payment_id, paymenttype_id, type, amount, date],
+    );
+
+    res.status(200).json({
+      success: true,
+      data: req.body,
+      message: "expence update successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: true,
+      data: null,
+      message: "expence not-update successfully",
+    });
+  }
 };
 
-const deleteExpence = () => {
+const deleteExpence = async (req, res) => {
   try {
-    console.log("deleteExpence");
-  } catch (error) {}
+    console.log(req.body);
+    const expenceId = req.params.id;
+    console.log(expenceId);
+
+    const [rows, feild, result] = await pool.query(
+      "DELETE FROM expence WHERE id=?",
+      [expenceId],
+    );
+
+    res.status(200).json({
+      success: true,
+      data: null,
+      message: "expence deleted successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: true,
+      data: null,
+      message: "expence not-deleted successfully",
+    });
+  }
 };
 
 module.exports = {
