@@ -12,8 +12,12 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { styled } from "@mui/material/styles";
 import { object, string } from "yup";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { getBranch } from "../../../redux/slice/branch.slice";
+import { useDispatch, useSelector } from "react-redux";
+import { addBranch, deleteBranch, getBranch } from "../../../redux/slice/branch.slice";
+import { DataGrid } from "@mui/x-data-grid";
+import IconButton from '@mui/material/IconButton';
+
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function Branch(props) {
   const [open, setOpen] = React.useState(false);
@@ -29,19 +33,22 @@ function Branch(props) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getBranch())
-  }, [])
+    dispatch(getBranch());
+  }, []);
 
-
+  const branch = useSelector((state) => state.branch);
+  console.log(branch);
 
   let userschema = object({
     name: string().required("Please enter name"),
     description: string().required("please enter description"),
     email: string().required("Please Select type"),
-    mobile: string()
-      .required("Please enter mobile number")
+    mobile_no: string()
+      .required("Please enter mobile_no number")
       .matches(/^[0-9]{10}$/, "Mobile number must be 10 digits"),
     address: string().required("Please Select address"),
+    city: string().required("Please Select city"),
+    state: string().required("Please Select state"),
   });
   // console.log(userschema)
 
@@ -49,20 +56,47 @@ function Branch(props) {
     initialValues: {
       name: "",
       description: "",
-      mobile: "",
+      mobile_no: "",
       email: "",
       address: "",
+      city: "",
+      state: "",
     },
 
     validationSchema: userschema,
 
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: (values,{resetForm}) => {
       console.log(values);
+      handleClose()
+      resetForm()
+      dispatch(addBranch(values));
     },
   });
 
+  // const dispatch = useDispatch(values);
+
   console.log(formik.errors, formik.touched);
+
+  const columns = [
+    { field: "name", headerName: "Name", width: 130 },
+    { field: "description", headerName: "Description", width: 130 },
+    { field: "email", headerName: "Email", width: 130 },
+    { field: "address", headerName: "Address", width: 130 },
+    { field: "city", headerName: "City", width: 130 },
+    { field: "state", headerName: "State", width: 130 },
+     { field: "action",
+       headerName: "Action", 
+        width: 130,
+
+        renderCell: (params) => (
+        <IconButton aria-label="delete" onClick={() => dispatch(deleteBranch(params.row.id))}> 
+        <DeleteIcon />  
+        </IconButton> 
+        )
+      },
+  ];
+
+  const paginationModel = { page: 0, pageSize: 5 };
 
   return (
     <div>
@@ -139,20 +173,20 @@ function Branch(props) {
                 }
               />
               <TextField
-                error={formik.errors.mobile && formik.touched.mobile}
+                error={formik.errors.mobile_no && formik.touched.mobile_no}
                 margin="dense"
-                id="mobile"
-                name="mobile"
+                id="mobile_no"
+                name="mobile_no"
                 label="Mobile Number"
                 type="phone"
                 fullWidth
                 variant="standard"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.mobile}
+                value={formik.values.mobile_no}
                 helperText={
-                  formik.errors.mobile && formik.touched.mobile
-                    ? formik.errors.mobile
+                  formik.errors.mobile_no && formik.touched.mobile_no
+                    ? formik.errors.mobile_no
                     : ""
                 }
               />
@@ -162,7 +196,7 @@ function Branch(props) {
                 label="address"
                 type="text"
                 multiline
-                                variant="standard"
+                variant="standard"
                 rows={4}
                 fullWidth
                 onChange={formik.handleChange}
@@ -171,6 +205,42 @@ function Branch(props) {
                 helperText={
                   formik.errors.address && formik.touched.address
                     ? formik.errors.address
+                    : ""
+                }
+              />
+              <TextField
+                error={formik.errors.city && formik.touched.city}
+                margin="dense"
+                id="city"
+                name="city"
+                label="City"
+                type="text"
+                fullWidth
+                variant="standard"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.city}
+                helperText={
+                  formik.errors.city && formik.touched.city
+                    ? formik.errors.city
+                    : ""
+                }
+              />
+              <TextField
+                error={formik.errors.state && formik.touched.state}
+                margin="dense"
+                id="state"
+                name="state"
+                label="state"
+                type="text"
+                fullWidth
+                variant="standard"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.state}
+                helperText={
+                  formik.errors.state && formik.touched.state
+                    ? formik.errors.state
                     : ""
                 }
               />
@@ -184,6 +254,15 @@ function Branch(props) {
           </DialogActions>
         </Dialog>
       </React.Fragment>
+
+      <DataGrid
+        rows={branch.branch}
+        columns={columns}
+        initialState={{ pagination: { paginationModel } }}
+        pageSizeOptions={[5, 10]}
+        checkboxSelection
+        sx={{ border: 0 }}
+      />
     </div>
   );
 }
