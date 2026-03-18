@@ -11,7 +11,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
 import { date, number, object, string } from "yup";
-import { deleteExpence, getExpence } from "../../../redux/slice/expence.slice";
+import { addExpence, deleteExpence, getExpence } from "../../../redux/slice/expence.slice";
 import { useDispatch, useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
 import IconButton from '@mui/material/IconButton';
@@ -63,9 +63,11 @@ function Expence(props) {
 
     validationSchema: userschema,
 
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: (values,{resetForm}) => {
       console.log(values);
+      handleClose()
+      resetForm()
+      dispatch(addExpence(values));
     },
   });
 

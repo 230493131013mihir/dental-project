@@ -13,9 +13,11 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
 import { number, object, string } from "yup";
-import { getInsfrastructure } from "../../../redux/slice/insfrastructure.slice";
+import { addInsfrastructure, deleteInsfrastructure, getInsfrastructure } from "../../../redux/slice/insfrastructure.slice";
 import { useDispatch, useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function Insfrastructure(props) {
   const [open, setOpen] = React.useState(false);
@@ -64,11 +66,13 @@ function Insfrastructure(props) {
 
     validationSchema: userschema,
 
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
-      console.log(values);
-    },
-  });
+     onSubmit: (values,{resetForm}) => {
+       console.log(values);
+       handleClose()
+       resetForm()
+       dispatch(addInsfrastructure(values));
+     },
+   });
 
   console.log(formik.errors, formik.touched);
 

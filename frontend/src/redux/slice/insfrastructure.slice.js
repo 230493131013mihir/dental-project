@@ -7,23 +7,21 @@ const initialState = {
   error: false,
 };
 
-export const getInsfrastructure = createAsyncThunk(
-  "insfrastructure/getInsfrastructure",
-  async () => {
-    const responce = await axios.get(
-      "http://localhost:3000/insfrastructure/getInsfrastructure",
-    );
-    console.log(responce.data.data);
+export const getInsfrastructure = createAsyncThunk("insfrastructure/getInsfrastructure", async () => {
 
-    return responce.data.data;
-  },
-);
-export const addDepartment = createAsyncThunk(
-  "department/addDepartment",
+    
+  const responce = await axios.get("http://localhost:3000/insfrastructure/getInsfrastructure");
+  console.log(responce.data.data);
+
+  return responce.data.data;
+});
+
+export const addExpence = createAsyncThunk(
+  "insfrastructure/addInsfrastructure",
   async (values) => {
     try {
       const responce = await axios.post(
-        "http://localhost:3000/department/addDepartment",
+        "http://localhost:3000/insfrastructure/addInsfrastructure",
         values,
       );
       console.log(responce);
@@ -33,13 +31,13 @@ export const addDepartment = createAsyncThunk(
   },
 );
 
-export const deleteDepartment = createAsyncThunk(
-  "department/deleteDepartment",
+export const deleteExpence = createAsyncThunk(
+  "insfrastructure/deleteInsfrastructure",
   async (id) => {
     console.log(id);
 
     const responce = await axios.delete(
-      `http://localhost:3000/department/deleteDepartment/${id}`,
+      `http://localhost:3000/insfrastructure/deleteInsfrastructure/${id}`,
     );
     console.log(responce);
 
@@ -52,18 +50,18 @@ export const insfrastructureSlice = createSlice({
   initialState: initialState,
   extraReducers: (builder) => {
     builder.addCase(getInsfrastructure.fulfilled, (state, action) => {
-      console.log(action.payload);
-
-      state.insfrastructure = action.payload;
-    });
-     builder.addCase(addInsfrastructure.fulfilled, (state, action) => {
-          state.insfrastructure.push = action.payload;
-        });
-        builder.addCase(deleteInsfrastructure.fulfilled, (state, action) => {
-          const index = state.insfrastructure.findIndex((v) => v.id === action.payload);
+          console.log(action.payload);
     
-          state.insfrastructure.splice(index, 1);
+          state.insfrastructure = action.payload;
         });
+         builder.addCase(addInsfrastructure.fulfilled, (state, action) => {
+              state.insfrastructure.push = action.payload;
+            });
+            builder.addCase(deleteInsfrastructure.fulfilled, (state, action) => {
+              const index = state.insfrastructure.findIndex((v) => v.id === action.payload);
+        
+              state.insfrastructure.splice(index, 1);
+            });
   },
 });
 
