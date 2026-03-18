@@ -11,9 +11,12 @@ import { Formik, useFormik } from "formik";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
-import { getDepartment } from "../../../redux/slice/department.slice";
+import { deleteDepartment, getDepartment } from "../../../redux/slice/department.slice";
 import { useDispatch, useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
+import IconButton from '@mui/material/IconButton';
+
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function Department(props) {
   const [open, setOpen] = React.useState(false);
@@ -85,6 +88,15 @@ function Department(props) {
     { field: "email", headerName: "Email", width: 130 },
     { field: "address", headerName: "Address", width: 130 },
     { field: "mobile", headerName: "Mobile no", width: 130 },
+    { field: "action", headerName: "Action",
+       width: 130,
+        renderCell: (params) => (
+        <IconButton aria-label="delete" onClick={() => dispatch(deleteDepartment(params.row.id))}> 
+        <DeleteIcon />  
+        </IconButton> 
+        )
+
+    },
   ];
 
   const paginationModel = { page: 0, pageSize: 5 };

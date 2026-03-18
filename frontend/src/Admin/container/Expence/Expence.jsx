@@ -11,8 +11,12 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
 import { date, number, object, string } from "yup";
-import { getExpence } from "../../../redux/slice/expence.slice";
-import { useDispatch } from "react-redux";
+import { deleteExpence, getExpence } from "../../../redux/slice/expence.slice";
+import { useDispatch, useSelector } from "react-redux";
+import { DataGrid } from "@mui/x-data-grid";
+import IconButton from '@mui/material/IconButton';
+
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function Expence(props) {
   const [open, setOpen] = React.useState(false);
@@ -25,11 +29,14 @@ function Expence(props) {
     setOpen(false);
   };
 
-   const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getExpence())
-  }, [])
+    dispatch(getExpence());
+  }, []);
+
+  const expence = useSelector(state => state.expence);
+    console.log(expence);
 
   let userschema = object({
     branch: string().required("Please enter name"),
@@ -56,7 +63,7 @@ function Expence(props) {
 
     validationSchema: userschema,
 
-     onSubmit: (values) => {
+    onSubmit: (values) => {
       alert(JSON.stringify(values, null, 2));
       console.log(values);
     },
@@ -112,6 +119,30 @@ function Expence(props) {
       label: "offline-payment",
     },
   ];
+
+  const columns = [
+    { field: "branch", headerName: "Branch", width: 130 },
+    { field: "payment", headerName: "Payment", width: 130 },
+    { field: "paymenttype", headerName: "Paymenttype", width: 130 },
+    { field: "email", headerName: "Email", width: 130 },
+    { field: "type", headerName: "Type", width: 130 },
+    { field: "amount", headerName: "Amount ", width: 130 },
+    { field: "date", headerName: "Date ", width: 130 },
+     { field: "action", 
+      headerName: "Action ",
+       width: 130,
+       renderCell: (params) => (
+        <IconButton aria-label="delete" onClick={() => dispatch(deleteExpence(params.row.id))}> 
+        <DeleteIcon />  
+        </IconButton> 
+        )
+
+      },
+  ];
+
+  const paginationModel = { page: 0, pageSize: 5 };
+
+
 
   return (
     <div>
@@ -270,6 +301,15 @@ function Expence(props) {
           </DialogActions>
         </Dialog>
       </React.Fragment>
+
+      <DataGrid
+        rows={expence.expence}
+        columns={columns}
+        initialState={{ pagination: { paginationModel } }}
+        pageSizeOptions={[5, 10]}
+        checkboxSelection
+        sx={{ border: 0 }}
+      />
     </div>
   );
 }

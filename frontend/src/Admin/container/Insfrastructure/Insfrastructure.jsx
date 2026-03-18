@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -13,6 +13,9 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
 import { number, object, string } from "yup";
+import { getInsfrastructure } from "../../../redux/slice/insfrastructure.slice";
+import { useDispatch, useSelector } from "react-redux";
+import { DataGrid } from "@mui/x-data-grid";
 
 function Insfrastructure(props) {
   const [open, setOpen] = React.useState(false);
@@ -24,6 +27,15 @@ function Insfrastructure(props) {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getInsfrastructure());
+  }, []);
+
+  const insfrastructure = useSelector(state => state.insfrastructure);
+    console.log(insfrastructure);
 
   let userschema = object({
     branch: string().required("Please enter branch"),
@@ -135,7 +147,27 @@ function Insfrastructure(props) {
       label: "type 3",
     },
   ];
+const columns = [
+    { field: "branch", headerName: "Branch", width: 130 },
+    { field: "vendor", headerName: "Vendor", width: 130 },
+    { field: "department", headerName: "Department", width: 130 },
+    { field: "name", headerName: "Name", width: 130 },
+    { field: "type", headerName: "Type", width: 130 },
+    { field: "description", headerName: "Description ", width: 130 },
+    { field: "price", headerName: "Price ", width: 130 },
+     { field: "action", 
+      headerName: "Action ",
+       width: 130,
+       renderCell: (params) => (
+        <IconButton aria-label="delete" onClick={() => dispatch(deleteInsfrastructure(params.row.id))}> 
+        <DeleteIcon />  
+        </IconButton> 
+        )
 
+      },
+  ];
+
+  const paginationModel = { page: 0, pageSize: 5 };
 
 
   return (
@@ -313,6 +345,15 @@ function Insfrastructure(props) {
           </DialogActions>
         </Dialog>
       </React.Fragment>
+
+      <DataGrid
+              rows={insfrastructure.insfrastructure}
+              columns={columns}
+              initialState={{ pagination: { paginationModel } }}
+              pageSizeOptions={[5, 10]}
+              checkboxSelection
+              sx={{ border: 0 }}
+            />
     </div>
   );
 }

@@ -3,22 +3,21 @@ import axios from "axios";
 
 const initialState = {
   isLoading: false,
-  department: [],
+  insfrastructure: [],
   error: false,
 };
 
-export const getDepartment = createAsyncThunk(
-  "department/getDepartment",
+export const getInsfrastructure = createAsyncThunk(
+  "insfrastructure/getInsfrastructure",
   async () => {
     const responce = await axios.get(
-      "http://localhost:3000/department/getDepartment",
+      "http://localhost:3000/insfrastructure/getInsfrastructure",
     );
     console.log(responce.data.data);
 
     return responce.data.data;
   },
 );
-
 export const addDepartment = createAsyncThunk(
   "department/addDepartment",
   async (values) => {
@@ -48,23 +47,24 @@ export const deleteDepartment = createAsyncThunk(
   },
 );
 
-export const departmentSlice = createSlice({
-  name: "department",
+export const insfrastructureSlice = createSlice({
+  name: "insfrastructure",
   initialState: initialState,
   extraReducers: (builder) => {
-    builder.addCase(getDepartment.fulfilled, (state, action) => {
+    builder.addCase(getInsfrastructure.fulfilled, (state, action) => {
       console.log(action.payload);
-      state.department = action.payload;
-    });
-    builder.addCase(addDepartment.fulfilled, (state, action) => {
-      state.department.push = action.payload;
-    });
-    builder.addCase(deleteDepartment.fulfilled, (state, action) => {
-      const index = state.department.findIndex((v) => v.id === action.payload);
 
-      state.department.splice(index, 1);
+      state.insfrastructure = action.payload;
     });
+     builder.addCase(addBranch.fulfilled, (state, action) => {
+          state.branch.push = action.payload;
+        });
+        builder.addCase(deleteBranch.fulfilled, (state, action) => {
+          const index = state.branch.findIndex((v) => v.id === action.payload);
+    
+          state.branch.splice(index, 1);
+        });
   },
 });
 
-export default departmentSlice.reducer;
+export default insfrastructureSlice.reducer;
