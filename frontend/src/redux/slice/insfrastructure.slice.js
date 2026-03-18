@@ -56,13 +56,13 @@ export const insfrastructureSlice = createSlice({
 
       state.insfrastructure = action.payload;
     });
-     builder.addCase(addBranch.fulfilled, (state, action) => {
-          state.branch.push = action.payload;
+     builder.addCase(addInsfrastructure.fulfilled, (state, action) => {
+          state.insfrastructure.push = action.payload;
         });
-        builder.addCase(deleteBranch.fulfilled, (state, action) => {
-          const index = state.branch.findIndex((v) => v.id === action.payload);
+        builder.addCase(deleteInsfrastructure.fulfilled, (state, action) => {
+          const index = state.insfrastructure.findIndex((v) => v.id === action.payload);
     
-          state.branch.splice(index, 1);
+          state.insfrastructure.splice(index, 1);
         });
   },
 });
