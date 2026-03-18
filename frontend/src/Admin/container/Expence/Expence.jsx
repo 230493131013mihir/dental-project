@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -11,6 +11,8 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
 import { date, number, object, string } from "yup";
+import { getExpence } from "../../../redux/slice/expence.slice";
+import { useDispatch } from "react-redux";
 
 function Expence(props) {
   const [open, setOpen] = React.useState(false);
@@ -22,6 +24,12 @@ function Expence(props) {
   const handleClose = () => {
     setOpen(false);
   };
+
+   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getExpence())
+  }, [])
 
   let userschema = object({
     branch: string().required("Please enter name"),

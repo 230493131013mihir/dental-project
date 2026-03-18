@@ -12,7 +12,8 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
 import { getDepartment } from "../../../redux/slice/department.slice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { DataGrid } from "@mui/x-data-grid";
 
 function Department(props) {
   const [open, setOpen] = React.useState(false);
@@ -30,6 +31,9 @@ function Department(props) {
   useEffect(() => {
     dispatch(getDepartment())
   }, [])
+
+   const department = useSelector(state => state.department);
+  console.log(department);
 
   let userschema = object({
     branch: string().required("Please select branch"),
@@ -73,6 +77,17 @@ function Department(props) {
       label: "branch3",
     },
   ];
+
+   const columns = [
+    { field: "branch", headerName: "branch", width: 130 },
+    { field: "name", headerName: "Name", width: 130 },
+    { field: "description", headerName: "Description", width: 130 },
+    { field: "email", headerName: "Email", width: 130 },
+    { field: "address", headerName: "Address", width: 130 },
+    { field: "mobile", headerName: "Mobile no", width: 130 },
+  ];
+
+  const paginationModel = { page: 0, pageSize: 5 };
 
   return (
     <div>
@@ -218,7 +233,17 @@ function Department(props) {
           </DialogActions>
         </Dialog>
       </React.Fragment>
-    </div>
+
+      <DataGrid
+              rows={department.department}
+              columns={columns}
+              initialState={{ pagination: { paginationModel } }}
+              pageSizeOptions={[5, 10]}
+              checkboxSelection
+              sx={{ border: 0 }}
+            />
+          </div>
+    
   );
 }
 
