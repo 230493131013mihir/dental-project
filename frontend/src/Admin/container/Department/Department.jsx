@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -11,6 +11,8 @@ import { Formik, useFormik } from "formik";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
+import { getDepartment } from "../../../redux/slice/department.slice";
+import { useDispatch } from "react-redux";
 
 function Department(props) {
   const [open, setOpen] = React.useState(false);
@@ -22,6 +24,12 @@ function Department(props) {
   const handleClose = () => {
     setOpen(false);
   };
+
+   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getDepartment())
+  }, [])
 
   let userschema = object({
     branch: string().required("Please select branch"),
