@@ -10,5 +10,6 @@ export const store = configureStore({
     department: departmentSlice,
     expence: expenceSlice,
     insfrastructure: insfrastructureSlice,
+    
   },
 })
