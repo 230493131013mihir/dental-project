@@ -18,21 +18,22 @@ export const addBranch = createAsyncThunk(
   "branch/addBranch",
   async (values) => {
     try {
-       
       console.log(values);
 
-      const formData = new FormData()
-     FormData.append("name",values.name);
-     FormData.append("description",values.description);
-     FormData.append("mobile_no",values.mobile_no);
-     FormData.append("email",values.email);
-     FormData.append("address",values.address);
-      FormData.append("city",values.city);
-       FormData.append("state",values.state);
-        FormData.append("branch_img",values.branch_img);
+      const formData = new FormData();
+      formData.append("name", values.name);
+      formData.append("description", values.description);
+      formData.append("mobile_no", values.mobile_no);
+      formData.append("email", values.email);
+      formData.append("address", values.address);
+      formData.append("city", values.city);
+      formData.append("state", values.state);
+      formData.append("branch_img", values.branch_img);
 
       const responce = await axios.post(
-        "http://localhost:3000/branch/addBranch",FormData);
+        "http://localhost:3000/branch/addBranch",
+        formData,
+      );
       console.log(responce);
 
       return responce.data.data;
@@ -80,17 +81,16 @@ export const branchSlice = createSlice({
     builder.addCase(addBranch.fulfilled, (state, action) => {
       state.branch.push(action.payload);
     });
-     builder.addCase(updateBranch.fulfilled, (state, action) => {
+    builder.addCase(updateBranch.fulfilled, (state, action) => {
       const index = state.branch.findIndex((v) => v.id == action.payload.id);
-   
+
       state.branch[index] = action.payload;
     });
     builder.addCase(deleteBranch.fulfilled, (state, action) => {
       const index = state.branch.findIndex((v) => v.id === action.payload);
-   
+
       state.branch.splice(index, 1);
     });
-    
   },
 });
 
