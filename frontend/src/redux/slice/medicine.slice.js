@@ -20,8 +20,35 @@ export const addMedicine = createAsyncThunk(
   "medicine/addMedicine",
   async (values) => {
     try {
+
+      console.log(values);
+
+      const formData = new FormData();
+      formData.append("name", values.name);
+      formData.append("description", values.description);
+      formData.append("mobile_no", values.mobile_no);
+      formData.append("email", values.email);
+      formData.append("address", values.address);
+      formData.append("city", values.city);
+      formData.append("state", values.state);
+
       const responce = await axios.post(
         "http://localhost:3000/medicine/addMedicine",
+        values,
+      );
+      console.log(responce);
+
+      return responce.data.data;
+    } catch (error) {}
+  },
+);
+
+export const updateBranch = createAsyncThunk(
+  "branch/updateBranch",
+  async (values) => {
+    try {
+      const responce = await axios.put(
+        `http://localhost:3000/medicine/updateMedicine/${values.id}`,
         values,
       );
       console.log(responce);
@@ -57,6 +84,11 @@ export const medicineSlice = createSlice({
          builder.addCase(addMedicine.fulfilled, (state, action) => {
               state.medicine.push(action.payload);
             });
+             builder.addCase(updateMedicine.fulfilled, (state, action) => {
+                  const index = state.medicine.findIndex((v) => v.id == action.payload.id);
+            
+                  state.medicine[index] = action.payload;
+                });
             builder.addCase(deleteMedicine.fulfilled, (state, action) => {
               const index = state.medicine.findIndex((v) => v.id === action.payload);
         

@@ -17,6 +17,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import IconButton from '@mui/material/IconButton';
 
 import DeleteIcon from '@mui/icons-material/Delete';
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
 
 function Expence(props) {
   const [open, setOpen] = React.useState(false);
@@ -37,6 +38,14 @@ function Expence(props) {
 
   const expence = useSelector(state => state.expence);
     console.log(expence);
+
+    const handleEdit = (values) => {
+    handleClose();
+    console.log(values);
+    formik.setValues(values);
+    handleClickOpen();
+    setUpdate(true);
+  };
 
   let userschema = object({
     branch_id: string().required("Please enter name"),
@@ -63,13 +72,19 @@ function Expence(props) {
 
     validationSchema: userschema,
 
-    onSubmit: (values,{resetForm}) => {
-      console.log(values);
-      handleClose()
-      resetForm()
-      dispatch(addExpence(values));
-    },
-  });
+  onSubmit: (values, { resetForm }) => {
+        console.log(values);
+       
+        if (update){
+          console.log("update data")
+          dispatch(updateExpence(values))
+        }else{
+        dispatch(updateExpence(values));
+        }
+       handleClose();
+       resetForm();
+      },
+    });
 
   console.log(formik.errors, formik.touched);
 
@@ -133,13 +148,23 @@ function Expence(props) {
      { field: "action", 
       headerName: "Action ",
        width: 130,
-       renderCell: (params) => (
-        <IconButton aria-label="delete" onClick={() => dispatch(deleteExpence(params.row.id))}> 
-        <DeleteIcon />  
-        </IconButton> 
-        )
-
-      },
+      renderCell: (params) => (
+        <>
+          <IconButton
+            aria-label="Edit"
+            onClick={() => handleEdit(params.row)}
+          >
+            <ModeEditIcon />
+          </IconButton>
+          <IconButton
+            aria-label="delete"
+            onClick={() => dispatch(deleteExpence(params.row.id))}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </>
+      ),
+    },
   ];
 
   const paginationModel = { page: 0, pageSize: 5 };

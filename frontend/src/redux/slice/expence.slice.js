@@ -8,8 +8,6 @@ const initialState = {
 };
 
 export const getExpence = createAsyncThunk("expence/getExpence", async () => {
-
-    
   const responce = await axios.get("http://localhost:3000/expence/getExpence");
   console.log(responce.data.data);
 
@@ -20,8 +18,34 @@ export const addExpence = createAsyncThunk(
   "expence/addExpence",
   async (values) => {
     try {
+      console.log(values);
+
+      const formData = new FormData();
+      formData.append("name", values.name);
+      formData.append("description", values.description);
+      formData.append("mobile_no", values.mobile_no);
+      formData.append("email", values.email);
+      formData.append("address", values.address);
+      formData.append("city", values.city);
+      formData.append("state", values.state);
+
       const responce = await axios.post(
         "http://localhost:3000/expence/addExpence",
+        values,
+      );
+      console.log(responce);
+
+      return responce.data.data;
+    } catch (error) {}
+  },
+);
+
+export const updateExpence = createAsyncThunk(
+  "expence/updateExpence",
+  async (values) => {
+    try {
+      const responce = await axios.put(
+        `http://localhost:3000/expence/updateExpence/${values.id}`,
         values,
       );
       console.log(responce);
@@ -50,18 +74,23 @@ export const expenceSlice = createSlice({
   initialState: initialState,
   extraReducers: (builder) => {
     builder.addCase(getExpence.fulfilled, (state, action) => {
-          console.log(action.payload);
-    
-          state.expence = action.payload;
-        });
-         builder.addCase(addExpence.fulfilled, (state, action) => {
-              state.expence.push(action.payload);
-            });
-            builder.addCase(deleteExpence.fulfilled, (state, action) => {
-              const index = state.expence.findIndex((v) => v.id === action.payload);
-        
-              state.expence.splice(index, 1);
-            });
+      console.log(action.payload);
+
+      state.expence = action.payload;
+    });
+    builder.addCase(addExpence.fulfilled, (state, action) => {
+      state.expence.push(action.payload);
+    });
+    builder.addCase(updateExpence.fulfilled, (state, action) => {
+      const index = state.expence.findIndex((v) => v.id == action.payload.id);
+
+      state.expence[index] = action.payload;
+    });
+    builder.addCase(deleteExpence.fulfilled, (state, action) => {
+      const index = state.expence.findIndex((v) => v.id === action.payload);
+
+      state.expence.splice(index, 1);
+    });
   },
 });
 

@@ -8,7 +8,7 @@ const router = express.Router()
 router.get('/getServices', getServices)
 
 // POST
-router.post('/addServices', addServices)
+router.post('/addServices' ,upload.single('branch_img'), addServices)
 
 // PUT (Update)
 router.put('/updateServices/:id', updateServices)

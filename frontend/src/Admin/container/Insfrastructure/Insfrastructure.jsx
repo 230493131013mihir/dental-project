@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from '@mui/icons-material/Delete';
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
 
 function Insfrastructure(props) {
   const [open, setOpen] = React.useState(false);
@@ -38,6 +39,14 @@ function Insfrastructure(props) {
 
   const insfrastructure = useSelector(state => state.insfrastructure);
     console.log(insfrastructure);
+
+    const handleEdit = (values) => {
+    handleClose();
+    console.log(values);
+    formik.setValues(values);
+    handleClickOpen();
+    setUpdate(true);
+  };
 
   let userschema = object({
     branch: string().required("Please enter branch"),
@@ -65,14 +74,19 @@ function Insfrastructure(props) {
     },
 
     validationSchema: userschema,
-
-     onSubmit: (values,{resetForm}) => {
-       console.log(values);
-       handleClose()
-       resetForm()
-       dispatch(addInsfrastructure(values));
-     },
-   });
+onSubmit: (values, { resetForm }) => {
+        console.log(values);
+       
+        if (update){
+          console.log("update data")
+          dispatch(updateInsfrastructure(values))
+        }else{
+        dispatch(updateInsfrastructure(values));
+        }
+       handleClose();
+       resetForm();
+      },
+    });
 
   console.log(formik.errors, formik.touched);
 
@@ -162,13 +176,23 @@ const columns = [
      { field: "action", 
       headerName: "Action ",
        width: 130,
-       renderCell: (params) => (
-        <IconButton aria-label="delete" onClick={() => dispatch(deleteInsfrastructure(params.row.id))}> 
-        <DeleteIcon />  
-        </IconButton> 
-        )
-
-      },
+        renderCell: (params) => (
+        <>
+          <IconButton
+            aria-label="Edit"
+            onClick={() => handleEdit(params.row)}
+          >
+            <ModeEditIcon />
+          </IconButton>
+          <IconButton
+            aria-label="delete"
+            onClick={() => dispatch(deleteInsfrastructure(params.row.id))}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </>
+      ),
+    },
   ];
 
   const paginationModel = { page: 0, pageSize: 5 };

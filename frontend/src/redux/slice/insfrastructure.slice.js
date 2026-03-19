@@ -20,8 +20,35 @@ export const addInsfrastructure = createAsyncThunk(
   "insfrastructure/addInsfrastructure",
   async (values) => {
     try {
+
+      console.log(values);
+
+      const formData = new FormData();
+      formData.append("name", values.name);
+      formData.append("description", values.description);
+      formData.append("mobile_no", values.mobile_no);
+      formData.append("email", values.email);
+      formData.append("address", values.address);
+      formData.append("city", values.city);
+      formData.append("state", values.state);
+
       const responce = await axios.post(
         "http://localhost:3000/insfrastructure/addInsfrastructure",
+        values,
+      );
+      console.log(responce);
+
+      return responce.data.data;
+    } catch (error) {}
+  },
+);
+
+export const updateBranch = createAsyncThunk(
+  "branch/updateBranch",
+  async (values) => {
+    try {
+      const responce = await axios.put(
+        `http://localhost:3000/insfrastructure/updateInsfrastructure/${values.id}`,
         values,
       );
       console.log(responce);
@@ -57,6 +84,11 @@ export const insfrastructureSlice = createSlice({
          builder.addCase(addInsfrastructure.fulfilled, (state, action) => {
               state.insfrastructure.push(action.payload);
             });
+             builder.addCase(updateInsfrastructure.fulfilled, (state, action) => {
+                  const index = state.insfrastructure.findIndex((v) => v.id == action.payload.id);
+            
+                  state.insfrastructure[index] = action.payload;
+                });
             builder.addCase(deleteInsfrastructure.fulfilled, (state, action) => {
               const index = state.insfrastructure.findIndex((v) => v.id === action.payload);
         
