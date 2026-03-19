@@ -39,9 +39,9 @@ function Expence(props) {
     console.log(expence);
 
   let userschema = object({
-    branch: string().required("Please enter name"),
-    payment: number().required("Please enter amount"),
-    paymenttype: number().required("Please select paymenttype"),
+    branch_id: string().required("Please enter name"),
+    payment_id: number().required("Please enter amount"),
+    paymenttype_id: number().required("Please select paymenttype_id"),
     type: string().required("Please Select type"),
     amount: number()
       .required("Enter amount")
@@ -52,9 +52,9 @@ function Expence(props) {
 
   const formik = useFormik({
     initialValues: {
-      branch: "",
-      payment: "",
-      paymenttype: "",
+      branch_id: "",
+      payment_id: "",
+      paymenttype_id: "",
       email: "",
       type: "",
       amount: "",
@@ -73,10 +73,10 @@ function Expence(props) {
 
   console.log(formik.errors, formik.touched);
 
-  const branch = [
+  const branch_id = [
     {
       value: "",
-      label: "--select branch--",
+      label: "--select branch_id--",
     },
     {
       value: "0",
@@ -92,14 +92,14 @@ function Expence(props) {
     },
   ];
 
-  const payment = [
+  const payment_id = [
     {
       value: "",
-      label: "select payment",
+      label: "select payment_id",
     },
     {
       value: "0",
-      label: "payment",
+      label: "payment_id",
     },
     {
       value: "1",
@@ -107,25 +107,25 @@ function Expence(props) {
     },
   ];
 
-  const paymenttype = [
+  const paymenttype_id = [
     {
       value: "",
-      label: "select payment-type",
+      label: "select payment_id-type",
     },
     {
       value: "0",
-      label: "online-payment ",
+      label: "online-payment_id ",
     },
     {
       value: "1",
-      label: "offline-payment",
+      label: "offline-payment_id",
     },
   ];
 
   const columns = [
-    { field: "branch", headerName: "Branch", width: 130 },
-    { field: "payment", headerName: "Payment", width: 130 },
-    { field: "paymenttype", headerName: "Paymenttype", width: 130 },
+    { field: "branch_id", headerName: "Branch", width: 130 },
+    { field: "payment_id", headerName: "Payment", width: 130 },
+    { field: "paymenttype_id", headerName: "Paymenttype", width: 130 },
     { field: "email", headerName: "Email", width: 130 },
     { field: "type", headerName: "Type", width: 130 },
     { field: "amount", headerName: "Amount ", width: 130 },
@@ -166,23 +166,23 @@ function Expence(props) {
           <DialogContent>
             <form onSubmit={formik.handleSubmit} id="subscription-form">
               <TextField
-                error={formik.errors.branch && formik.touched.branch}
-                id="branch"
-                name="branch"
+                error={formik.errors.branch_id && formik.touched.branch_id}
+                id="branch_id"
+                name="branch_id"
                 fullWidth
                 select
                 variant="standard"
                 label="Select Branch"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.branch}
+                value={formik.values.branch_id}
                 helperText={
-                  formik.errors.branch && formik.touched.branch
-                    ? formik.errors.branch
+                  formik.errors.branch_id && formik.touched.branch_id
+                    ? formik.errors.branch_id
                     : ""
                 }
               >
-                {branch.map((option) => (
+                {branch_id.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>
@@ -190,23 +190,23 @@ function Expence(props) {
               </TextField>
 
               <TextField
-                error={formik.errors.payment && formik.touched.payment}
-                id="payment"
-                name="payment"
+                error={formik.errors.payment_id && formik.touched.payment_id}
+                id="payment_id"
+                name="payment_id"
                 fullWidth
                 select
                 variant="standard"
-                label="Select payment"
+                label="Select payment_id"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.payment}
+                value={formik.values.payment_id}
                 helperText={
-                  formik.errors.payment && formik.touched.payment
-                    ? formik.errors.payment
+                  formik.errors.payment_id && formik.touched.payment_id
+                    ? formik.errors.payment_id
                     : ""
                 }
               >
-                {payment.map((option) => (
+                {payment_id.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>
@@ -214,23 +214,23 @@ function Expence(props) {
               </TextField>
 
               <TextField
-                error={formik.errors.paymenttype && formik.touched.paymenttype}
-                id="paymenttype"
-                name="paymenttype"
+                error={formik.errors.paymenttype_id && formik.touched.paymenttype_id}
+                id="paymenttype_id"
+                name="paymenttype_id"
                 fullWidth
                 select
                 variant="standard"
-                label="Select paymenttype"
+                label="Select paymenttype_id"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.paymenttype}
+                value={formik.values.paymenttype_id}
                 helperText={
-                  formik.errors.paymenttype && formik.touched.paymenttype
-                    ? formik.errors.paymenttype
+                  formik.errors.paymenttype_id && formik.touched.paymenttype_id
+                    ? formik.errors.paymenttype_id
                     : ""
                 }
               >
-                {paymenttype.map((option) => (
+                {paymenttype_id.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>

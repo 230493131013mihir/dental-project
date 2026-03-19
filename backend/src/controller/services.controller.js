@@ -15,7 +15,7 @@ const getServices = async (req, res) => {
         res.status(500).json({
             success: true,
             data: null,
-            message: "services not-fetched successfully",
+            message:"server not found"+ error.message,
         });
     }
 };
@@ -33,7 +33,7 @@ const addServices = async (req, res) => {
 
         res.status(200).json({
             success: true,
-            data: req.body,
+            data:  {...req.body, id: rows.insertId},
             message: "services added successfully",
         });
         console.log(rows, fields, result);

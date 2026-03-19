@@ -57,7 +57,9 @@ export const departmentSlice = createSlice({
       state.department = action.payload;
     });
     builder.addCase(addDepartment.fulfilled, (state, action) => {
-      state.department.push = action.payload;
+      console.log(action.payload);
+      
+      state.department.push(action.payload);
     });
     builder.addCase(deleteDepartment.fulfilled, (state, action) => {
       const index = state.department.findIndex((v) => v.id === action.payload);

@@ -15,7 +15,7 @@ const getExpence = async (req, res) => {
     res.status(500).json({
       success: true,
       data: null,
-      message: "expence not-fetched successfully",
+      message: "server not-fetched successfully"+ error.message,
     });
   }
 };
@@ -34,7 +34,7 @@ const addExpence = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      data: req.body,
+      data:  {...req.body, id: rows.insertId},
       message: "expence added successfully",
     });
     console.log(rows, fields, result);
@@ -43,7 +43,7 @@ const addExpence = async (req, res) => {
     res.status(500).json({
       success: true,
       data: null,
-      message: "expence not-added successfully",
+      message: "server not found"+ error.message,
     });
   }
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -10,14 +10,33 @@ import { Formik, useFormik } from "formik";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
-import { object, string } from "yup";
+import { mixed, object, string } from "yup";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addBranch, deleteBranch, getBranch } from "../../../redux/slice/branch.slice";
+import {
+  addBranch,
+  deleteBranch,
+  getBranch,
+  updateBranch,
+} from "../../../redux/slice/branch.slice";
 import { DataGrid } from "@mui/x-data-grid";
-import IconButton from '@mui/material/IconButton';
+import IconButton from "@mui/material/IconButton";
 
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from "@mui/icons-material/Delete";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
+
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
+
 
 function Branch(props) {
   const [open, setOpen] = React.useState(false);
@@ -28,7 +47,12 @@ function Branch(props) {
 
   const handleClose = () => {
     setOpen(false);
+    setUpdate(false);
   };
+
+
+   const [update,setUpdate] = useState(false)
+  console.log(update);
 
   const dispatch = useDispatch();
 
@@ -39,6 +63,13 @@ function Branch(props) {
   const branch = useSelector((state) => state.branch);
   console.log(branch);
 
+  const handleEdit = (values) => {
+    handleClose();
+    console.log(values);
+    formik.setValues(values);
+    handleClickOpen();
+    setUpdate(true);
+  };
   let userschema = object({
     name: string().required("Please enter name"),
     description: string().required("please enter description"),
@@ -49,6 +80,7 @@ function Branch(props) {
     address: string().required("Please Select address"),
     city: string().required("Please Select city"),
     state: string().required("Please Select state"),
+    branch_img: mixed().required("Please Select image"),
   });
   // console.log(userschema)
 
@@ -61,15 +93,22 @@ function Branch(props) {
       address: "",
       city: "",
       state: "",
+      branch_img: "",
     },
 
     validationSchema: userschema,
 
-    onSubmit: (values,{resetForm}) => {
+    onSubmit: (values, { resetForm }) => {
       console.log(values);
-      handleClose()
-      resetForm()
+     
+      if (update){
+        console.log("update data")
+        dispatch(updateBranch(values))
+      }else{
       dispatch(addBranch(values));
+      }
+     handleClose();
+     resetForm();
     },
   });
 
@@ -84,16 +123,29 @@ function Branch(props) {
     { field: "address", headerName: "Address", width: 130 },
     { field: "city", headerName: "City", width: 130 },
     { field: "state", headerName: "State", width: 130 },
-     { field: "action",
-       headerName: "Action", 
-        width: 130,
+    // { field: "branch_img", headerName: "branch_imgtate", width: 130 },
+    {
+      field: "action",
+      headerName: "Action",
+      width: 130,
 
-        renderCell: (params) => (
-        <IconButton aria-label="delete" onClick={() => dispatch(deleteBranch(params.row.id))}> 
-        <DeleteIcon />  
-        </IconButton> 
-        )
-      },
+      renderCell: (params) => (
+        <>
+          <IconButton
+            aria-label="Edit"
+            onClick={() => handleEdit(params.row)}
+          >
+            <ModeEditIcon />
+          </IconButton>
+          <IconButton
+            aria-label="delete"
+            onClick={() => dispatch(deleteBranch(params.row.id))}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </>
+      ),
+    },
   ];
 
   const paginationModel = { page: 0, pageSize: 5 };
@@ -102,7 +154,7 @@ function Branch(props) {
     <div>
       <Box
         sx={{
-          display: "flex",  
+          display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
         }}
@@ -244,6 +296,33 @@ function Branch(props) {
                     : ""
                 }
               />
+                <br />
+
+              <Button
+                component="label"
+                role={undefined}
+                variant="contained"
+                tabIndex={-1}
+                startIcon={<CloudUploadIcon />}
+              >
+                Upload Branch image
+                <VisuallyHiddenInput
+                  type="file"
+                  name="branch_img"
+                  // onChange={(event) => console.log(event.target.files)}
+                  multiple
+                  onChange= {(event) => formik.setFieldValue("branch_img",event.target.files[0])}
+                  onBlur={formik.handleBlur}
+                  // value={formik.values.branch_img}
+                ></VisuallyHiddenInput>
+              </Button>
+
+              <br />
+              {formik.errors.branch_img && formik.errors.branch_img ? (
+                <span className="error">please select Branch image</span>
+              ) : (
+                ""
+              )}
             </form>
           </DialogContent>
           <DialogActions>

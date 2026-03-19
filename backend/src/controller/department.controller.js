@@ -15,7 +15,7 @@ const getDepartment = async (req, res) => {
     res.status(500).json({
       success: true,
       data: null,
-      message: "department not-fetched successfully",
+      message: "department not-fetched successfully"+ error.message,
     });
   }
 };
@@ -32,7 +32,7 @@ const addDepartment = async (req, res) => {
     );
     res.status(200).json({
       success: true,
-      data: req.body,
+      data:  {...req.body, id: rows.insertId},
       message: "department added successfully",
     });
     console.log(rows, fields, result);
@@ -41,7 +41,7 @@ const addDepartment = async (req, res) => {
     res.status(500).json({
       success: true,
       data: null,
-      message: "department not-added successfully",
+      message: "Internal Server Error (addDepartment)" + error.message,
     });
   }
 };

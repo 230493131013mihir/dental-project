@@ -1365,3 +1365,7 @@ footer {
     text-decoration:underline;
     color:var(--primary-color);
 }
+
+.error{
+  color: red;
+}

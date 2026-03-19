@@ -16,7 +16,7 @@ export const getInsfrastructure = createAsyncThunk("insfrastructure/getInsfrastr
   return responce.data.data;
 });
 
-export const addExpence = createAsyncThunk(
+export const addInsfrastructure = createAsyncThunk(
   "insfrastructure/addInsfrastructure",
   async (values) => {
     try {
@@ -31,7 +31,7 @@ export const addExpence = createAsyncThunk(
   },
 );
 
-export const deleteExpence = createAsyncThunk(
+export const deleteInsfrastructure = createAsyncThunk(
   "insfrastructure/deleteInsfrastructure",
   async (id) => {
     console.log(id);
@@ -55,7 +55,7 @@ export const insfrastructureSlice = createSlice({
           state.insfrastructure = action.payload;
         });
          builder.addCase(addInsfrastructure.fulfilled, (state, action) => {
-              state.insfrastructure.push = action.payload;
+              state.insfrastructure.push(action.payload);
             });
             builder.addCase(deleteInsfrastructure.fulfilled, (state, action) => {
               const index = state.insfrastructure.findIndex((v) => v.id === action.payload);

@@ -11,7 +11,7 @@ import { Formik, useFormik } from "formik";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
-import { deleteDepartment, getDepartment } from "../../../redux/slice/department.slice";
+import { addDepartment, deleteDepartment, getDepartment } from "../../../redux/slice/department.slice";
 import { useDispatch, useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
 import IconButton from '@mui/material/IconButton';
@@ -35,11 +35,12 @@ function Department(props) {
     dispatch(getDepartment())
   }, [])
 
-   const department = useSelector(state => state.department);
+   const department = useSelector((state) => state.department);
   console.log(department);
+  //console.log(error);
 
   let userschema = object({
-    branch: string().required("Please select branch"),
+    branch_id: string().required("Please select branch_id"),
     name: string().required("Please enter name"),
     description: string().required("please enter description"),
     email: string().required("Please Select type"),
@@ -52,7 +53,7 @@ function Department(props) {
 
   const formik = useFormik({
     initialValues: {
-      branch: "",
+      branch_id: "",
       name: "",
       description: "",
       mobile: "",
@@ -62,15 +63,16 @@ function Department(props) {
 
     validationSchema: userschema,
 
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
-      console.log(values);
-    },
-  });
-
+    onSubmit: (values,{resetForm}) => {
+          console.log(values);
+          handleClose()
+          resetForm()
+          dispatch(addDepartment(values));
+        },
+      });
   console.log(formik.errors, formik.touched);
 
-  const branch = [
+  const branch_id = [
     {
       value: "1",
       label: "branch2",
@@ -82,13 +84,13 @@ function Department(props) {
   ];
 
    const columns = [
-    { field: "branch", headerName: "branch", width: 130 },
+    { field: "branch_id", headerName: "branch_id", width: 130 },
     { field: "name", headerName: "Name", width: 130 },
     { field: "description", headerName: "Description", width: 130 },
     { field: "email", headerName: "Email", width: 130 },
     { field: "address", headerName: "Address", width: 130 },
     { field: "mobile", headerName: "Mobile no", width: 130 },
-    { field: "action", headerName: "Action",
+    { field: "a   ction", headerName: "Action",
        width: 130,
         renderCell: (params) => (
         <IconButton aria-label="delete" onClick={() => dispatch(deleteDepartment(params.row.id))}> 
@@ -120,23 +122,23 @@ function Department(props) {
           <DialogContent>
             <form onSubmit={formik.handleSubmit} id="subscription-form">
               <TextField
-                error={formik.errors.branch && formik.touched.branch}
-                id="branch"
-                name="branch"
+                error={formik.errors.branch_id && formik.touched.branch_id}
+                id="branch_id"
+                name="branch_id"
                 fullWidth
                 select
                 variant="standard"
                 label="Select Branch"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.branch}
+                value={formik.values.branch_id}
                 helperText={
-                  formik.errors.branch && formik.touched.branch
-                    ? formik.errors.branch
+                  formik.errors.branch_id && formik.touched.branch_id
+                    ? formik.errors.branch_id
                     : ""
                 }
               >
-                {branch.map((option) => (
+                {branch_id.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>

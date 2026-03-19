@@ -15,7 +15,7 @@ const getInsfrastructure = async (req, res) => {
         res.status(500).json({
             success: true,
             data: null,
-            message: "insfrastructure not-fetched successfully",
+            message: "server not-fetched successfully"+ error.message,
         });
     }
 };
@@ -32,7 +32,7 @@ const addInsfrastructure = async (req, res) => {
         );
         res.status(200).json({
             success: true,
-            data: req.body,
+            data:  {...req.body, id: rows.insertId},
             message: "insfrastructure added successfully",
         });
         console.log(rows, fields, result);
@@ -41,7 +41,7 @@ const addInsfrastructure = async (req, res) => {
         res.status(500).json({
             success: true,
             data: null,
-            message: "insfrastructure not-added successfully",
+            message: "server not found"+ error.message,
         });
     }
 };

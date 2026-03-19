@@ -55,7 +55,7 @@ export const medicineSlice = createSlice({
           state.medicine = action.payload;
         });
          builder.addCase(addMedicine.fulfilled, (state, action) => {
-              state.medicine.push = action.payload;
+              state.medicine.push(action.payload);
             });
             builder.addCase(deleteMedicine.fulfilled, (state, action) => {
               const index = state.medicine.findIndex((v) => v.id === action.payload);

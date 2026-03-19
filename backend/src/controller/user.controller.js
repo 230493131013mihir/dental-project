@@ -32,7 +32,7 @@ const [rows] = await pool.query(
 );
     res.status(200).json({
       success: true,
-      data: req.body,
+      data:  {...req.body, id: rows.insertId},
       message: "user added successfully",
     });
     console.log(rows, fields, result);
@@ -41,7 +41,7 @@ const [rows] = await pool.query(
     res.status(500).json({
       success: true,
       data: null,
-      message: "user not-added successfully",
+      message: "server not found"+ error.message,
     });
   }
 };

@@ -55,7 +55,7 @@ export const expenceSlice = createSlice({
           state.expence = action.payload;
         });
          builder.addCase(addExpence.fulfilled, (state, action) => {
-              state.expence.push = action.payload;
+              state.expence.push(action.payload);
             });
             builder.addCase(deleteExpence.fulfilled, (state, action) => {
               const index = state.expence.findIndex((v) => v.id === action.payload);
