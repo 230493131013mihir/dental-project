@@ -43,8 +43,8 @@ export const addInsfrastructure = createAsyncThunk(
   },
 );
 
-export const updateBranch = createAsyncThunk(
-  "branch/updateBranch",
+export const updateInsfrastructure = createAsyncThunk(
+  "insfrastructure/updateInsfrastructure",
   async (values) => {
     try {
       const responce = await axios.put(

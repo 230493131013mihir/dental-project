@@ -17,6 +17,8 @@ import { DataGrid } from "@mui/x-data-grid";
 import IconButton from '@mui/material/IconButton';
 
 import DeleteIcon from '@mui/icons-material/Delete';
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
+
 
 function Department(props) {
   const [open, setOpen] = React.useState(false);
@@ -38,6 +40,14 @@ function Department(props) {
    const department = useSelector((state) => state.department);
   console.log(department);
   //console.log(error);
+
+    const handleEdit = (values) => {
+    handleClose();
+    console.log(values);
+    formik.setValues(values);
+    handleClickOpen();
+    setUpdate(true);
+  };
 
   let userschema = object({
     branch_id: string().required("Please select branch_id"),
@@ -63,13 +73,20 @@ function Department(props) {
 
     validationSchema: userschema,
 
-    onSubmit: (values,{resetForm}) => {
-          console.log(values);
-          handleClose()
-          resetForm()
-          dispatch(addDepartment(values));
-        },
-      });
+    onSubmit: (values, { resetForm }) => {
+      console.log(values);
+     
+      if (update){
+        console.log("update data")
+        dispatch(updateDepartment(values))
+      }else{
+      dispatch(addDepartment(values));
+      }
+     handleClose();
+     resetForm();
+    },
+  });
+
   console.log(formik.errors, formik.touched);
 
   const branch_id = [
@@ -92,11 +109,22 @@ function Department(props) {
     { field: "mobile", headerName: "Mobile no", width: 130 },
     { field: "a   ction", headerName: "Action",
        width: 130,
-        renderCell: (params) => (
-        <IconButton aria-label="delete" onClick={() => dispatch(deleteDepartment(params.row.id))}> 
-        <DeleteIcon />  
-        </IconButton> 
-        )
+       renderCell: (params) => (
+        <>
+          <IconButton
+            aria-label="Edit"
+            onClick={() => handleEdit(params.row)}
+          >
+            <ModeEditIcon />
+          </IconButton>
+          <IconButton
+            aria-label="delete"
+            onClick={() => dispatch(deleteDepartment(params.row.id))}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </>
+      ),
 
     },
   ];

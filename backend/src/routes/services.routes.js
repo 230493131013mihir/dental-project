@@ -1,6 +1,7 @@
 
 const express = require('express')
 const { addServices, getServices, updateServices, deleteServices } = require('../controller/services.controller')
+const upload = require('../middleware/upload')
 const router = express.Router()
 
 
@@ -8,7 +9,7 @@ const router = express.Router()
 router.get('/getServices', getServices)
 
 // POST
-router.post('/addServices' ,upload.single('branch_img'), addServices)
+router.post('/addServices' ,upload.single('serv_img'), addServices)
 
 // PUT (Update)
 router.put('/updateServices/:id', updateServices)

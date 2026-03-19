@@ -30,7 +30,7 @@ export const addDepartment = createAsyncThunk(
       console.log(responce);
 
       return responce.data.data;
-    } catch (error) {}
+    } catch (error) { }
   },
 );
 
@@ -58,8 +58,13 @@ export const departmentSlice = createSlice({
     });
     builder.addCase(addDepartment.fulfilled, (state, action) => {
       console.log(action.payload);
-      
+
       state.department.push(action.payload);
+    });
+    builder.addCase(updateDepartment.fulfilled, (state, action) => {
+      const index = state.department.findIndex((v) => v.id == action.payload.id);
+
+      state.department[index] = action.payload;
     });
     builder.addCase(deleteDepartment.fulfilled, (state, action) => {
       const index = state.department.findIndex((v) => v.id === action.payload);
