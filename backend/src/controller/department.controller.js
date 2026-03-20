@@ -29,7 +29,7 @@ const addDepartment = async (req, res) => {
     console.log(req.file);
 
     const [rows] = await pool.query(
-      "INSERT INTO department(branch_id, name, description, mobile, email, address,department_img) VALUES (?,?,?,?,?,?)",
+      "INSERT INTO department(branch_id, name, description, mobile, email, address,department_img) VALUES (?,?,?,?,?,?,?)",
       [branch_id, name, description, mobile, email, address, req.file.path],
     );
     res.status(200).json({
@@ -39,6 +39,7 @@ const addDepartment = async (req, res) => {
     });
     console.log(rows, fields, result);
   } catch (error) {
+
     console.log(error);
     res.status(500).json({
       success: true,
@@ -50,7 +51,7 @@ const addDepartment = async (req, res) => {
 
 const updateDepartment = async (req, res) => {
   try {
-    console.log("req.body");
+    console.log(req.body);
 
     const { branch_id, name, description, mobile, email, address } = req.body;
 
@@ -59,7 +60,7 @@ const updateDepartment = async (req, res) => {
      const [rows] = await pool.query(
       `SELECT * FROM department WHERE id=${departmentId}`,);
 
-    console.log(branch_id, name, description, mobile, email, address);
+    console.log(branch_id, name, description, mobile, email, address,departmentId,rows[0].department_img,);
 
      let fileImg = "";
         if (req.file) {
@@ -68,17 +69,17 @@ const updateDepartment = async (req, res) => {
           });
           fileImg = req.file.path;
         } else {
-          fileImg = rows[0].branch_img;
+          fileImg = rows[0].department_img;
         }
 
     await pool.query(
       "UPDATE department SET branch_id = ?,name= ?,mobile= ?,address= ?,description= ? WHERE id=?",
-      [branch_id, name, mobile, address, description, departmentId],
+      [branch_id, name, mobile, address, description,fileImg, departmentId],
     );
 
     res.status(200).json({
       success: true,
-      data: { branch_id, name, description, mobile, email, address,id:departmentId},
+      data: { branch_id, name, description, mobile, email, address,id: departmentId,},
       message: "department update successfully",
     });
      console.log(fields,results);
@@ -94,7 +95,7 @@ const updateDepartment = async (req, res) => {
 
 const deleteDepartment = async (req, res) => {
   try {
-    console.log(req.body);
+    // console.log(req.body);
     const departmentId = req.params.id;
 
      const [rows] = await pool.query(
@@ -104,6 +105,8 @@ const deleteDepartment = async (req, res) => {
     fs.unlinkSync(rows[0].department_img, (error) => {
       console.log(error);
     });
+
+
     console.log(departmentId);
 
     await pool.query(

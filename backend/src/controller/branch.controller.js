@@ -120,7 +120,6 @@ const updateBranch = async (req, res) => {
         description,
         city,
         state,
-        branch_img: fileImg,
         id: branchId,
       },
       message: "branch update successfully",

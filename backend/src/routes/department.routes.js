@@ -1,6 +1,7 @@
 
 const express = require('express')
 const { addDepartment, getDepartment, updateDepartment, deleteDepartment } = require('../controller/department.controller')
+const upload = require('../middleware/upload')
 const router = express.Router()
 
 
@@ -8,10 +9,10 @@ const router = express.Router()
 router.get('/getDepartment', getDepartment)
 
 // POST
-router.post('/addDepartment', addDepartment)
+router.post('/addDepartment',upload.single('department_img'), addDepartment)
 
 // PUT (Update)
-router.put('/updateDepartment/:id', updateDepartment)
+router.put('/updateDepartment/:id',upload.single('department_img'), updateDepartment)
 
 // DELETE
 router.delete('/deleteDepartment/:id', deleteDepartment)

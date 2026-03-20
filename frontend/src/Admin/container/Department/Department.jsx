@@ -134,12 +134,12 @@ function Department(props) {
     { field: "address", headerName: "Address", width: 130 },
     { field: "mobile", headerName: "Mobile no", width: 130 },
     {
-      field: "branch_img",
-      headerName: "branch_img",
+      field: "department_img",
+      headerName: "department_img",
       width: 130,
       renderCell: (params) => (
         <img
-          src={"http://localhost:3000/" + params.row.branch_img}
+          src={"http://localhost:3000/" + params.row.department_img}
           width={"50px"}
           height={"50px"}
         />
@@ -301,6 +301,42 @@ function Department(props) {
                     : ""
                 }
               />
+              <Button
+                component="label"
+                role={undefined}
+                variant="contained"
+                tabIndex={-1}
+                startIcon={<CloudUploadIcon />}
+              >
+                Upload department image
+                <VisuallyHiddenInput
+                  type="file"
+                  name="department_img"
+                  // onChange={(event) => console.log(event.target.files)}
+                  multiple
+                  onChange={(event) =>
+                    formik.setFieldValue("department_img", event.target.files[0])
+                  }
+                  onBlur={formik.handleBlur}
+                // value={formik.values.department_img}
+                ></VisuallyHiddenInput>
+              </Button>
+              <img
+                src={
+                  typeof formik.values.department_img === "string"
+                    ? "http://localhost:3000/" + formik.values.department_img
+                    : URL.createObjectURL(formik.values.department_img)
+                }
+                width={"50px"}
+                height={"50px"}
+              />
+
+              <br />
+              {formik.errors.department_img && formik.errors.department_img ? (
+                <span className="error">please select department image</span>
+              ) : (
+                ""
+              )}
             </form>
           </DialogContent>
           <DialogActions>

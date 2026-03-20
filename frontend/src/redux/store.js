@@ -12,6 +12,6 @@ export const store = configureStore({
     expence: expenceSlice,
     insfrastructure: insfrastructureSlice,
     medicine: medicineSlice,
-    salary: salarySlice,
+    // salary: salarySlice,
   },
 })
