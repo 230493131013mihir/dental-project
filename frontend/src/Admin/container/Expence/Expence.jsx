@@ -30,6 +30,10 @@ function Expence(props) {
     setOpen(false);
   };
 
+  const [update,setUpdate] = useState(false)
+    console.log(update);
+  
+
   const dispatch = useDispatch();
 
   useEffect(() => {

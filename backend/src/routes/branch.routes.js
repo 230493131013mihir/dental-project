@@ -12,7 +12,7 @@ router.get('/getBranch', getBranch)
 router.post('/addBranch', upload.single('branch_img'), addBranch)
 
 // PUT (Update)
-router.put('/updateBranch/:id', updateBranch)
+router.put('/updateBranch/:id' ,upload.single('branch_img'), updateBranch)
 
 // DELETE
 router.delete('/deleteBranch/:id', deleteBranch)

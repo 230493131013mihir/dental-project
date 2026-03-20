@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -13,7 +13,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
 import { number, object, string } from "yup";
-import { addInsfrastructure, deleteInsfrastructure, getInsfrastructure } from "../../../redux/slice/insfrastructure.slice";
+import { addInsfrastructure, deleteInsfrastructure, getInsfrastructure, updateInsfrastructure } from "../../../redux/slice/insfrastructure.slice";
 import { useDispatch, useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
@@ -30,6 +30,10 @@ function Insfrastructure(props) {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const [update,setUpdate] = useState(false)
+    console.log(update);
+  
 
   const dispatch = useDispatch();
 

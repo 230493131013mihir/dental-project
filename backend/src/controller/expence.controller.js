@@ -1,4 +1,5 @@
 const pool = require("../db/mysql");
+const fs = require("fs");
 
 const getExpence = async (req, res) => {
   try {
@@ -27,14 +28,16 @@ const addExpence = async (req, res) => {
     const { branch_id,payment_id,paymenttype_id,type,amount,date } =
       req.body;
 
+      console.log(req.file);
+
     const [rows, fields, result] = await pool.query(
-      "INSERT INTO expence(branch_id,payment_id,paymenttype_id,type,amount,date) VALUES(?,?,?,?,?,?)",
-      [branch_id,payment_id,paymenttype_id,type,amount,date],
+      "INSERT INTO expence(branch_id,payment_id,paymenttype_id,type,amount,date,expence_img) VALUES(?,?,?,?,?,?)",
+      [branch_id,payment_id,paymenttype_id,type,amount,date, req.file.path],
     );
 
     res.status(200).json({
       success: true,
-      data:  {...req.body, id: rows.insertId},
+      data:  {...req.body, id: rows.insertId,expence_img: req.file.path},
       message: "expence added successfully",
     });
     console.log(rows, fields, result);

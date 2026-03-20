@@ -7,20 +7,22 @@ const initialState = {
   error: false,
 };
 
-export const getMedicine = createAsyncThunk("medicine/getMedicine", async () => {
+export const getMedicine = createAsyncThunk(
+  "medicine/getMedicine",
+  async () => {
+    const responce = await axios.get(
+      "http://localhost:3000/medicine/getMedicine",
+    );
+    console.log(responce.data.data);
 
-    
-  const responce = await axios.get("http://localhost:3000/medicine/getMedicine");
-  console.log(responce.data.data);
-
-  return responce.data.data;
-});
+    return responce.data.data;
+  },
+);
 
 export const addMedicine = createAsyncThunk(
   "medicine/addMedicine",
   async (values) => {
     try {
-
       console.log(values);
 
       const formData = new FormData();
@@ -43,8 +45,8 @@ export const addMedicine = createAsyncThunk(
   },
 );
 
-export const updateBranch = createAsyncThunk(
-  "branch/updateBranch",
+export const updateMedicine = createAsyncThunk(
+  "medicine/updateMedicine",
   async (values) => {
     try {
       const responce = await axios.put(
@@ -77,23 +79,23 @@ export const medicineSlice = createSlice({
   initialState: initialState,
   extraReducers: (builder) => {
     builder.addCase(getMedicine.fulfilled, (state, action) => {
-          console.log(action.payload);
-    
-          state.medicine = action.payload;
-        });
-         builder.addCase(addMedicine.fulfilled, (state, action) => {
-              state.medicine.push(action.payload);
-            });
-             builder.addCase(updateMedicine.fulfilled, (state, action) => {
-                  const index = state.medicine.findIndex((v) => v.id == action.payload.id);
-            
-                  state.medicine[index] = action.payload;
-                });
-            builder.addCase(deleteMedicine.fulfilled, (state, action) => {
-              const index = state.medicine.findIndex((v) => v.id === action.payload);
-        
-              state.medicine.splice(index, 1);
-            });
+      console.log(action.payload);
+
+      state.medicine = action.payload;
+    });
+    builder.addCase(addMedicine.fulfilled, (state, action) => {
+      state.medicine.push(action.payload);
+    });
+    builder.addCase(updateMedicine.fulfilled, (state, action) => {
+      const index = state.medicine.findIndex((v) => v.id == action.payload.id);
+
+      state.medicine[index] = action.payload;
+    });
+    builder.addCase(deleteMedicine.fulfilled, (state, action) => {
+      const index = state.medicine.findIndex((v) => v.id === action.payload);
+
+      state.medicine.splice(index, 1);
+    });
   },
 });
 

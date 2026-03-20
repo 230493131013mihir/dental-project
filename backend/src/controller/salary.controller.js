@@ -1,4 +1,5 @@
 const pool = require("../db/mysql");
+const fs = require("fs");
 
 const getSalary = async (req, res) => {
   try {

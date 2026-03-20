@@ -26,14 +26,16 @@ const addMedicine = async (req, res) => {
 
     const { vendor_id, department_id, name, description, price, stock, expirydate } = req.body;
 
+    console.log(req.file);
+
 const [rows] = await pool.query(
-  "INSERT INTO medicine(vendor_id, department_id, name, description, price, stock, expirydate) VALUES (?,?,?,?,?,?,?)",
-  [vendor_id, department_id, name, description, price, stock, expirydate]
+  "INSERT INTO medicine(vendor_id, department_id, name, description, price, stock, expirydate,medicine_img) VALUES (?,?,?,?,?,?,?)",
+  [vendor_id, department_id, name, description, price, stock, expirydate, req.file.path]
 );
 
     res.status(200).json({
       success: true,
-      data:  {...req.body, id: rows.insertId},
+      data:  {...req.body, id: rows.insertId,medicine_img: req.file.path},
       message: "medicine added successfully",
     });
     console.log(rows, fields, result);

@@ -37,7 +37,6 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-
 function Branch(props) {
   const [open, setOpen] = React.useState(false);
 
@@ -50,8 +49,7 @@ function Branch(props) {
     setUpdate(false);
   };
 
-
-   const [update,setUpdate] = useState(false)
+  const [update, setUpdate] = useState(false);
   console.log(update);
 
   const dispatch = useDispatch();
@@ -70,6 +68,7 @@ function Branch(props) {
     handleClickOpen();
     setUpdate(true);
   };
+
   let userschema = object({
     name: string().required("Please enter name"),
     description: string().required("please enter description"),
@@ -100,15 +99,15 @@ function Branch(props) {
 
     onSubmit: (values, { resetForm }) => {
       console.log(values);
-     
-      if (update){
-        console.log("update data")
-        dispatch(updateBranch(values))
-      }else{
-      dispatch(addBranch(values));
+
+      if (update) {
+        console.log("update data");
+        dispatch(updateBranch(values));
+      } else {
+        dispatch(addBranch(values));
       }
-     handleClose();
-     resetForm();
+      handleClose();
+      resetForm();
     },
   });
 
@@ -123,7 +122,18 @@ function Branch(props) {
     { field: "address", headerName: "Address", width: 130 },
     { field: "city", headerName: "City", width: 130 },
     { field: "state", headerName: "State", width: 130 },
-    // { field: "branch_img", headerName: "branch_imgtate", width: 130 },
+    {
+      field: "branch_img",
+      headerName: "branch_img",
+      width: 130,
+      renderCell: (params) => (
+        <img
+          src={"http://localhost:3000/" + params.row.branch_img}
+          width={"50px"}
+          height={"50px"}
+        />
+      ),
+    },
     {
       field: "action",
       headerName: "Action",
@@ -131,10 +141,7 @@ function Branch(props) {
 
       renderCell: (params) => (
         <>
-          <IconButton
-            aria-label="Edit"
-            onClick={() => handleEdit(params.row)}
-          >
+          <IconButton aria-label="Edit" onClick={() => handleEdit(params.row)}>
             <ModeEditIcon />
           </IconButton>
           <IconButton
@@ -296,7 +303,7 @@ function Branch(props) {
                     : ""
                 }
               />
-                <br />
+              <br />
 
               <Button
                 component="label"
@@ -311,11 +318,22 @@ function Branch(props) {
                   name="branch_img"
                   // onChange={(event) => console.log(event.target.files)}
                   multiple
-                  onChange= {(event) => formik.setFieldValue("branch_img",event.target.files[0])}
+                  onChange={(event) =>
+                    formik.setFieldValue("branch_img", event.target.files[0])
+                  }
                   onBlur={formik.handleBlur}
                   // value={formik.values.branch_img}
                 ></VisuallyHiddenInput>
               </Button>
+              <img
+                src={
+                  typeof formik.values.branch_img === "string"
+                    ? "http://localhost:3000/" + formik.values.branch_img
+                    : URL.createObjectURL(formik.values.branch_img)
+                }
+                width={"50px"}
+                height={"50px"}
+              />
 
               <br />
               {formik.errors.branch_img && formik.errors.branch_img ? (

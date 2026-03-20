@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -11,15 +11,31 @@ import { Formik, useFormik } from "formik";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
-import { addDepartment, deleteDepartment, getDepartment } from "../../../redux/slice/department.slice";
+import {
+  addDepartment,
+  deleteDepartment,
+  getDepartment,
+  updateDepartment,
+} from "../../../redux/slice/department.slice";
 import { useDispatch, useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
-import IconButton from '@mui/material/IconButton';
+import IconButton from "@mui/material/IconButton";
 
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from "@mui/icons-material/Delete";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
-import { update } from "../../redux/slice/departmentSlice";
+import { getBranch } from "../../../redux/slice/branch.slice";
 
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
 
 function Department(props) {
   const [open, setOpen] = React.useState(false);
@@ -32,17 +48,24 @@ function Department(props) {
     setOpen(false);
   };
 
-   const dispatch = useDispatch();
+  const [update, setUpdate] = useState(false);
+  console.log(update);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getDepartment())
-  }, [])
+    dispatch(getDepartment());
+    dispatch(getBranch());
+  }, []);
 
-   const department = useSelector((state) => state.department);
-  console.log(department);
+  const department = useSelector((state) => state.department);
+
+  const branch = useSelector((state) => state.branch);
+
+  console.log(branch.branch);
   //console.log(error);
 
-    const handleEdit = (values) => {
+  const handleEdit = (values) => {
     handleClose();
     console.log(values);
     formik.setValues(values);
@@ -59,6 +82,7 @@ function Department(props) {
       .required("Please enter mobile number")
       .matches(/^[0-9]{10}$/, "Mobile number must be 10 digits"),
     address: string().required("Please Select address"),
+    department_img: mixed().required("Please Select image"),
   });
   // console.log(userschema)
 
@@ -70,21 +94,22 @@ function Department(props) {
       mobile: "",
       email: "",
       address: "",
+      department_img: "",
     },
 
     validationSchema: userschema,
 
     onSubmit: (values, { resetForm }) => {
       console.log(values);
-     
-      if (update){
-        console.log("update data")
-        dispatch(updateDepartment(values))
-      }else{
-      dispatch(addDepartment(values));
+
+      if (update) {
+        console.log("update data");
+        dispatch(updateDepartment(values));
+      } else {
+        dispatch(addDepartment(values));
       }
-     handleClose();
-     resetForm();
+      handleClose();
+      resetForm();
     },
   });
 
@@ -101,21 +126,32 @@ function Department(props) {
     },
   ];
 
-   const columns = [
+  const columns = [
     { field: "branch_id", headerName: "branch_id", width: 130 },
     { field: "name", headerName: "Name", width: 130 },
     { field: "description", headerName: "Description", width: 130 },
     { field: "email", headerName: "Email", width: 130 },
     { field: "address", headerName: "Address", width: 130 },
     { field: "mobile", headerName: "Mobile no", width: 130 },
-    { field: "a   ction", headerName: "Action",
-       width: 130,
-       renderCell: (params) => (
+    {
+      field: "branch_img",
+      headerName: "branch_img",
+      width: 130,
+      renderCell: (params) => (
+        <img
+          src={"http://localhost:3000/" + params.row.branch_img}
+          width={"50px"}
+          height={"50px"}
+        />
+      ),
+    },
+    {
+      field: "action",
+      headerName: "Action",
+      width: 130,
+      renderCell: (params) => (
         <>
-          <IconButton
-            aria-label="Edit"
-            onClick={() => handleEdit(params.row)}
-          >
+          <IconButton aria-label="Edit" onClick={() => handleEdit(params.row)}>
             <ModeEditIcon />
           </IconButton>
           <IconButton
@@ -126,7 +162,6 @@ function Department(props) {
           </IconButton>
         </>
       ),
-
     },
   ];
 
@@ -167,9 +202,9 @@ function Department(props) {
                     : ""
                 }
               >
-                {branch_id.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
+                {branch.branch.map((v) => (
+                  <MenuItem key={v.id} value={v.id}>
+                    {v.name}
                   </MenuItem>
                 ))}
               </TextField>
@@ -278,15 +313,14 @@ function Department(props) {
       </React.Fragment>
 
       <DataGrid
-              rows={department.department}
-              columns={columns}
-              initialState={{ pagination: { paginationModel } }}
-              pageSizeOptions={[5, 10]}
-              checkboxSelection
-              sx={{ border: 0 }}
-            />
-          </div>
-    
+        rows={department.department}
+        columns={columns}
+        initialState={{ pagination: { paginationModel } }}
+        pageSizeOptions={[5, 10]}
+        checkboxSelection
+        sx={{ border: 0 }}
+      />
+    </div>
   );
 }
 

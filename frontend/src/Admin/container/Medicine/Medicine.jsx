@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -15,7 +15,7 @@ import { date, number, object, string } from "yup";
 import IconButton from '@mui/material/IconButton';
 
 import DeleteIcon from '@mui/icons-material/Delete';
-import { deleteMedicine } from "../../../redux/slice/medicine.slice";
+import { deleteMedicine, getMedicine, updateMedicine } from "../../../redux/slice/medicine.slice";
 import { DataGrid } from "@mui/x-data-grid";
 import { useDispatch, useSelector } from "react-redux";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
@@ -31,6 +31,10 @@ function Medicine(props) {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const [update,setUpdate] = useState(false)
+    console.log(update);
+  
 
   const dispatch = useDispatch();
   

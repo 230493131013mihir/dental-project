@@ -23,6 +23,17 @@ export const addDepartment = createAsyncThunk(
   "department/addDepartment",
   async (values) => {
     try {
+       console.log(values);
+
+      const formData = new FormData();
+      formData.append("branch_id", values.branch_id);
+      formData.append("description", values.description);
+      formData.append("name", values.name);
+      formData.append("email", values.email);
+      formData.append("address", values.address);
+      formData.append("mobile", values.Mobile_no);
+       formData.append("department_img", values.branch_img);
+
       const responce = await axios.post(
         "http://localhost:3000/department/addDepartment",
         values,
@@ -31,6 +42,32 @@ export const addDepartment = createAsyncThunk(
 
       return responce.data.data;
     } catch (error) { }
+  },
+);
+
+export const updateDepartment = createAsyncThunk(
+  "department/updateDepartment",
+  async (values) => {
+    try {
+       console.log(values);
+
+      const formData = new FormData();
+      formData.append("branch_id", values.branch_id);
+      formData.append("description", values.description);
+      formData.append("name", values.name);
+      formData.append("email", values.email);
+      formData.append("address", values.address);
+      formData.append("mobile", values.Mobile_no);
+       formData.append("department_img", values.branch_img);
+       
+      const responce = await axios.put(
+        `http://localhost:3000/department/updateDepartment/${values.id}`,
+        values,
+      );
+      console.log(responce);
+
+      return responce.data.data;
+    } catch (error) {}
   },
 );
 

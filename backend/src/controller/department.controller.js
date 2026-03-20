@@ -1,5 +1,5 @@
 const pool = require("../db/mysql");
-
+const fs = require("fs");
 const getDepartment = async (req, res) => {
   try {
     const [rows] = await pool.query("SELECT * FROM department");
@@ -26,13 +26,15 @@ const addDepartment = async (req, res) => {
 
     const { branch_id, name, description, mobile, email, address } = req.body;
 
+    console.log(req.file);
+
     const [rows] = await pool.query(
-      "INSERT INTO department(branch_id, name, description, mobile, email, address) VALUES (?,?,?,?,?,?)",
-      [branch_id, name, description, mobile, email, address],
+      "INSERT INTO department(branch_id, name, description, mobile, email, address,department_img) VALUES (?,?,?,?,?,?)",
+      [branch_id, name, description, mobile, email, address, req.file.path],
     );
     res.status(200).json({
       success: true,
-      data:  {...req.body, id: rows.insertId},
+      data:  {...req.body, id: rows.insertId,department_img: req.file.path},
       message: "department added successfully",
     });
     console.log(rows, fields, result);
@@ -54,9 +56,22 @@ const updateDepartment = async (req, res) => {
 
     const departmentId = req.params.id;
 
+     const [rows] = await pool.query(
+      `SELECT * FROM department WHERE id=${departmentId}`,);
+
     console.log(branch_id, name, description, mobile, email, address);
 
-    const [rows] = await pool.query(
+     let fileImg = "";
+        if (req.file) {
+          fs.unlinkSync(rows[0].department_img, (error) => {
+            console.log(error);
+          });
+          fileImg = req.file.path;
+        } else {
+          fileImg = rows[0].branch_img;
+        }
+
+    await pool.query(
       "UPDATE department SET branch_id = ?,name= ?,mobile= ?,address= ?,description= ? WHERE id=?",
       [branch_id, name, mobile, address, description, departmentId],
     );
@@ -81,10 +96,18 @@ const deleteDepartment = async (req, res) => {
   try {
     console.log(req.body);
     const departmentId = req.params.id;
+
+     const [rows] = await pool.query(
+      `SELECT * FROM department WHERE id=${departmentId}`,
+    );
+
+    fs.unlinkSync(rows[0].department_img, (error) => {
+      console.log(error);
+    });
     console.log(departmentId);
 
-    const [rows, feild, result] = await pool.query(
-      "DELETE FROM department WHERE id=?",
+    await pool.query(
+      `DELETE FROM department WHERE id=${departmentId}`,
       [departmentId],
     );
 
@@ -98,7 +121,7 @@ const deleteDepartment = async (req, res) => {
     res.status(500).json({
       success: true,
       data: null,
-      message: "department not-deleted successfully",
+      message: "department not-deleted successfully"+ error.message,
     });
   }
 };

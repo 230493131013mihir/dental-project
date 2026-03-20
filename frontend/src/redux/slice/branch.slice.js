@@ -44,10 +44,23 @@ export const addBranch = createAsyncThunk(
 export const updateBranch = createAsyncThunk(
   "branch/updateBranch",
   async (values) => {
+   
+
+  
     try {
+      const formData = new FormData();
+      formData.append("name", values.name);
+      formData.append("description", values.description);
+      formData.append("mobile_no", values.mobile_no);
+      formData.append("email", values.email);
+      formData.append("address", values.address);
+      formData.append("city", values.city);
+      formData.append("state", values.state);
+      formData.append("branch_img", values.branch_img);
+
       const responce = await axios.put(
         `http://localhost:3000/branch/updateBranch/${values.id}`,
-        values,
+        formData,
       );
       console.log(responce);
 

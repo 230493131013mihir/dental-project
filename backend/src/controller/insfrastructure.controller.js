@@ -1,4 +1,5 @@
 const pool = require("../db/mysql");
+const fs = require("fs");
 
 const getInsfrastructure = async (req, res) => {
     try {
@@ -25,14 +26,14 @@ const addInsfrastructure = async (req, res) => {
         console.log(req.body);
 
         const { branch_id, department_id, type_id, vendor_id, description, name, price } = req.body;
-
+console.log(req.file);
         const [rows, fields, result] = await pool.query(
-            "INSERT INTO insfrastructure(branch_id, department_id, type_id, vendor_id, description, name, price) VALUES(?,?,?,?,?,?,?)",
-            [branch_id, department_id, type_id, vendor_id, description, name, price]
+            "INSERT INTO insfrastructure(branch_id, department_id, type_id, vendor_id, description, name, price,insfrastructure_img) VALUES(?,?,?,?,?,?,?)",
+            [branch_id, department_id, type_id, vendor_id, description, name, price, req.file.path]
         );
         res.status(200).json({
             success: true,
-            data:  {...req.body, id: rows.insertId},
+            data:  {...req.body, id: rows.insertId,insfrastructure_img: req.file.path},
             message: "insfrastructure added successfully",
         });
         console.log(rows, fields, result);
