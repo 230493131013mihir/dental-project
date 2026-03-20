@@ -36,7 +36,7 @@ export const addDepartment = createAsyncThunk(
 
       const responce = await axios.post(
         "http://localhost:3000/department/addDepartment",
-        values,
+        formData,
       );
       console.log(responce);
 
@@ -49,7 +49,7 @@ export const updateDepartment = createAsyncThunk(
   "department/updateDepartment",
   async (values) => {
     try {
-      console.log(values);
+     // console.log(values);
 
       const formData = new FormData();
       formData.append("branch_id", values.branch_id);

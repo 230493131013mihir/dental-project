@@ -73,7 +73,7 @@ const updateDepartment = async (req, res) => {
         }
 
     await pool.query(
-      "UPDATE department SET branch_id = ?,name= ?,mobile= ?,address= ?,description= ? WHERE id=?",
+      "UPDATE department SET branch_id = ?,name= ?,mobile= ?,address= ?,description= ?,department_img=? WHERE id=?",
       [branch_id, name, mobile, address, description,fileImg, departmentId],
     );
 
