@@ -34,6 +34,22 @@ export const addDepartment = createAsyncThunk(
   },
 );
 
+export const updateDepartment = createAsyncThunk(
+  "department/updateDepartment",
+  async (values) => {
+    try {
+      const responce = await axios.put(
+        `http://localhost:3000/department/updateDepartment/${values.id}`,
+        values,
+      );
+      console.log(responce);
+
+      return responce.data.data;
+    } catch (error) {}
+  },
+);
+
+
 export const deleteDepartment = createAsyncThunk(
   "department/deleteDepartment",
   async (id) => {

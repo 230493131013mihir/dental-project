@@ -11,14 +11,14 @@ import { Formik, useFormik } from "formik";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
-import { addDepartment, deleteDepartment, getDepartment } from "../../../redux/slice/department.slice";
+import { addDepartment, deleteDepartment, getDepartment, updateDepartment } from "../../../redux/slice/department.slice";
 import { useDispatch, useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
 import IconButton from '@mui/material/IconButton';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
-import { update } from "../../redux/slice/departmentSlice";
+
 
 
 function Department(props) {
