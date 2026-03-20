@@ -11,28 +11,42 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
 import { date, number, object, string } from "yup";
-import { addExpence, deleteExpence, getExpence } from "../../../redux/slice/expence.slice";
+import { addExpence, deleteExpence, getExpence, updateExpence } from "../../../redux/slice/expence.slice";
 import { useDispatch, useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
 import IconButton from '@mui/material/IconButton';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import { useState } from "react";
 
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
 function Expence(props) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
+
   };
 
   const handleClose = () => {
     setOpen(false);
+    setUpdate(false);
   };
 
-  const [update,setUpdate] = useState(false)
-    console.log(update);
-  
+  const [update, setUpdate] = useState(false)
+  console.log(update);
+
 
   const dispatch = useDispatch();
 
@@ -41,9 +55,9 @@ function Expence(props) {
   }, []);
 
   const expence = useSelector(state => state.expence);
-    console.log(expence);
+  console.log(expence);
 
-    const handleEdit = (values) => {
+  const handleEdit = (values) => {
     handleClose();
     console.log(values);
     formik.setValues(values);
@@ -72,23 +86,24 @@ function Expence(props) {
       type: "",
       amount: "",
       date: "",
+      expence_img: "",
     },
 
     validationSchema: userschema,
 
-  onSubmit: (values, { resetForm }) => {
-        console.log(values);
-       
-        if (update){
-          console.log("update data")
-          dispatch(updateExpence(values))
-        }else{
+    onSubmit: (values, { resetForm }) => {
+      console.log(values);
+
+      if (update) {
+        console.log("update data")
+        dispatch(updateExpence(values))
+      } else {
         dispatch(updateExpence(values));
-        }
-       handleClose();
-       resetForm();
-      },
-    });
+      }
+      handleClose();
+      resetForm();
+    },
+  });
 
   console.log(formik.errors, formik.touched);
 
@@ -149,9 +164,22 @@ function Expence(props) {
     { field: "type", headerName: "Type", width: 130 },
     { field: "amount", headerName: "Amount ", width: 130 },
     { field: "date", headerName: "Date ", width: 130 },
-     { field: "action", 
+    {
+      field: "expence_img",
+      headerName: "expence_img",
+      width: 130,
+      renderCell: (params) => (
+        <img
+          src={"http://localhost:3000/" + params.row.expence_img}
+          width={"50px"}
+          height={"50px"}
+        />
+      ),
+    },
+    {
+      field: "action",
       headerName: "Action ",
-       width: 130,
+      width: 130,
       renderCell: (params) => (
         <>
           <IconButton
@@ -322,6 +350,44 @@ function Expence(props) {
                     : ""
                 }
               />
+              <br />
+
+              <Button
+                component="label"
+                role={undefined}
+                variant="contained"
+                tabIndex={-1}
+                startIcon={<CloudUploadIcon />}
+              >
+                Upload expence image
+                <VisuallyHiddenInput
+                  type="file"
+                  name="expence_img"
+                  // onChange={(event) => console.log(event.target.files)}
+                  multiple
+                  onChange={(event) =>
+                    formik.setFieldValue("expence_img", event.target.files[0])
+                  }
+                  onBlur={formik.handleBlur}
+                // value={formik.values.expence_img}
+                ></VisuallyHiddenInput>
+              </Button>
+              <img
+                src={
+                  typeof formik.values.expence_img === "string"
+                    ? "http://localhost:3000/" + formik.values.expence_img
+                    : URL.createObjectURL(formik.values.expence_img)
+                }
+                width={"50px"}
+                height={"50px"}
+              />
+
+              <br />
+              {formik.errors.expence_img && formik.errors.expence_img ? (
+                <span className="error">please select expence image</span>
+              ) : (
+                ""
+              )}
             </form>
           </DialogContent>
           <DialogActions>

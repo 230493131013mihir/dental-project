@@ -21,17 +21,19 @@ export const addExpence = createAsyncThunk(
       console.log(values);
 
       const formData = new FormData();
-      formData.append("name", values.name);
-      formData.append("description", values.description);
-      formData.append("mobile_no", values.mobile_no);
+      formData.append("branch_id", values.branch_id);
+      formData.append("payment_id", values.payment_id);
+      formData.append("paymenttype_id", values.paymenttype_id);
       formData.append("email", values.email);
-      formData.append("address", values.address);
-      formData.append("city", values.city);
-      formData.append("state", values.state);
+      formData.append("type", values.type);
+      formData.append("amount", values.amount);
+      formData.append("date", values.date);
+      formData.append("expence_img", values.expence_img);
 
       const responce = await axios.post(
-        "http://localhost:3000/expence/addExpence",
-        values,
+  
+         `http://localhost:3000/expence/addExpence/${values.id}`,
+        formData,
       );
       console.log(responce);
 

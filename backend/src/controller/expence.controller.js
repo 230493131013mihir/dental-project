@@ -16,7 +16,7 @@ const getExpence = async (req, res) => {
     res.status(500).json({
       success: true,
       data: null,
-      message: "server not-fetched successfully"+ error.message,
+      message: "server not-fetched successfully" + error.message,
     });
   }
 };
@@ -25,28 +25,28 @@ const addExpence = async (req, res) => {
   try {
     console.log(req.body);
 
-    const { branch_id,payment_id,paymenttype_id,type,amount,date } =
+    const { branch_id, payment_id, paymenttype_id, type, amount, date } =
       req.body;
 
-      console.log(req.file);
+    console.log(req.file);
 
     const [rows, fields, result] = await pool.query(
-      "INSERT INTO expence(branch_id,payment_id,paymenttype_id,type,amount,date,expence_img) VALUES(?,?,?,?,?,?)",
-      [branch_id,payment_id,paymenttype_id,type,amount,date, req.file.path],
+      "INSERT INTO expence(branch_id,payment_id,paymenttype_id,type,amount,date,expence_img) VALUES(?,?,?,?,?,?,?)",
+      [branch_id, payment_id, paymenttype_id, type, amount, date, req.file.path],
     );
 
     res.status(200).json({
       success: true,
-      data:  {...req.body, id: rows.insertId,expence_img: req.file.path},
+      data: { ...req.body, id: rows.insertId, expence_img: req.file.path },
       message: "expence added successfully",
     });
     console.log(rows, fields, result);
   } catch (error) {
-     console.log(error);
+    console.log(error);
     res.status(500).json({
       success: true,
       data: null,
-      message: "server not found"+ error.message,
+      message: "server not found" + error.message,
     });
   }
 };
@@ -55,25 +55,38 @@ const updateExpence = async (req, res) => {
   try {
     console.log("req.body");
 
-    const { branch_id,payment_id,paymenttype_id,type,amount,date} = req.body;
+    const { branch_id, payment_id, paymenttype_id, type, amount, date } = req.body;
 
     const expenceId = req.params.id;
 
-    console.log(branch_id,payment_id,paymenttype_id,type,amount,date);
-
     const [rows] = await pool.query(
-      "UPDATE expence SET branch_id = ?,payment_id= ?,paymenttype_id= ?,type= ?,amount= ?,date= ? WHERE id=?",
-      [branch_id, payment_id, paymenttype_id, type, amount, date],
+      `SELECT * FROM expence WHERE id=${expenceId}`,
+    );
+
+    console.log(branch_id, payment_id, paymenttype_id, type, amount, date, rows[0].branch_img,);
+    let fileImg = "";
+    if (req.file) {
+      fs.unlinkSync(rows[0].expence_img, (error) => {
+        console.log(error);
+      });
+      fileImg = req.file.path;
+    } else {
+      fileImg = rows[0].branch_img;
+    }
+
+    await pool.query(
+      "UPDATE expence SET branch_id = ?,payment_id= ?,paymenttype_id= ?,type= ?,amount= ?,date= ?,expence_img=? WHERE id=?",
+      [branch_id, payment_id, paymenttype_id, type, amount, date, fileImg, expenceId],
     );
 
     res.status(200).json({
       success: true,
-      data: { branch_id,payment_id,paymenttype_id,type,amount,date},
+      data: { branch_id, payment_id, paymenttype_id, type, amount, date, id: expenceId },
       message: "expence update successfully",
     });
 
-     console.log(fields,results);
-     
+    console.log(fields);
+
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -90,8 +103,18 @@ const deleteExpence = async (req, res) => {
     const expenceId = req.params.id;
     console.log(expenceId);
 
-    const [rows, feild, result] = await pool.query(
-      "DELETE FROM expence WHERE id=?",
+    const [rows] = await pool.query(
+      `SELECT * FROM expence WHERE id=${expenceId}`,
+    );
+
+        fs.unlinkSync(rows[0].expence_img, (error) => {
+          console.log(error);
+        });
+
+        console.log(expenceId);
+
+    await pool.query(
+      `DELETE FROM expence WHERE id=${expenceId}`,
       [expenceId],
     );
 
