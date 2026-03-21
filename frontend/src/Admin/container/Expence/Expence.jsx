@@ -10,7 +10,7 @@ import { Formik, useFormik } from "formik";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
-import { date, number, object, string } from "yup";
+import { date, mixed, number, object, string } from "yup";
 import { addExpence, deleteExpence, getExpence, updateExpence } from "../../../redux/slice/expence.slice";
 import { useDispatch, useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
@@ -57,6 +57,10 @@ function Expence(props) {
   const expence = useSelector(state => state.expence);
   console.log(expence);
 
+  const branch = useSelector((state) => state.branch);
+  
+    console.log(branch.branch);
+
   const handleEdit = (values) => {
     handleClose();
     console.log(values);
@@ -74,6 +78,8 @@ function Expence(props) {
       .required("Enter amount")
       .positive("Amount must be greater than 0"),
     date: date().required("Please Select date"),
+        expence_img: mixed().required("Please Select image"),
+    
   });
   // console.log(userschema)
 
@@ -239,9 +245,9 @@ function Expence(props) {
                     : ""
                 }
               >
-                {branch_id.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
+                {branch_id.map((v) => (
+                  <MenuItem key={v.id} value={v.id}>
+                    {v.name}
                   </MenuItem>
                 ))}
               </TextField>

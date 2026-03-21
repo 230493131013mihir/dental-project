@@ -9,10 +9,10 @@ const router = express.Router()
 router.get('/getExpence', getExpence)
 
 // POST
-router.post('/addExpence', upload.single('branch_img'), addExpence)
+router.post('/addExpence', upload.single('expence_img'), addExpence)
 
 // PUT (Update)
-router.put('/updateExpence/:id', upload.single('branch_img'), updateExpence)
+router.put('/updateExpence/:id', upload.single('expence_img'), updateExpence)
 
 // DELETE
 router.delete('/deleteExpence/:id', deleteExpence)

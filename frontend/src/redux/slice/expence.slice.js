@@ -32,7 +32,7 @@ export const addExpence = createAsyncThunk(
 
       const responce = await axios.post(
   
-         `http://localhost:3000/expence/addExpence/${values.id}`,
+         "http://localhost:3000/expence/addExpence",
         formData,
       );
       console.log(responce);
@@ -45,10 +45,22 @@ export const addExpence = createAsyncThunk(
 export const updateExpence = createAsyncThunk(
   "expence/updateExpence",
   async (values) => {
+
     try {
+
+            const formData = new FormData();
+      formData.append("branch_id", values.branch_id);
+      formData.append("payment_id", values.payment_id);
+      formData.append("paymenttype_id", values.paymenttype_id);
+      formData.append("email", values.email);
+      formData.append("type", values.type);
+      formData.append("amount", values.amount);
+      formData.append("date", values.date);
+      formData.append("expence_img", values.expence_img);
+
       const responce = await axios.put(
         `http://localhost:3000/expence/updateExpence/${values.id}`,
-        values,
+        formData,
       );
       console.log(responce);
 
@@ -77,8 +89,8 @@ export const expenceSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getExpence.fulfilled, (state, action) => {
       console.log(action.payload);
-
       state.expence = action.payload;
+
     });
     builder.addCase(addExpence.fulfilled, (state, action) => {
       state.expence.push(action.payload);

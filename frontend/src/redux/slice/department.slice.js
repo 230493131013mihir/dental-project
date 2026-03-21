@@ -32,7 +32,7 @@ export const addDepartment = createAsyncThunk(
       formData.append("email", values.email);
       formData.append("address", values.address);
       formData.append("mobile", values.Mobile_no);
-      formData.append("department_img", values.branch_img);
+      formData.append("department_img", values.department_img);
 
       const responce = await axios.post(
         "http://localhost:3000/department/addDepartment",
@@ -49,7 +49,7 @@ export const updateDepartment = createAsyncThunk(
   "department/updateDepartment",
   async (values) => {
     try {
-     // console.log(values);
+      // console.log(values);
 
       const formData = new FormData();
       formData.append("branch_id", values.branch_id);
@@ -62,7 +62,7 @@ export const updateDepartment = createAsyncThunk(
 
       const responce = await axios.put(
         `http://localhost:3000/department/updateDepartment/${values.id}`,
-        values,
+        formData,
       );
       console.log(responce);
 
@@ -94,9 +94,9 @@ export const departmentSlice = createSlice({
       state.department = action.payload;
     });
     builder.addCase(addDepartment.fulfilled, (state, action) => {
-      console.log(action.payload);
-
+      // console.log(action.payload);
       state.department.push(action.payload);
+
     });
     builder.addCase(updateDepartment.fulfilled, (state, action) => {
       const index = state.department.findIndex((v) => v.id == action.payload.id);

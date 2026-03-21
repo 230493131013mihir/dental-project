@@ -318,7 +318,7 @@ function Department(props) {
                     formik.setFieldValue("department_img", event.target.files[0])
                   }
                   onBlur={formik.handleBlur}
-                // value={formik.values.department_img}
+                //  value={formik.values.department_img}
                 ></VisuallyHiddenInput>
               </Button>
               <img
@@ -327,6 +327,13 @@ function Department(props) {
                     ? "http://localhost:3000/" + formik.values.department_img
                     : URL.createObjectURL(formik.values.department_img)
                 }
+//                 src={
+//   formik.values.department_img instanceof File
+//     ? URL.createObjectURL(formik.values.department_img)
+//     : typeof formik.values.department_img === "string"
+//     ? "http://localhost:3000/" + formik.values.department_img
+//     : ""
+// }
                 width={"50px"}
                 height={"50px"}
               />
