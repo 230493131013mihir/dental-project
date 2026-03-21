@@ -13,6 +13,19 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
 import { number, object, string } from "yup";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addSalary,
+  deleteSalary,
+  getSalary,
+  updateSalary,
+} from "../../../redux/slice/salary.slice";
+import { useEffect, useState } from "react";
+import { DataGrid } from "@mui/x-data-grid";
+import IconButton from "@mui/material/IconButton";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { addBranch, updateBranch } from "../../../redux/slice/branch.slice";
 
 function Salary(props) {
   const [open, setOpen] = React.useState(false);
@@ -23,11 +36,30 @@ function Salary(props) {
 
   const handleClose = () => {
     setOpen(false);
+    setUpdate(false);
   };
 
+  const [update, setUpdate] = useState(false);
+  console.log(update);
+
+const dispatch = useDispatch();
+
+useEffect(() => {
+  dispatch(getSalary());
+}, []);
+
+const salary = useSelector((state) => state.salary);
+
+const handleEdit = (values) => {
+  handleClose();
+  formik.setValues(values);
+  handleClickOpen();
+  setUpdate(true);
+};
+
   let userschema = object({
-    user: string().required("Please select user"),
-    payment: number().required("Please enter amount"),
+    user_id: string().required("Please select user"),
+    payment_id: number().required("Please enter amount"),
     paymenttype: number().required("Please select paymenttype"),
     status: string().required("Please Select status"),
     amount: number()
@@ -39,8 +71,8 @@ function Salary(props) {
 
   const formik = useFormik({
     initialValues: {
-      user: "",
-      payment: "",
+      user_id: "",
+      payment_id: "",
       paymenttype: "",
       status: "",
       amount: "",
@@ -50,13 +82,48 @@ function Salary(props) {
 
     validationSchema: userschema,
 
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: (values, { resetForm }) => {
       console.log(values);
+
+      if (update) {
+        console.log("update data");
+        dispatch(updateBranch(values));
+      } else {
+        dispatch(addBranch(values));
+      }
+      handleClose();
+      resetForm();
     },
   });
 
   console.log(formik.errors, formik.touched);
+
+  const columns = [
+  { field: "user_id", headerName: "User", width: 130 },
+  { field: "payment_id", headerName: "Payment", width: 130 },
+  { field: "paymenttype", headerName: "Payment Type", width: 130 },
+  { field: "status", headerName: "Status", width: 130 },
+  { field: "workingdays", headerName: "Working Days", width: 130 },
+  { field: "amount", headerName: "Amount", width: 130 },
+  {
+    field: "action",
+    headerName: "Action",
+    width: 130,
+    renderCell: (params) => (
+      <>
+        <IconButton onClick={() => handleEdit(params.row)}>
+          <ModeEditIcon />
+        </IconButton>
+        <IconButton
+          onClick={() => dispatch(deleteSalary(params.row.id))}
+        >
+          <DeleteIcon />
+        </IconButton>
+      </>
+    ),
+  },
+];
+  const paginationModel = { page: 0, pageSize: 5 };
 
   const user = [
     {
@@ -242,6 +309,18 @@ function Salary(props) {
           </DialogActions>
         </Dialog>
       </React.Fragment>
+
+      
+            <DataGrid
+              rows={salary  .salary }
+              columns={columns}
+              initialState={{ pagination: { paginationModel } }}
+              pageSizeOptions={[5, 10]}
+              checkboxSelection
+              sx={{ border: 0 }}
+            />
+
+      
     </div>
   );
 }
