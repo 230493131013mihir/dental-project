@@ -6,11 +6,25 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
-import { Formik, useFormik } from"formik";
+import { Formik, useFormik } from "formik";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
 import { date, number, object, string } from "yup";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    addBranch,
+    deleteBranch,
+    getBranch,
+    updateBranch,
+} from "../../../redux/slice/timeslot.slice";
+import { DataGrid } from "@mui/x-data-grid";
+import IconButton from "@mui/material/IconButton";
+
+import DeleteIcon from "@mui/icons-material/Delete";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import { addTimeslot, getTimeslot, updateTimeslot } from "../../../../../backend/src/controller/timeslot.controller";
 
 function Timeslot(props) {
     const [open, setOpen] = React.useState(false);
@@ -21,6 +35,26 @@ function Timeslot(props) {
 
     const handleClose = () => {
         setOpen(false);
+    };
+
+    const [update, setUpdate] = useState(false);
+    console.log(update);
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getTimeslot());
+    }, []);
+
+    const timeslot = useSelector((state) => state.timeslot);
+    console.log(timeslot);
+
+    const handleEdit = (values) => {
+        handleClose();
+        console.log(values);
+        formik.setValues(values);
+        handleClickOpen();
+        setUpdate(true);
     };
 
     let userschema = object({
@@ -40,10 +74,17 @@ function Timeslot(props) {
         },
 
         validationSchema: userschema,
-
-        onSubmit: (values) => {
-            alert(JSON.stringify(values, null, 2));
+        onSubmit: (values, { resetForm }) => {
             console.log(values);
+
+            if (update) {
+                console.log("update data");
+                dispatch(updateTimeslot(values));
+            } else {
+                dispatch(addTimeslot(values));
+            }
+            handleClose();
+            resetForm();
         },
     });
 
@@ -68,6 +109,34 @@ function Timeslot(props) {
         },
     ];
 
+    const columns = [
+        { field: "user_id", headerName: "User", width: 130 },
+        { field: "date", headerName: "Date", width: 130 },
+        { field: "startdate", headerName: "Start Date", width: 130 },
+        { field: "enddate", headerName: "End Date", width: 130 },
+
+        {
+            field: "action",
+            headerName: "Action",
+            width: 130,
+
+            renderCell: (params) => (
+                <>
+                    <IconButton aria-label="Edit" onClick={() => handleEdit(params.row)}>
+                        <ModeEditIcon />
+                    </IconButton>
+                    <IconButton
+                        aria-label="delete"
+                        onClick={() => dispatch(deleteTimeslot(params.row.id))}
+                    >
+                        <DeleteIcon />
+                    </IconButton>
+                </>
+            ),
+        },
+    ];
+
+    const paginationModel = { page: 0, pageSize: 5 };
 
 
     return (
@@ -177,6 +246,15 @@ function Timeslot(props) {
                     </DialogActions>
                 </Dialog>
             </React.Fragment>
+
+            <DataGrid
+                rows={timeslot.timeslot}
+                columns={columns}
+                initialState={{ pagination: { paginationModel } }}
+                pageSizeOptions={[5, 10]}
+                checkboxSelection
+                sx={{ border: 0 }}
+            />
         </div>
     );
 }

@@ -12,7 +12,32 @@ import { Formik, useFormik } from "formik";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
-import { number, object, string } from "yup";
+import { number, object, string,mixed } from "yup";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addBranch,
+  deleteBranch,
+  getBranch,
+  updateBranch,
+} from "../../../redux/slice/branch.slice";
+import { DataGrid } from "@mui/x-data-grid";
+import IconButton from "@mui/material/IconButton";
+
+import DeleteIcon from "@mui/icons-material/Delete";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
+
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
 
 
 function Vendor(props) {
@@ -24,7 +49,30 @@ function Vendor(props) {
 
   const handleClose = () => {
     setOpen(false);
+    setUpdate(false);
   };
+
+  const [update, setUpdate] = useState(false);
+  console.log(update);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getVendor());
+  }, []);
+
+  const vendor = useSelector((state) => state.vendor);
+  console.log(vendor);
+
+
+  const handleEdit = (values) => {
+    handleClose();
+    console.log(values);
+    formik.setValues(values);
+    handleClickOpen();
+    setUpdate(true);
+  };
+
 
   let userschema = object({
     name: string().required("Please Select name"),
@@ -35,6 +83,8 @@ function Vendor(props) {
       .matches(/^[0-9]{10}$/, "Mobile number must be 10 digits"),
     address: string().required("Please Select address"),
     gstno: number().required("Please Select number"),
+        vendor_img: mixed().required("Please Select image"),
+    
 
   });
   // console.log(userschema)
@@ -48,17 +98,68 @@ function Vendor(props) {
       mobile: "",
       address: "",
       gstno: "",
+      vendor_img: "",
     },
 
     validationSchema: userschema,
 
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: (values, { resetForm }) => {
       console.log(values);
+
+      if (update) {
+        console.log("update data");
+        dispatch(updateVendor(values));
+      } else {
+        dispatch(addVendor(values));
+      }
+      handleClose();
+      resetForm();
     },
   });
 
   console.log(formik.errors, formik.touched);
+
+  const columns = [
+  { field: "name", headerName: "Name", width: 130 },
+  { field: "address", headerName: "Address", width: 130 },
+  { field: "companyname", headerName: "Company", width: 130 },
+  { field: "mobile", headerName: "Mobile", width: 130 },
+  { field: "email", headerName: "Email", width: 130 },
+  { field: "gstno", headerName: "GST No", width: 130 },
+
+  {
+    field: "vendor_img",
+    headerName: "vendor_img",
+    width: 130,
+    renderCell: (params) => (
+      <img
+        src={"http://localhost:3000/" + params.row.vendor_img}
+        width={"50px"}
+        height={"50px"}
+      />
+    ),
+  },
+
+  {
+    field: "action",
+    headerName: "Action",
+    width: 130,
+    renderCell: (params) => (
+      <>
+        <IconButton onClick={() => handleEdit(params.row)}>
+          <ModeEditIcon />
+        </IconButton>
+        <IconButton onClick={() => dispatch(deleteVendor(params.row.id))}>
+          <DeleteIcon />
+        </IconButton>
+      </>
+    ),
+  },
+];
+
+const paginationModel = { page: 0, pageSize: 5 };
+
+
 
   return (
     <div>

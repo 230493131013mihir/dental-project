@@ -10,7 +10,32 @@ import { Formik, useFormik } from "formik";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
-import { date, number, object, string } from "yup";
+import { date, mixed, number, object, string } from "yup";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addBranch,
+  deleteBranch,
+  getBranch,
+  updateBranch,
+} from "../../../redux/slice/branch.slice";
+import { DataGrid } from "@mui/x-data-grid";
+import IconButton from "@mui/material/IconButton";
+
+import DeleteIcon from "@mui/icons-material/Delete";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
+
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
 
 function User(props) {
   const [open, setOpen] = React.useState(false);
@@ -23,6 +48,30 @@ function User(props) {
     setOpen(false);
   };
 
+    const [update, setUpdate] = useState(false);
+    console.log(update);
+  
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getUser());
+      }, []);
+
+      const user = useSelector((state) => state.user);
+        console.log(user);
+      
+    
+
+  
+
+  const handleEdit = (values) => {
+    handleClose();
+    console.log(values);
+    formik.setValues(values);
+    handleClickOpen();
+    setUpdate(true);
+  };
+
   let userschema = object({
     branch: string().required("Please enter branch"),
     role: string().required("Please select role"),
@@ -32,6 +81,8 @@ function User(props) {
     qualification: string().required("Please Select qualification"),
     dob: date().required("Please Select date"),
     email: string().required("Please Select type"),
+        user_img: mixed().required("Please Select image"),
+    
 
   });
 
@@ -45,17 +96,71 @@ function User(props) {
       qualification: "",
       dob: "",
       email: "",
+      user_img: "",
     },
 
     validationSchema: userschema,
 
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
-      console.log(values);
-    },
-  });
+    onSubmit: (values, { resetForm }) => {
+          console.log(values);
+    
+          if (update) {
+            console.log("update data");
+            dispatch(updateUser(values));
+          } else {
+            dispatch(addUser(values));
+          }
+          handleClose();
+          resetForm();
+        },
+      });
+    
 
   console.log(formik.errors, formik.touched);
+
+  const columns = [
+  { field: "branch_id", headerName: "Branch", width: 130 },
+  { field: "department_id", headerName: "Department", width: 130 },
+  { field: "role_id", headerName: "Role", width: 130 },
+  { field: "name", headerName: "Name", width: 130 },
+  { field: "dob", headerName: "DOB", width: 130 },
+  { field: "email", headerName: "Email", width: 130 },
+  { field: "qualification", headerName: "Qualification", width: 130 },
+  { field: "address", headerName: "Address", width: 130 },
+
+  {
+    field: "user_img",
+    headerName: "user_img",
+    width: 130,
+    renderCell: (params) => (
+      <img
+        src={"http://localhost:3000/" + params.row.user_img}
+        width={"50px"}
+        height={"50px"}
+      />
+    ),
+  },
+
+  {
+    field: "action",
+    headerName: "Action",
+    width: 130,
+    renderCell: (params) => (
+      <>
+        <IconButton onClick={() => handleEdit(params.row)}>
+          <ModeEditIcon />
+        </IconButton>
+        <IconButton onClick={() => dispatch(deleteUser(params.row.id))}>
+          <DeleteIcon />
+        </IconButton>
+      </>
+    ),
+  },
+];
+
+const paginationModel = { page: 0, pageSize: 5 };
+
+
 
   const branch = [
     {
@@ -302,6 +407,17 @@ function User(props) {
           </DialogActions>
         </Dialog>
       </React.Fragment>
+
+      <DataGrid
+  rows={user.user}
+  columns={columns}
+  initialState={{ pagination: { paginationModel } }}
+  pageSizeOptions={[5, 10]}
+  checkboxSelection
+  sx={{ border: 0 }}
+/>
+
+
     </div>
   );
 }

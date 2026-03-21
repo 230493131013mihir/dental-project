@@ -10,7 +10,53 @@ import { Formik, useFormik } from "formik";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
-import { date, number, object, string } from "yup";
+import { date, number, object, string,mixed } from "yup";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addBranch,
+  deleteBranch,
+  getBranch,
+  updateBranch,
+} from "../../../redux/slice/branch.slice";
+import { DataGrid } from "@mui/x-data-grid";
+import IconButton from "@mui/material/IconButton";
+
+import DeleteIcon from "@mui/icons-material/Delete";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
+
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
+
+const [update, setUpdate] = useState(false);
+  console.log(update);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getTreatment());
+  }, []);
+
+  const treatment = useSelector((state) => state.treatment);
+  console.log(treatment);
+
+  const handleEdit = (values) => {
+    handleClose();
+    console.log(values);
+    formik.setValues(values);
+    handleClickOpen();
+    setUpdate(true);
+  };
+
 
 function Treatment(props) {
     const [open, setOpen] = React.useState(false);
@@ -21,6 +67,8 @@ function Treatment(props) {
 
     const handleClose = () => {
         setOpen(false);
+            setUpdate(false);
+
     };
 
     let userschema = object({
@@ -29,6 +77,7 @@ function Treatment(props) {
         amount: number().required("Please Select startdate"),
         prescription: string().required("Please Select prescription"),
         disease: string().required("Please Select disease"),
+        Treatment_img: mixed().required("Please Select image"),
 
     });
     // console.log(userschema)
@@ -40,17 +89,69 @@ function Treatment(props) {
             prescription: "",
             disease: "",
             date4: "",
+            Treatment_img: "",
         },
 
         validationSchema: userschema,
+    onSubmit: (values, { resetForm }) => {
+      console.log(values);
 
-        onSubmit: (values) => {
-            alert(JSON.stringify(values, null, 2));
-            console.log(values);
-        },
-    });
+      if (update) {
+        console.log("update data");
+        dispatch(updateTreatment(values));
+      } else {
+        dispatch(addTreatment(values));
+      }
+      handleClose();
+      resetForm();
+    },
+  });
 
     console.log(formik.errors, formik.touched);
+
+    const columns = [
+  { field: "appointment_id", headerName: "Appointment", width: 130 },
+  { field: "disease", headerName: "Disease", width: 130 },
+  { field: "date", headerName: "Date", width: 130 },
+  { field: "prescription", headerName: "Prescription", width: 130 },
+  { field: "amount", headerName: "Amount", width: 130 },
+
+  {
+    field: "treatment_img",
+    headerName: "treatment_img",
+    width: 130,
+    renderCell: (params) => (
+      <img
+        src={"http://localhost:3000/" + params.row.treatment_img}
+        width={"50px"}
+        height={"50px"}
+      />
+    ),
+  },
+
+  {
+    field: "action",
+    headerName: "Action",
+    width: 130,
+
+    renderCell: (params) => (
+      <>
+        <IconButton aria-label="Edit" onClick={() => handleEdit(params.row)}>
+          <ModeEditIcon />
+        </IconButton>
+        <IconButton
+          aria-label="delete"
+          onClick={() => dispatch(deleteTreatment(params.row.id))}
+        >
+          <DeleteIcon />
+        </IconButton>
+      </>
+    ),
+  },
+];
+
+const paginationModel = { page: 0, pageSize: 5 };
+
 
     const date4 = [
         {
@@ -248,6 +349,18 @@ function Treatment(props) {
                     </DialogActions>
                 </Dialog>
             </React.Fragment>
+
+            <DataGrid
+  rows={treatment.treatment}
+  columns={columns}
+  initialState={{ pagination: { paginationModel } }}
+  pageSizeOptions={[5, 10]}
+  checkboxSelection
+  sx={{ border: 0 }}
+/>
+
+
+
         </div>
     );
 }
