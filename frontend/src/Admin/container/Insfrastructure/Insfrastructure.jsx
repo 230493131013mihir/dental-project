@@ -35,6 +35,7 @@ function Insfrastructure(props) {
     console.log(update);
   
 
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -44,6 +45,9 @@ function Insfrastructure(props) {
   const insfrastructure = useSelector(state => state.insfrastructure);
     console.log(insfrastructure);
 
+      // const branch = useSelector((state) => state.branch);
+    
+      // console.log(branch.branch);
     const handleEdit = (values) => {
     handleClose();
     console.log(values);
@@ -53,27 +57,27 @@ function Insfrastructure(props) {
   };
 
   let userschema = object({
-    branch: string().required("Please enter branch"),
-    vendor: string().required("Please enter vendor"),
-    department: string().required("Please enter department"),
+    branch_id: string().required("Please enter branch_id"),
+    vendor_id: string().required("Please enter vendor_id"),
+    department_id: string().required("Please enter department_id"),
     name: string().required("Please Select name"),
     description: string().required("Please Select description"),
     price: number()
       .required("Enter amount")
       .positive("Amount must be greater than 0"),
-    type: string().required("Please Select type")
+    type_id: string().required("Please Select type")
 
   });
 
   const formik = useFormik({
     initialValues: {
-      branch: "",
-      vendor: "",
-      department: "",
+      branch_id: "",
+      vendor_id: "",
+      department_id: "",
       name: "",
       description: "",
       price: "",
-      type: "",
+      type_id: "",
       
     },
 
@@ -85,7 +89,7 @@ onSubmit: (values, { resetForm }) => {
           console.log("update data")
           dispatch(updateInsfrastructure(values))
         }else{
-        dispatch(updateInsfrastructure(values));
+        dispatch(addInsfrastructure(values));
         }
        handleClose();
        resetForm();
@@ -94,7 +98,7 @@ onSubmit: (values, { resetForm }) => {
 
   console.log(formik.errors, formik.touched);
 
-  const branch = [
+  const branch_id = [
     {
       value: "",
       label: "-- Select Branch --",
@@ -113,7 +117,7 @@ onSubmit: (values, { resetForm }) => {
     },
   ];
 
-  const vendor = [
+  const vendor_id = [
     {
       value: "",
       label: "-- Select Vendor --",
@@ -132,7 +136,7 @@ onSubmit: (values, { resetForm }) => {
     },
   ];
 
-  const department = [
+  const department_id = [
     {
       value: "",
       label: "-- Select Department --",
@@ -151,7 +155,7 @@ onSubmit: (values, { resetForm }) => {
     },
   ];
 
-  const type = [
+  const type_id = [
     {
       value: "",
       label: "-- Select type --",
@@ -170,11 +174,11 @@ onSubmit: (values, { resetForm }) => {
     },
   ];
 const columns = [
-    { field: "branch", headerName: "Branch", width: 130 },
-    { field: "vendor", headerName: "Vendor", width: 130 },
-    { field: "department", headerName: "Department", width: 130 },
+    { field: "branch_id", headerName: "branch_id", width: 130 },
+    { field: "vendor_id", headerName: "vendor_id", width: 130 },
+    { field: "department_id", headerName: "department_id", width: 130 },
     { field: "name", headerName: "Name", width: 130 },
-    { field: "type", headerName: "Type", width: 130 },
+    { field: "type_id", headerName: "type_id", width: 130 },
     { field: "description", headerName: "Description ", width: 130 },
     { field: "price", headerName: "Price ", width: 130 },
      { field: "action", 
@@ -221,92 +225,92 @@ const columns = [
           <DialogContent>
             <form onSubmit={formik.handleSubmit} id="subscription-form">
               <TextField
-                error={formik.errors.branch && formik.touched.branch}
-                id="branch"
-                name="branch"
+                error={formik.errors.branch_id && formik.touched.branch_id}
+                id="branch_id"
+                name="branch_id"
                 select
                 label="Branch"
                 fullWidth
                 variant="standard"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.branch}
+                value={formik.values.branch_id}
                 helperText={
-                  formik.errors.branch && formik.touched.branch
-                    ? formik.errors.branch
+                  formik.errors.branch_id && formik.touched.branch_id
+                    ? formik.errors.branch_id
                     : ""
                 }
               >
-                {branch.map((option) => (
+                {branch_id.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>
                 ))}
               </TextField>
               <TextField
-                error={formik.errors.department && formik.touched.department}
-                id="department"
-                name="department"
+                error={formik.errors.department_id && formik.touched.department_id}
+                id="department_id"
+                name="department_id"
                 select
                 label="Department"
                 fullWidth
                 variant="standard"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.department}
+                value={formik.values.department_id}
                 helperText={
-                  formik.errors.department && formik.touched.department
-                    ? formik.errors.department
+                  formik.errors.department_id && formik.touched.department_id
+                    ? formik.errors.department_id
                     : ""
                 }
               >
-                {department.map((option) => (
+                {department_id.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>
                 ))}
               </TextField>
               <TextField
-                error={formik.errors.vendor && formik.touched.vendor}
-                id="vendor"
-                name="vendor"
+                error={formik.errors.vendor_id && formik.touched.vendor_id}
+                id="vendor_id"
+                name="vendor_id"
                 select
                 label="Vendor"
                 fullWidth
                 variant="standard"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.vendor}
+                value={formik.values.vendor_id}
                 helperText={
-                  formik.errors.vendor && formik.touched.vendor
-                    ? formik.errors.vendor
+                  formik.errors.vendor_id && formik.touched.vendor_id
+                    ? formik.errors.vendor_id
                     : ""
                 }
               >
-                {vendor.map((option) => (
+                {vendor_id.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>
                 ))}
               </TextField>
               <TextField
-                error={formik.errors.type && formik.touched.type}
-                id="type"
-                name="type"
+                error={formik.errors.type_id && formik.touched.type_id}
+                id="type_id"
+                name="type_id"
                 select
-                label="type"
+                label="type_id"
                 fullWidth
                 variant="standard"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.type}
+                value={formik.values.type_id}
                 helperText={
-                  formik.errors.type && formik.touched.type
-                    ? formik.errors.type
+                  formik.errors.type_id && formik.touched.type_id
+                    ? formik.errors.type_id
                     : ""
                 }
               >
-                {type.map((option) => (
+                {type_id.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>

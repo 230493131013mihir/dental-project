@@ -65,6 +65,10 @@ function Services(props) {
   
     const services = useSelector((state) => state.services);
     console.log(services);
+
+    const branch = useSelector((state) => state.branch);
+    
+      console.log(branch.branch);
   
     const handleEdit = (values) => {
       handleClose();

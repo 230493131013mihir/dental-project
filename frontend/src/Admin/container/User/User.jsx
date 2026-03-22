@@ -73,9 +73,9 @@ function User(props) {
   };
 
   let userschema = object({
-    branch: string().required("Please enter branch"),
-    role: string().required("Please select role"),
-    department: string().required("Please enter department"),
+    branch_id: string().required("Please enter branch_id"),
+    role_id: string().required("Please select role"),
+    department_id: string().required("Please enter department_id"),
     name: string().required("Please Select name"),
     address: string().required("Please Select address"),
     qualification: string().required("Please Select qualification"),
@@ -88,9 +88,9 @@ function User(props) {
 
   const formik = useFormik({
     initialValues: {
-      branch: "",
-      role: "",
-      department: "",
+      branch_id: "",
+      role_id: "",
+      department_id: "",
       name: "",
       address: "",
       qualification: "",
@@ -162,7 +162,7 @@ const paginationModel = { page: 0, pageSize: 5 };
 
 
 
-  const branch = [
+  const branch_id = [
     {
       value: "",
       label: "-- Select Branch --",
@@ -181,7 +181,7 @@ const paginationModel = { page: 0, pageSize: 5 };
     },
   ];
 
-  const role = [
+  const role_id = [
     {
       value: "",
       label: "-- Select role --",
@@ -200,7 +200,7 @@ const paginationModel = { page: 0, pageSize: 5 };
     },
   ];
 
-  const department = [
+  const department_id = [
     {
       value: "",
       label: "-- Select Department --",
@@ -238,69 +238,69 @@ const paginationModel = { page: 0, pageSize: 5 };
           <DialogContent>
             <form onSubmit={formik.handleSubmit} id="subscription-form">
               <TextField
-                error={formik.errors.branch && formik.touched.branch}
-                id="branch"
-                name="branch"
+                error={formik.errors.branch_id && formik.touched.branch_id}
+                id="branch_id"
+                name="branch_id"
                 select
                 label="Branch"
                 fullWidth
                 variant="standard"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.branch}
+                value={formik.values.branch_id}
                 helperText={
-                  formik.errors.branch && formik.touched.branch
-                    ? formik.errors.branch
+                  formik.errors.branch_id && formik.touched.branch_id
+                    ? formik.errors.branch_id
                     : ""
                 }
               >
-                {branch.map((option) => (
+                {branch_id.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>
                 ))}
               </TextField>
               <TextField
-                error={formik.errors.role && formik.touched.role}
-                id="role"
-                name="role"
+                error={formik.errors.role_id && formik.touched.role_id}
+                id="role_id"
+                name="role_id"
                 select
-                label="role"
+                label="role_id"
                 fullWidth
                 variant="standard"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.role}
+                value={formik.values.role_id}
                 helperText={
-                  formik.errors.role && formik.touched.role
-                    ? formik.errors.role
+                  formik.errors.role_id && formik.touched.role_id
+                    ? formik.errors.role_id
                     : ""
                 }
               >
-                {role.map((option) => (
+                {role_id.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>
                 ))}
               </TextField>
               <TextField
-                error={formik.errors.department && formik.touched.department}
-                id="department"
-                name="department"
+                error={formik.errors.department_id && formik.touched.department_id}
+                id="department_id"
+                name="department_id"
                 select
                 label="Department"
                 fullWidth
                 variant="standard"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.department}
+                value={formik.values.department_id}
                 helperText={
-                  formik.errors.department && formik.touched.department
-                    ? formik.errors.department
+                  formik.errors.department_id && formik.touched.department_id
+                    ? formik.errors.department_id
                     : ""
                 }
               >
-                {department.map((option) => (
+                {department_id.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>
