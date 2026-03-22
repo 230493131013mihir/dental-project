@@ -78,10 +78,19 @@ const updateDepartment = async (req, res) => {
     );
 
     res.status(200).json({
-      success: true,
-      data: { branch_id, name, description, mobile, email, address,id: departmentId,},
-      message: "department update successfully",
-    });
+  success: true,
+  data: {
+    branch_id,
+    name,
+    description,
+    mobile,
+    email,
+    address,
+    department_img: fileImg,
+    id: departmentId,
+  },
+  message: "department update successfully",
+});
      console.log(fields,results);
   } catch (error) {
     console.log(error);

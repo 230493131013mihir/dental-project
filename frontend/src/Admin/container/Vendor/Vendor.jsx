@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -12,15 +12,15 @@ import { Formik, useFormik } from "formik";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
-import { number, object, string,mixed } from "yup";
+import { number, object, string, mixed } from "yup";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addBranch,
-  deleteBranch,
-  getBranch,
-  updateBranch,
-} from "../../../redux/slice/branch.slice";
+  addVendor,
+  deleteVendor,
+  getVendor,
+  updateVendor,
+} from "../../../redux/slice/vendor.slice";
 import { DataGrid } from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
 
@@ -83,8 +83,8 @@ function Vendor(props) {
       .matches(/^[0-9]{10}$/, "Mobile number must be 10 digits"),
     address: string().required("Please Select address"),
     gstno: number().required("Please Select number"),
-        vendor_img: mixed().required("Please Select image"),
-    
+    vendor_img: mixed().required("Please Select image"),
+
 
   });
   // console.log(userschema)
@@ -120,44 +120,44 @@ function Vendor(props) {
   console.log(formik.errors, formik.touched);
 
   const columns = [
-  { field: "name", headerName: "Name", width: 130 },
-  { field: "address", headerName: "Address", width: 130 },
-  { field: "companyname", headerName: "Company", width: 130 },
-  { field: "mobile", headerName: "Mobile", width: 130 },
-  { field: "email", headerName: "Email", width: 130 },
-  { field: "gstno", headerName: "GST No", width: 130 },
+    { field: "name", headerName: "Name", width: 130 },
+    { field: "address", headerName: "Address", width: 130 },
+    { field: "companyname", headerName: "Company", width: 130 },
+    { field: "mobile", headerName: "Mobile", width: 130 },
+    { field: "email", headerName: "Email", width: 130 },
+    { field: "gstno", headerName: "GST No", width: 130 },
 
-  {
-    field: "vendor_img",
-    headerName: "vendor_img",
-    width: 130,
-    renderCell: (params) => (
-      <img
-        src={"http://localhost:3000/" + params.row.vendor_img}
-        width={"50px"}
-        height={"50px"}
-      />
-    ),
-  },
+    {
+      field: "vendor_img",
+      headerName: "vendor_img",
+      width: 130,
+      renderCell: (params) => (
+        <img
+          src={"http://localhost:3000/" + params.row.vendor_img}
+          width={"50px"}
+          height={"50px"}
+        />
+      ),
+    },
 
-  {
-    field: "action",
-    headerName: "Action",
-    width: 130,
-    renderCell: (params) => (
-      <>
-        <IconButton onClick={() => handleEdit(params.row)}>
-          <ModeEditIcon />
-        </IconButton>
-        <IconButton onClick={() => dispatch(deleteVendor(params.row.id))}>
-          <DeleteIcon />
-        </IconButton>
-      </>
-    ),
-  },
-];
+    {
+      field: "action",
+      headerName: "Action",
+      width: 130,
+      renderCell: (params) => (
+        <>
+          <IconButton onClick={() => handleEdit(params.row)}>
+            <ModeEditIcon />
+          </IconButton>
+          <IconButton onClick={() => dispatch(deleteVendor(params.row.id))}>
+            <DeleteIcon />
+          </IconButton>
+        </>
+      ),
+    },
+  ];
 
-const paginationModel = { page: 0, pageSize: 5 };
+  const paginationModel = { page: 0, pageSize: 5 };
 
 
 
@@ -286,6 +286,45 @@ const paginationModel = { page: 0, pageSize: 5 };
                     : ""
                 }
               />
+
+              <br />
+
+<Button
+  component="label"
+  role={undefined}
+  variant="contained"
+  tabIndex={-1}
+  startIcon={<CloudUploadIcon />}
+>
+  Upload Vendor image
+  <VisuallyHiddenInput
+    type="file"
+    name="vendor_img"
+    multiple
+    onChange={(event) =>
+      formik.setFieldValue("vendor_img", event.target.files[0])
+    }
+    onBlur={formik.handleBlur}
+  ></VisuallyHiddenInput>
+</Button>
+
+<img
+  src={
+    typeof formik.values.vendor_img === "string"
+      ? "http://localhost:3000/" + formik.values.vendor_img
+      : URL.createObjectURL(formik.values.vendor_img)
+  }
+  width={"50px"}
+  height={"50px"}
+/>
+
+<br />
+
+{formik.errors.vendor_img && formik.errors.vendor_img ? (
+  <span className="error">please select Vendor image</span>
+) : (
+  ""
+)}
             </form>
           </DialogContent>
           <DialogActions>
@@ -296,6 +335,15 @@ const paginationModel = { page: 0, pageSize: 5 };
           </DialogActions>
         </Dialog>
       </React.Fragment>
+
+      <DataGrid
+        rows={vendor.vendor}
+        columns={columns}
+        initialState={{ pagination: { paginationModel } }}
+        pageSizeOptions={[5, 10]}
+        checkboxSelection
+        sx={{ border: 0 }}
+      />
     </div>
   );
 }

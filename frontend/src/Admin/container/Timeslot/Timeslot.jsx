@@ -14,17 +14,17 @@ import { date, number, object, string } from "yup";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-    addBranch,
-    deleteBranch,
-    getBranch,
-    updateBranch,
+    addTimeslot,
+    deleteTimeslot,
+    getTimeslot,
+    updateTimeslot,
 } from "../../../redux/slice/timeslot.slice";
 import { DataGrid } from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
-import { addTimeslot, getTimeslot, updateTimeslot } from "../../../../../backend/src/controller/timeslot.controller";
+// import { addTimeslot, getTimeslot, updateTimeslot } from "../../../../../backend/src/controller/timeslot.controller";
 
 function Timeslot(props) {
     const [open, setOpen] = React.useState(false);

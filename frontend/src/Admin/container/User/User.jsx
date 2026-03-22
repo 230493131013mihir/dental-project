@@ -14,11 +14,11 @@ import { date, mixed, number, object, string } from "yup";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addBranch,
-  deleteBranch,
-  getBranch,
-  updateBranch,
-} from "../../../redux/slice/branch.slice";
+    addUser,
+  getUser,
+  updateUser,
+  deleteUser,
+} from "../../../redux/slice/user.slice";
 import { DataGrid } from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
 
@@ -397,6 +397,45 @@ const paginationModel = { page: 0, pageSize: 5 };
                     : ""
                 }
               />
+
+              <br />
+
+<Button
+  component="label"
+  role={undefined}
+  variant="contained"
+  tabIndex={-1}
+  startIcon={<CloudUploadIcon />}
+>
+  Upload User image
+  <VisuallyHiddenInput
+    type="file"
+    name="user_img"
+    multiple
+    onChange={(event) =>
+      formik.setFieldValue("user_img", event.target.files[0])
+    }
+    onBlur={formik.handleBlur}
+  ></VisuallyHiddenInput>
+</Button>
+
+<img
+  src={
+    typeof formik.values.user_img === "string"
+      ? "http://localhost:3000/" + formik.values.user_img
+      : URL.createObjectURL(formik.values.user_img)
+  }
+  width={"50px"}
+  height={"50px"}
+/>
+
+<br />
+
+{formik.errors.user_img && formik.errors.user_img ? (
+  <span className="error">please select User image</span>
+) : (
+  ""
+)}
             </form>
           </DialogContent>
           <DialogActions>

@@ -31,7 +31,7 @@ export const addDepartment = createAsyncThunk(
       formData.append("name", values.name);
       formData.append("email", values.email);
       formData.append("address", values.address);
-      formData.append("mobile", values.Mobile_no);
+      formData.append("mobile", values.mobile);
       formData.append("department_img", values.department_img);
 
       const responce = await axios.post(
@@ -57,8 +57,8 @@ export const updateDepartment = createAsyncThunk(
       formData.append("name", values.name);
       formData.append("email", values.email);
       formData.append("address", values.address);
-      formData.append("mobile", values.Mobile_no);
-      formData.append("department_img", values.branch_img);
+      formData.append("mobile", values.mobile);
+      formData.append("department_img", values.department_img);
 
       const responce = await axios.put(
         `http://localhost:3000/department/updateDepartment/${values.id}`,

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -14,11 +14,11 @@ import { date, number, object, string,mixed } from "yup";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addBranch,
-  deleteBranch,
-  getBranch,
-  updateBranch,
-} from "../../../redux/slice/branch.slice";
+  addTreatment,
+  deleteTreatment,
+  getTreatment,
+  updateTreatment,
+} from "../../../redux/slice/treatment.slice";
 import { DataGrid } from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
 
@@ -37,7 +37,21 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-const [update, setUpdate] = useState(false);
+
+function Treatment(props) {
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+            setUpdate(false);
+
+    };
+
+    const [update, setUpdate] = useState(false);
   console.log(update);
 
   const dispatch = useDispatch();
@@ -58,18 +72,8 @@ const [update, setUpdate] = useState(false);
   };
 
 
-function Treatment(props) {
-    const [open, setOpen] = React.useState(false);
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
 
-    const handleClose = () => {
-        setOpen(false);
-            setUpdate(false);
-
-    };
 
     let userschema = object({
         appointmentid: number().required("Please Select id"),
@@ -338,6 +342,45 @@ const paginationModel = { page: 0, pageSize: 5 };
                                         : ""
                                 }
                             />
+
+                            <br />
+
+<Button
+  component="label"
+  role={undefined}
+  variant="contained"
+  tabIndex={-1}
+  startIcon={<CloudUploadIcon />}
+>
+  Upload Treatment image
+  <VisuallyHiddenInput
+    type="file"
+    name="treatment_img"
+    multiple
+    onChange={(event) =>
+      formik.setFieldValue("treatment_img", event.target.files[0])
+    }
+    onBlur={formik.handleBlur}
+  ></VisuallyHiddenInput>
+</Button>
+
+<img
+  src={
+    typeof formik.values.treatment_img === "string"
+      ? "http://localhost:3000/" + formik.values.treatment_img
+      : URL.createObjectURL(formik.values.treatment_img)
+  }
+  width={"50px"}
+  height={"50px"}
+/>
+
+<br />
+
+{formik.errors.treatment_img && formik.errors.treatment_img ? (
+  <span className="error">please select Treatment image</span>
+) : (
+  ""
+)}
                             
                         </form>
                     </DialogContent>

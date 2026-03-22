@@ -325,7 +325,7 @@ function Branch(props) {
                   // value={formik.values.branch_img}
                 ></VisuallyHiddenInput>
               </Button>
-              <img
+              {/* <img
                 src={
                   typeof formik.values.branch_img === "string"
                     ? "http://localhost:3000/" + formik.values.branch_img
@@ -333,7 +333,18 @@ function Branch(props) {
                 }
                 width={"50px"}
                 height={"50px"}
-              />
+              /> */}
+              <img
+  src={
+    formik.values.branch_img instanceof File
+      ? URL.createObjectURL(formik.values.branch_img)
+      : typeof formik.values.branch_img === "string"
+      ? "http://localhost:3000/" + formik.values.branch_img
+      : ""
+  }
+  width={"50px"}
+  height={"50px"}
+/>
 
               <br />
               {formik.errors.branch_img && formik.errors.branch_img ? (

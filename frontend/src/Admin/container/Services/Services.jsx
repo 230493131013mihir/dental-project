@@ -13,7 +13,20 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
 import { mixed, number, object, string } from "yup";
-import User from "../User/User";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  
+  addServices,
+  getServices,
+  updateServices,
+  deleteServices,
+} from "../../../redux/slice/services.slice";
+import { DataGrid } from "@mui/x-data-grid";
+import IconButton from "@mui/material/IconButton";
+
+import DeleteIcon from "@mui/icons-material/Delete";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -38,15 +51,78 @@ function Services(props) {
 
   const handleClose = () => {
     setOpen(false);
+    setUpdate(false);
   };
 
+  const [update, setUpdate] = useState(false);
+    console.log(update);
+  
+    const dispatch = useDispatch();
+  
+    useEffect(() => {
+      dispatch(getServices());
+    }, []);
+  
+    const services = useSelector((state) => state.services);
+    console.log(services);
+  
+    const handleEdit = (values) => {
+      handleClose();
+      console.log(values);
+      formik.setValues(values);
+      handleClickOpen();
+      setUpdate(true);
+    };
+  const columns = [
+  { field: "branch_id", headerName: "Branch", width: 130 },
+  { field: "department_id", headerName: "Department", width: 130 },
+  { field: "user_id", headerName: "User", width: 130 },
+  { field: "name", headerName: "Name", width: 130 },
+  { field: "description", headerName: "Description", width: 130 },
+
+  {
+    field: "services_img",
+    headerName: "services_img",
+    width: 130,
+    renderCell: (params) => (
+      <img
+        src={"http://localhost:3000/" + params.row.services_img}
+        width={"50px"}
+        height={"50px"}
+      />
+    ),
+  },
+
+  {
+    field: "action",
+    headerName: "Action",
+    width: 130,
+
+    renderCell: (params) => (
+      <>
+        <IconButton aria-label="Edit" onClick={() => handleEdit(params.row)}>
+          <ModeEditIcon />
+        </IconButton>
+        <IconButton
+          aria-label="delete"
+          onClick={() => dispatch(deleteServices(params.row.id))}
+        >
+          <DeleteIcon />
+        </IconButton>
+      </>
+    ),
+  },
+];
+
+const paginationModel = { page: 0, pageSize: 5 };
+
   let userschema = object({
-    branch: string().required("Please enter branch"),
+    branch_id: string().required("Please enter branch_id"),
     User: string().required("Please enter vendor"),
-    department: string().required("Please enter department"),
+    department_id: string().required("Please enter department_id"),
     name: string().required("Please Select name"),
     description: string().required("Please Select description"),
-    servimg: mixed().required("Please Select image"),
+    services_img: mixed().required("Please Select image"),
 
 
   });
@@ -54,25 +130,32 @@ function Services(props) {
 
   const formik = useFormik({
     initialValues: {
-      branch: "",
+      branch_id: "",
       user: "",
-      department: "",
+      department_id: "",
       name: "",
       description: "",
-      servimg: "",
+      services_img: "",
     },
 
     validationSchema: userschema,
 
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: (values, { resetForm }) => {
       console.log(values);
+
+      if (update) {
+        console.log("update data");
+        dispatch(updateServices(values));
+      } else {
+        dispatch(addServices(values));
+      }
+      handleClose();
+      resetForm();
     },
   });
-
   console.log(formik.errors, formik.touched);
 
-  const branch = [
+  const branch_id = [
     {
       value: "",
       label: "-- Select Branch --",
@@ -91,7 +174,7 @@ function Services(props) {
     },
   ];
 
-  const user = [
+  const user = [  
     {
       value: "",
       label: "-- Select user --",
@@ -110,7 +193,7 @@ function Services(props) {
     },
   ];
 
-  const department = [
+  const department_id = [
     {
       value: "",
       label: "-- Select Department --",
@@ -150,23 +233,23 @@ function Services(props) {
           <DialogContent>
             <form onSubmit={formik.handleSubmit} id="subscription-form">
               <TextField
-                error={formik.errors.branch && formik.touched.branch}
-                id="branch"
-                name="branch"
+                error={formik.errors.branch_id && formik.touched.branch_id}
+                id="branch_id"
+                name="branch_id"
                 select
                 label="Branch"
                 fullWidth
                 variant="standard"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.branch}
+                value={formik.values.branch_id}
                 helperText={
-                  formik.errors.branch && formik.touched.branch
-                    ? formik.errors.branch
+                  formik.errors.branch_id && formik.touched.branch_id
+                    ? formik.errors.branch_id
                     : ""
                 }
               >
-                {branch.map((option) => (
+                {branch_id.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>
@@ -196,23 +279,23 @@ function Services(props) {
                 ))}
               </TextField>
               <TextField
-                error={formik.errors.department && formik.touched.department}
-                id="department"
-                name="department"
+                error={formik.errors.department_id && formik.touched.department_id}
+                id="department_id"
+                name="department_id"
                 select
                 label="Department"
                 fullWidth
                 variant="standard"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.department}
+                value={formik.values.department_id}
                 helperText={
-                  formik.errors.department && formik.touched.department
-                    ? formik.errors.department
+                  formik.errors.department_id && formik.touched.department_id
+                    ? formik.errors.department_id
                     : ""
                 }
               >
-                {department.map((option) => (
+                {department_id.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>
