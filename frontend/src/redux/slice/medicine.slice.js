@@ -26,17 +26,19 @@ export const addMedicine = createAsyncThunk(
       console.log(values);
 
       const formData = new FormData();
+      formData.append("branch_id", values.branch_id);
+      formData.append("vendor_id", values.vendor_id);
+      formData.append("department_id", values.department_id);
       formData.append("name", values.name);
       formData.append("description", values.description);
-      formData.append("mobile_no", values.mobile_no);
-      formData.append("email", values.email);
-      formData.append("address", values.address);
-      formData.append("city", values.city);
-      formData.append("state", values.state);
+      formData.append("price", values.price);
+      formData.append("stock", values.stock);
+      formData.append("expirydate", values.expirydate);
+      formData.append("medicine_img", values.medicine_img);
 
       const responce = await axios.post(
         "http://localhost:3000/medicine/addMedicine",
-        values,
+        formData,
       );
       console.log(responce);
 
@@ -49,9 +51,20 @@ export const updateMedicine = createAsyncThunk(
   "medicine/updateMedicine",
   async (values) => {
     try {
+      const formData = new FormData();
+      formData.append("branch_id", values.branch_id);
+      formData.append("vendor_id", values.vendor_id);
+      formData.append("department_id", values.department_id);
+      formData.append("name", values.name);
+      formData.append("description", values.description);
+      formData.append("price", values.price);
+      formData.append("stock", values.stock);
+      formData.append("expirydate", values.expirydate);
+      formData.append("medicine_img", values.medicine_img);
+
       const responce = await axios.put(
         `http://localhost:3000/medicine/updateMedicine/${values.id}`,
-        values,
+        formData,
       );
       console.log(responce);
 
@@ -80,19 +93,25 @@ export const medicineSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getMedicine.fulfilled, (state, action) => {
       console.log(action.payload);
-
       state.medicine = action.payload;
     });
+
     builder.addCase(addMedicine.fulfilled, (state, action) => {
       state.medicine.push(action.payload);
     });
+
     builder.addCase(updateMedicine.fulfilled, (state, action) => {
-      const index = state.medicine.findIndex((v) => v.id == action.payload.id);
+      const index = state.medicine.findIndex(
+        (v) => v.id == action.payload.id
+      );
 
       state.medicine[index] = action.payload;
     });
+
     builder.addCase(deleteMedicine.fulfilled, (state, action) => {
-      const index = state.medicine.findIndex((v) => v.id === action.payload);
+      const index = state.medicine.findIndex(
+        (v) => v.id === action.payload
+      );
 
       state.medicine.splice(index, 1);
     });

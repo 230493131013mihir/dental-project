@@ -1,6 +1,7 @@
 
 const express = require('express')
 const { addMedicine, getMedicine, updateMedicine, deleteMedicine } = require('../controller/medicine.controller')
+const upload = require('../middleware/upload')
 const router = express.Router()
 
 
@@ -8,10 +9,10 @@ const router = express.Router()
 router.get('/getMedicine', getMedicine)
 
 // POST
-router.post('/addMedicine', addMedicine)
+router.post('/addMedicine', upload.single('medicine_img'), addMedicine)
 
 // PUT (Update)
-router.put('/updateMedicine/:id', updateMedicine)
+router.put('/updateMedicine/:id', upload.single('medicine_img'), updateMedicine)
 
 // DELETE
 router.delete('/deleteMedicine/:id', deleteMedicine)

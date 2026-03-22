@@ -7,34 +7,37 @@ const initialState = {
   error: false,
 };
 
-export const getInsfrastructure = createAsyncThunk("insfrastructure/getInsfrastructure", async () => {
+export const getInsfrastructure = createAsyncThunk(
+  "insfrastructure/getInsfrastructure",
+  async () => {
+    const responce = await axios.get(
+      "http://localhost:3000/insfrastructure/getInsfrastructure",
+    );
+    console.log(responce.data.data);
 
-    
-  const responce = await axios.get("http://localhost:3000/insfrastructure/getInsfrastructure");
-  console.log(responce.data.data);
-
-  return responce.data.data;
-});
+    return responce.data.data;
+  },
+);
 
 export const addInsfrastructure = createAsyncThunk(
   "insfrastructure/addInsfrastructure",
   async (values) => {
     try {
-
       console.log(values);
 
       const formData = new FormData();
-      formData.append("name", values.name);
+      formData.append("branch_id", values.branch_id);
+      formData.append("department_id", values.department_id);
+      formData.append("type_id", values.type_id);
+      formData.append("vendor_id", values.vendor_id);
       formData.append("description", values.description);
-      formData.append("mobile_no", values.mobile_no);
-      formData.append("email", values.email);
-      formData.append("address", values.address);
-      formData.append("city", values.city);
-      formData.append("state", values.state);
+      formData.append("name", values.name);
+      formData.append("price", values.price);
+      formData.append("insfrastructure_img", values.insfrastructure_img);
 
       const responce = await axios.post(
         "http://localhost:3000/insfrastructure/addInsfrastructure",
-        values,
+        formData,
       );
       console.log(responce);
 
@@ -47,9 +50,19 @@ export const updateInsfrastructure = createAsyncThunk(
   "insfrastructure/updateInsfrastructure",
   async (values) => {
     try {
+      const formData = new FormData();
+      formData.append("branch_id", values.branch_id);
+      formData.append("department_id", values.department_id);
+      formData.append("type_id", values.type_id);
+      formData.append("vendor_id", values.vendor_id);
+      formData.append("description", values.description);
+      formData.append("name", values.name);
+      formData.append("price", values.price);
+      formData.append("insfrastructure_img", values.insfrastructure_img);
+
       const responce = await axios.put(
         `http://localhost:3000/insfrastructure/updateInsfrastructure/${values.id}`,
-        values,
+        formData,
       );
       console.log(responce);
 
@@ -77,23 +90,29 @@ export const insfrastructureSlice = createSlice({
   initialState: initialState,
   extraReducers: (builder) => {
     builder.addCase(getInsfrastructure.fulfilled, (state, action) => {
-          console.log(action.payload);
-    
-          state.insfrastructure = action.payload;
-        });
-         builder.addCase(addInsfrastructure.fulfilled, (state, action) => {
-              state.insfrastructure.push(action.payload);
-            });
-             builder.addCase(updateInsfrastructure.fulfilled, (state, action) => {
-                  const index = state.insfrastructure.findIndex((v) => v.id == action.payload.id);
-            
-                  state.insfrastructure[index] = action.payload;
-                });
-            builder.addCase(deleteInsfrastructure.fulfilled, (state, action) => {
-              const index = state.insfrastructure.findIndex((v) => v.id === action.payload);
-        
-              state.insfrastructure.splice(index, 1);
-            });
+      console.log(action.payload);
+      state.insfrastructure = action.payload;
+    });
+
+    builder.addCase(addInsfrastructure.fulfilled, (state, action) => {
+      state.insfrastructure.push(action.payload);
+    });
+
+    builder.addCase(updateInsfrastructure.fulfilled, (state, action) => {
+      const index = state.insfrastructure.findIndex(
+        (v) => v.id == action.payload.id
+      );
+
+      state.insfrastructure[index] = action.payload;
+    });
+
+    builder.addCase(deleteInsfrastructure.fulfilled, (state, action) => {
+      const index = state.insfrastructure.findIndex(
+        (v) => v.id === action.payload
+      );
+
+      state.insfrastructure.splice(index, 1);
+    });
   },
 });
 

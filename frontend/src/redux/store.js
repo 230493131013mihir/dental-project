@@ -16,7 +16,7 @@ export const store = configureStore({
     medicine: medicineSlice,
     salary: salarySlice,
     // timeslot: timeslotSlice,
-    // treatment: treatmentSlice,
+    //  treatment: treatmentSlice,
     // user: userSlice,
     vendor: vendorSlice,
     // services: servicesSlice,

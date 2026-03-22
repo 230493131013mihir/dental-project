@@ -1,10 +1,10 @@
 const pool = require("../db/mysql");
+const fs = require("fs");
 
 const getMedicine = async (req, res) => {
   try {
     const [rows] = await pool.query("SELECT * FROM medicine");
 
-    console.log(rows);
     res.status(200).json({
       success: true,
       data: rows,
@@ -22,43 +22,153 @@ const getMedicine = async (req, res) => {
 
 const addMedicine = async (req, res) => {
   try {
-    console.log(req.body);
+    const {
+      branch_id,
+      vendor_id,
+      department_id,
+      name,
+      description,
+      price,
+      stock,
+      expirydate,
+    } = req.body;
 
-    const { vendor_id, department_id, name, description, price, stock, expirydate } = req.body;
-
-    console.log(req.file);
-
-const [rows] = await pool.query(
-  "INSERT INTO medicine(vendor_id, department_id, name, description, price, stock, expirydate,medicine_img) VALUES (?,?,?,?,?,?,?)",
-  [vendor_id, department_id, name, description, price, stock, expirydate, req.file.path]
-);
+    const [rows] = await pool.query(
+      "INSERT INTO medicine(branch_id,vendor_id,department_id,name,description,price,stock,medicine_img,expirydate) VALUES(?,?,?,?,?,?,?,?,?)",
+      [
+        branch_id,
+        vendor_id,
+        department_id,
+        name,
+        description,
+        price,
+        stock,
+        req.file.path,
+        expirydate,
+      ]
+    );
 
     res.status(200).json({
       success: true,
-      data:  {...req.body, id: rows.insertId,medicine_img: req.file.path},
+      data: {
+        ...req.body,
+        id: rows.insertId,
+        medicine_img: req.file.path,
+      },
       message: "medicine added successfully",
     });
-    console.log(rows, fields, result);
   } catch (error) {
-     console.log(error);
+    console.log(error);
     res.status(500).json({
       success: true,
       data: null,
-      message: "server not found"+ error.message,
+      message: "medicine not-added successfully",
     });
   }
 };
 
-const updateMedicine = () => {
+const updateMedicine = async (req, res) => {
   try {
-    console.log("updateMedicine");
-  } catch (error) {}
+    const {
+      branch_id,
+      vendor_id,
+      department_id,
+      name,
+      description,
+      price,
+      stock,
+      expirydate,
+    } = req.body;
+
+    const medicineId = req.params.id;
+
+    const [rows] = await pool.query(
+      `SELECT * FROM medicine WHERE id=${medicineId}`
+    );
+
+    let fileImg = "";
+    if (req.file) {
+      try {
+        fs.unlinkSync(rows[0].medicine_img);
+      } catch (err) {
+        console.log(err);
+      }
+      fileImg = req.file.path;
+    } else {
+      fileImg = rows[0].medicine_img;
+    }
+
+    await pool.query(
+      "UPDATE medicine SET branch_id=?,vendor_id=?,department_id=?,name=?,description=?,price=?,stock=?,medicine_img=?,expirydate=? WHERE id=?",
+      [
+        branch_id,
+        vendor_id,
+        department_id,
+        name,
+        description,
+        price,
+        stock,
+        fileImg,
+        expirydate,
+        medicineId,
+      ]
+    );
+
+    res.status(200).json({
+      success: true,
+      data: {
+        branch_id,
+        vendor_id,
+        department_id,
+        name,
+        description,
+        price,
+        stock,
+        expirydate,
+        medicine_img: fileImg,
+        id: medicineId,
+      },
+      message: "medicine update successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: true,
+      data: null,
+      message: "medicine not-update successfully",
+    });
+  }
 };
 
-const deleteMedicine = () => {
+const deleteMedicine = async (req, res) => {
   try {
-    console.log("deleteMedicine");
-  } catch (error) {}
+    const medicineId = req.params.id;
+
+    const [rows] = await pool.query(
+      `SELECT * FROM medicine WHERE id=${medicineId}`
+    );
+
+    try {
+      fs.unlinkSync(rows[0].medicine_img);
+    } catch (err) {
+      console.log(err);
+    }
+
+    await pool.query(`DELETE FROM medicine WHERE id=${medicineId}`);
+
+    res.status(200).json({
+      success: true,
+      data: null,
+      message: "medicine deleted successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: true,
+      data: null,
+      message: "medicine not-deleted successfully",
+    });
+  }
 };
 
 module.exports = {
