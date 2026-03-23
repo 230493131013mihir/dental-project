@@ -6,6 +6,9 @@ import  insfrastructureSlice  from './slice/insfrastructure.slice'
 import  medicineSlice  from './slice/medicine.slice'
 import  salarySlice  from './slice/salary.slice'
 import vendorSlice  from './slice/vendor.slice'
+import  userSlice  from './slice/user.slice'
+import treatmentSlice  from './slice/treatment.slice'
+import servicesSlice  from './slice/services.slice'
 
 export const store = configureStore({
   reducer: {
@@ -16,10 +19,10 @@ export const store = configureStore({
     medicine: medicineSlice,
     salary: salarySlice,
     // timeslot: timeslotSlice,
-    //  treatment: treatmentSlice,
-    // user: userSlice,
+     treatment: treatmentSlice,
+    user: userSlice,
     vendor: vendorSlice,
-    // services: servicesSlice,
+    services: servicesSlice,
 
   },
 })

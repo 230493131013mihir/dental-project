@@ -15,13 +15,15 @@ const getMedicine = async (req, res) => {
     res.status(500).json({
       success: true,
       data: null,
-      message: "medicine not-fetched successfully",
+      message: "medicine not-fetched successfully" + error.message,
     });
   }
 };
 
 const addMedicine = async (req, res) => {
   try {
+
+      console.log(req.body);
     const {
       branch_id,
       vendor_id,
@@ -33,6 +35,7 @@ const addMedicine = async (req, res) => {
       expirydate,
     } = req.body;
 
+     console.log(req.file);
     const [rows] = await pool.query(
       "INSERT INTO medicine(branch_id,vendor_id,department_id,name,description,price,stock,medicine_img,expirydate) VALUES(?,?,?,?,?,?,?,?,?)",
       [
@@ -57,18 +60,23 @@ const addMedicine = async (req, res) => {
       },
       message: "medicine added successfully",
     });
+
+    console.log(rows, fields, result);
   } catch (error) {
     console.log(error);
     res.status(500).json({
       success: true,
       data: null,
-      message: "medicine not-added successfully",
+      message: "medicine not-added successfully"+ error.message,
     });
   }
 };
 
 const updateMedicine = async (req, res) => {
   try {
+
+     console.log(req.body);
+
     const {
       branch_id,
       vendor_id,
@@ -83,20 +91,29 @@ const updateMedicine = async (req, res) => {
     const medicineId = req.params.id;
 
     const [rows] = await pool.query(
-      `SELECT * FROM medicine WHERE id=${medicineId}`
+      `SELECT * FROM medicine WHERE id=${medicineId}`,
     );
 
+    console.log( branch_id,
+      vendor_id,
+      department_id,
+      name,
+      description,
+      price,
+      stock,
+      expirydate,
+      rows[0].medicine_img,
+    )
+
     let fileImg = "";
-    if (req.file) {
-      try {
-        fs.unlinkSync(rows[0].medicine_img);
-      } catch (err) {
-        console.log(err);
-      }
-      fileImg = req.file.path;
-    } else {
-      fileImg = rows[0].medicine_img;
-    }
+              if (req.file) {
+                fs.unlinkSync(rows[0].medicine_img, (error) => {
+                  console.log(error);
+                });
+                fileImg = req.file.path;
+              } else {
+                fileImg = rows[0].medicine_img;
+              }
 
     await pool.query(
       "UPDATE medicine SET branch_id=?,vendor_id=?,department_id=?,name=?,description=?,price=?,stock=?,medicine_img=?,expirydate=? WHERE id=?",
@@ -130,12 +147,14 @@ const updateMedicine = async (req, res) => {
       },
       message: "medicine update successfully",
     });
+
+     console.log(fields,results);
   } catch (error) {
     console.log(error);
     res.status(500).json({
       success: true,
       data: null,
-      message: "medicine not-update successfully",
+      message: "medicine not-update successfully" + error.message,
     });
   }
 };
@@ -148,11 +167,11 @@ const deleteMedicine = async (req, res) => {
       `SELECT * FROM medicine WHERE id=${medicineId}`
     );
 
-    try {
-      fs.unlinkSync(rows[0].medicine_img);
-    } catch (err) {
-      console.log(err);
-    }
+      fs.unlinkSync(rows[0].medicine_img, (error) => {
+                console.log(error);
+              });
+    
+               console.log(medicineId);
 
     await pool.query(`DELETE FROM medicine WHERE id=${medicineId}`);
 

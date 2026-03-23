@@ -23,6 +23,8 @@ const getInsfrastructure = async (req, res) => {
 
 const addInsfrastructure = async (req, res) => {
   try {
+
+     console.log(req.body);
     const {
       branch_id,
       department_id,
@@ -59,7 +61,7 @@ const addInsfrastructure = async (req, res) => {
       message: "insfrastructure added successfully",
     });
 
-    console.log(rows);
+   console.log(rows, fields, result);
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -72,6 +74,7 @@ const addInsfrastructure = async (req, res) => {
 
 const updateInsfrastructure = async (req, res) => {
   try {
+      console.log(req.body);
     const {
       branch_id,
       department_id,
@@ -85,20 +88,27 @@ const updateInsfrastructure = async (req, res) => {
     const insfrastructureId = req.params.id;
 
     const [rows] = await pool.query(
-      `SELECT * FROM insfrastructure WHERE id=${insfrastructureId}`
+      `SELECT * FROM insfrastructure WHERE id=${insfrastructureId}`,
     );
+    console.log(branch_id,
+      department_id,
+      type_id,
+      vendor_id,
+      description,
+      name,
+      price,
+      rows[0].insfrastructure_img,
+    )
 
-    let fileImg = "";
-    if (req.file) {
-      try {
-        fs.unlinkSync(rows[0].insfrastructure_img);
-      } catch (err) {
-        console.log(err);
-      }
-      fileImg = req.file.path;
-    } else {
-      fileImg = rows[0].insfrastructure_img;
-    }
+  let fileImg = "";
+          if (req.file) {
+            fs.unlinkSync(rows[0].insfrastructure_img, (error) => {
+              console.log(error);
+            });
+            fileImg = req.file.path;
+          } else {
+            fileImg = rows[0].insfrastructure_img;
+          }
 
     await pool.query(
       "UPDATE insfrastructure SET branch_id=?,department_id=?,type_id=?,vendor_id=?,description=?,name=?,price=?,insfrastructure_img=? WHERE id=?",
@@ -130,6 +140,7 @@ const updateInsfrastructure = async (req, res) => {
       },
       message: "insfrastructure update successfully",
     });
+      console.log(fields,results);
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -148,11 +159,12 @@ const deleteInsfrastructure = async (req, res) => {
       `SELECT * FROM insfrastructure WHERE id=${insfrastructureId}`
     );
 
-    try {
-      fs.unlinkSync(rows[0].insfrastructure_img);
-    } catch (err) {
-      console.log(err);
-    }
+    
+       fs.unlinkSync(rows[0].insfrastructure_img, (error) => {
+            console.log(error);
+          });
+
+           console.log(insfrastructureId);
 
     await pool.query(
       `DELETE FROM insfrastructure WHERE id=${insfrastructureId}`
@@ -168,7 +180,7 @@ const deleteInsfrastructure = async (req, res) => {
     res.status(500).json({
       success: true,
       data: null,
-      message: "insfrastructure not-deleted successfully",
+      message: "insfrastructure not-deleted successfully"+ error.message,
     });
   }
 };

@@ -31,7 +31,7 @@ const addServices = async (req, res) => {
 
     const [rows] = await pool.query(
       "INSERT INTO services(branch_id,department_id,user_id,name,description,services_img) VALUES(?,?,?,?,?,?)",
-      [branch_id, department_id, user_id, name, description, req.file.path]
+      [branch_id, department_id, user_id, name, description, req.file.path,]
     );
 
     res.status(200).json({
@@ -44,7 +44,7 @@ const addServices = async (req, res) => {
       message: "services added successfully",
     });
 
-    console.log(rows);
+   console.log(rows, fields, result);
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -78,16 +78,14 @@ const updateServices = async (req, res) => {
     );
 
     let fileImg = "";
-    if (req.file) {
-      try {
-        fs.unlinkSync(rows[0].services_img);
-      } catch (err) {
-        console.log(err);
-      }
-      fileImg = req.file.path;
-    } else {
-      fileImg = rows[0].services_img;
-    }
+             if (req.file) {
+               fs.unlinkSync(rows[0].services_img, (error) => {
+                 console.log(error);
+               });
+               fileImg = req.file.path;
+             } else {
+               fileImg = rows[0].services_img;
+             }
 
     await pool.query(
       "UPDATE services SET branch_id=?,department_id=?,user_id=?,name=?,description=?,services_img=? WHERE id=?",
@@ -115,6 +113,7 @@ const updateServices = async (req, res) => {
       },
       message: "services update successfully",
     });
+       console.log(fields,results);
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -133,15 +132,16 @@ const deleteServices = async (req, res) => {
       `SELECT * FROM services WHERE id=${servicesId}`
     );
 
-    try {
-      fs.unlinkSync(rows[0].services_img);
-    } catch (err) {
-      console.log(err);
-    }
+     fs.unlinkSync(rows[0].services_img, (error) => {
+               console.log(error);
+             });
+   
+              console.log(servicesId);
+   
 
-    console.log(servicesId);
 
-    await pool.query(`DELETE FROM services WHERE id=${servicesId}`);
+    await pool.query(
+      `DELETE FROM services WHERE id=${servicesId}`);
 
     res.status(200).json({
       success: true,

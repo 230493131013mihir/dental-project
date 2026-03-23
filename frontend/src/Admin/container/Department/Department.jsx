@@ -23,6 +23,7 @@ import IconButton from "@mui/material/IconButton";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import { getBranch } from "../../../redux/slice/branch.slice";
 // import { getBranch } from "../../../redux/slice/branch.slice";
 
 const VisuallyHiddenInput = styled("input")({
@@ -46,6 +47,7 @@ function Department(props) {
 
   const handleClose = () => {
     setOpen(false);
+     setUpdate(false);
   };
 
   const [update, setUpdate] = useState(false);
@@ -62,7 +64,7 @@ function Department(props) {
 
   const branch = useSelector((state) => state.branch);
 
-  console.log(branch.branch);
+  console.log(branch.branch, department.department);
   //console.log(error);
 
   const handleEdit = (values) => {

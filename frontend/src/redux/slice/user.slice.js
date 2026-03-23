@@ -7,8 +7,11 @@ const initialState = {
   error: false,
 };
 
-export const getUser = createAsyncThunk("user/getUser", async () => {
-  const responce = await axios.get("http://localhost:3000/user/getUser");
+export const getUser = createAsyncThunk(
+  "user/getUser",
+   async () => {
+  const responce = await axios.get(
+    "http://localhost:3000/user/getUser");
   console.log(responce.data.data);
 
   return responce.data.data;

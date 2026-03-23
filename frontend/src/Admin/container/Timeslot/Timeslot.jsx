@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -24,6 +24,7 @@ import IconButton from "@mui/material/IconButton";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import { getUser } from "../../../redux/slice/user.slice";
 // import { addTimeslot, getTimeslot, updateTimeslot } from "../../../../../backend/src/controller/timeslot.controller";
 
 function Timeslot(props) {
@@ -44,10 +45,15 @@ function Timeslot(props) {
 
     useEffect(() => {
         dispatch(getTimeslot());
+         dispatch(getUser());
     }, []);
 
     const timeslot = useSelector((state) => state.timeslot);
     console.log(timeslot);
+
+     const user = useSelector((state) => state.user);
+         
+           console.log(user.user);
 
     const handleEdit = (values) => {
         handleClose();
@@ -58,7 +64,7 @@ function Timeslot(props) {
     };
 
     let userschema = object({
-        user: string().required("Please Select user"),
+        user_id: string().required("Please Select user"),
         date: date().required("Please Select date"),
         startdate: date().required("Please Select startdate"),
         enddate: date().required("Please Select enddate"),
@@ -67,7 +73,7 @@ function Timeslot(props) {
 
     const formik = useFormik({
         initialValues: {
-            user: "",
+            user_id: "",
             startdate: "",
             enddate: "",
             date: "",
@@ -90,7 +96,7 @@ function Timeslot(props) {
 
     console.log(formik.errors, formik.touched);
 
-    const user = [
+    const user_id = [
         {
             value: "",
             label: "--select user--",
@@ -159,23 +165,23 @@ function Timeslot(props) {
                     <DialogContent>
                         <form onSubmit={formik.handleSubmit} id="subscription-form">
                             <TextField
-                                error={formik.errors.user && formik.touched.user}
-                                id="user"
-                                name="user"
+                                error={formik.errors.user_id && formik.touched.user_id}
+                                id="user_id"
+                                name="user_id"
                                 fullWidth
                                 select
                                 variant="standard"
-                                label="Select user"
+                                label="Select user_id"
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
-                                value={formik.values.user}
+                                value={formik.values.user_id}
                                 helperText={
-                                    formik.errors.user && formik.touched.user
-                                        ? formik.errors.user
+                                    formik.errors.user_id && formik.touched.user_id
+                                        ? formik.errors.user_id
                                         : ""
                                 }
                             >
-                                {user.map((option) => (
+                                {user_id.map((option) => (
                                     <MenuItem key={option.value} value={option.value}>
                                         {option.label}
                                     </MenuItem>

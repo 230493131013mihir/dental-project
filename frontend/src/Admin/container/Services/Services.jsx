@@ -7,7 +7,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Box from "@mui/material/Box";
-import MenuItem from '@mui/material/MenuItem';
+import MenuItem from "@mui/material/MenuItem";
 import { Formik, useFormik } from "formik";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
@@ -16,7 +16,6 @@ import { mixed, number, object, string } from "yup";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  
   addServices,
   getServices,
   updateServices,
@@ -27,6 +26,10 @@ import IconButton from "@mui/material/IconButton";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import { getUser } from "../../../redux/slice/user.slice";
+import { getDepartment } from "../../../redux/slice/department.slice";
+import { getBranch } from "../../../redux/slice/branch.slice";
+import { useState } from "react";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -39,8 +42,6 @@ const VisuallyHiddenInput = styled("input")({
   whiteSpace: "nowrap",
   width: 1,
 });
-
-
 
 function Services(props) {
   const [open, setOpen] = React.useState(false);
@@ -55,87 +56,96 @@ function Services(props) {
   };
 
   const [update, setUpdate] = useState(false);
-    console.log(update);
-  
-    const dispatch = useDispatch();
-  
-    useEffect(() => {
-      dispatch(getServices());
-    }, []);
-  
-    const services = useSelector((state) => state.services);
-    console.log(services);
+  console.log(update);
 
-    const branch = useSelector((state) => state.branch);
-    
-      console.log(branch.branch);
-  
-    const handleEdit = (values) => {
-      handleClose();
-      console.log(values);
-      formik.setValues(values);
-      handleClickOpen();
-      setUpdate(true);
-    };
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getServices());
+    dispatch(getBranch());
+    dispatch(getDepartment());
+    dispatch(getUser());
+  }, []);
+
+  const services = useSelector((state) => state.services);
+  console.log(services);
+
+  const branch = useSelector((state) => state.branch);
+
+  console.log(branch.branch);
+
+  const department = useSelector((state) => state.department);
+
+  console.log(department.department);
+
+  const user = useSelector((state) => state.user);
+
+  console.log(user.user);
+
+  const handleEdit = (values) => {
+    handleClose();
+    console.log(values);
+    formik.setValues(values);
+    handleClickOpen();
+    setUpdate(true);
+  };
   const columns = [
-  { field: "branch_id", headerName: "Branch", width: 130 },
-  { field: "department_id", headerName: "Department", width: 130 },
-  { field: "user_id", headerName: "User", width: 130 },
-  { field: "name", headerName: "Name", width: 130 },
-  { field: "description", headerName: "Description", width: 130 },
+    { field: "branch_id", headerName: "branch_id", width: 130 },
+    { field: "department_id", headerName: "department_id", width: 130 },
+    { field: "user_id", headerName: "user_id", width: 130 },
+    { field: "name", headerName: "name", width: 130 },
+    { field: "description", headerName: "Description", width: 130 },
 
-  {
-    field: "services_img",
-    headerName: "services_img",
-    width: 130,
-    renderCell: (params) => (
-      <img
-        src={"http://localhost:3000/" + params.row.services_img}
-        width={"50px"}
-        height={"50px"}
-      />
-    ),
-  },
+    {
+      field: "services_img",
+      headerName: "services_img",
+      width: 130,
+      renderCell: (params) => (
+        <img
+          src={"http://localhost:3000/" + params.row.services_img}
+          width={"50px"}
+          height={"50px"}
+        />
+      ),
+    },
 
-  {
-    field: "action",
-    headerName: "Action",
-    width: 130,
+    {
+      field: "action",
+      headerName: "Action",
+      width: 130,
 
-    renderCell: (params) => (
-      <>
-        <IconButton aria-label="Edit" onClick={() => handleEdit(params.row)}>
-          <ModeEditIcon />
-        </IconButton>
-        <IconButton
-          aria-label="delete"
-          onClick={() => dispatch(deleteServices(params.row.id))}
-        >
-          <DeleteIcon />
-        </IconButton>
-      </>
-    ),
-  },
-];
+      renderCell: (params) => (
+        <>
+          <IconButton aria-label="Edit" onClick={() => handleEdit(params.row)}>
+            <ModeEditIcon />
+          </IconButton>
+          <IconButton
+            aria-label="delete"
+            onClick={() => dispatch(deleteServices(params.row.id))}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </>
+      ),
+    },
+  ];
 
-const paginationModel = { page: 0, pageSize: 5 };
+  const paginationModel = { page: 0, pageSize: 5 };
 
   let userschema = object({
     branch_id: string().required("Please enter branch_id"),
-    User: string().required("Please enter vendor"),
+    user_id: string().required("Please enter vendor"),
     department_id: string().required("Please enter department_id"),
     name: string().required("Please Select name"),
     description: string().required("Please Select description"),
     services_img: mixed().required("Please Select image"),
-
-
   });
   // console.log(userschema)
 
   const formik = useFormik({
     initialValues: {
       branch_id: "",
-      user: "",
+      user_id: "",
       department_id: "",
       name: "",
       description: "",
@@ -157,7 +167,7 @@ const paginationModel = { page: 0, pageSize: 5 };
       resetForm();
     },
   });
-  console.log(formik.errors, formik.touched);
+  console.log(branch.branch, department.department, formik.values.branch_id);
 
   const branch_id = [
     {
@@ -178,7 +188,7 @@ const paginationModel = { page: 0, pageSize: 5 };
     },
   ];
 
-  const user = [  
+  const user_id = [
     {
       value: "",
       label: "-- Select user --",
@@ -216,8 +226,6 @@ const paginationModel = { page: 0, pageSize: 5 };
     },
   ];
 
-
-
   return (
     <div>
       <Box
@@ -253,37 +261,39 @@ const paginationModel = { page: 0, pageSize: 5 };
                     : ""
                 }
               >
-                {branch_id.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
+                {branch.branch.map((v) => (
+                  <MenuItem key={v.id} value={v.id}>
+                    {v.name}
                   </MenuItem>
                 ))}
               </TextField>
               <TextField
-                error={formik.errors.user && formik.touched.user}
-                id="user"
-                name="user"
+                error={formik.errors.user_id && formik.touched.user_id}
+                id="user_id"
+                name="user_id"
                 select
-                label="user"
+                label="user_id"
                 fullWidth
                 variant="standard"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.user}
+                value={formik.values.user_id}
                 helperText={
-                  formik.errors.user && formik.touched.user
-                    ? formik.errors.user
+                  formik.errors.user_id && formik.touched.user_id
+                    ? formik.errors.user_id
                     : ""
                 }
               >
-                {user.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
+                {user.user.map((v) => (
+                  <MenuItem key={v.id} value={v.id}>
+                    {v.name}
                   </MenuItem>
                 ))}
               </TextField>
               <TextField
-                error={formik.errors.department_id && formik.touched.department_id}
+                error={
+                  formik.errors.department_id && formik.touched.department_id
+                }
                 id="department_id"
                 name="department_id"
                 select
@@ -299,11 +309,13 @@ const paginationModel = { page: 0, pageSize: 5 };
                     : ""
                 }
               >
-                {department_id.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
+                {department.department
+                  ?.filter((v1) => v1.branch_id == formik.values.branch_id)
+                  ?.map((v) => (
+                    <MenuItem key={v.id} value={v.id}>
+                      {v.name}
+                    </MenuItem>
+                  ))}
               </TextField>
               <TextField
                 error={formik.errors.name && formik.touched.name}
@@ -355,23 +367,32 @@ const paginationModel = { page: 0, pageSize: 5 };
                 Upload service image
                 <VisuallyHiddenInput
                   type="file"
-                  name="servimg"
+                  name="services_img"
                   // onChange={(event) => console.log(event.target.files)}
-                  multiple
-                  onChange={formik.handleChange}
+                  // multiple
+                  onChange={(event) =>
+                    formik.setFieldValue("services_img", event.target.files[0])
+                  }
                   onBlur={formik.handleBlur}
-                  value={formik.values.servimg}
                 ></VisuallyHiddenInput>
               </Button>
-
+              <img
+                src={
+                  formik.values.services_img instanceof File
+                    ? URL.createObjectURL(formik.values.services_img)
+                    : typeof formik.values.services_img === "string"
+                      ? "http://localhost:3000/" + formik.values.services_img
+                      : ""
+                }
+                width={"50px"}
+                height={"50px"}
+              />
               <br />
-              {formik.errors.servimg && formik.errors.servimg ? (
+              {formik.errors.services_img && formik.errors.services_img ? (
                 <span className="error">please select service image</span>
               ) : (
                 ""
               )}
-
-
             </form>
           </DialogContent>
           <DialogActions>
@@ -382,6 +403,15 @@ const paginationModel = { page: 0, pageSize: 5 };
           </DialogActions>
         </Dialog>
       </React.Fragment>
+
+      <DataGrid
+              rows={services.services}
+              columns={columns}
+              initialState={{ pagination: { paginationModel } }}
+              pageSizeOptions={[5, 10]}
+              checkboxSelection
+              sx={{ border: 0 }}
+            />
     </div>
   );
 }

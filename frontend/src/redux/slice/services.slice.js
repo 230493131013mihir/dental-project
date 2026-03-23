@@ -31,7 +31,7 @@ export const addServices = createAsyncThunk(
         "http://localhost:3000/services/addServices",
         formData
       );
-
+ console.log(responce);
       return responce.data.data;
     } catch (error) {}
   }
@@ -53,6 +53,7 @@ export const updateServices = createAsyncThunk(
         `http://localhost:3000/services/updateServices/${values.id}`,
         formData
       );
+    console.log(responce);
 
       return responce.data.data;
     } catch (error) {}
@@ -62,7 +63,14 @@ export const updateServices = createAsyncThunk(
 export const deleteServices = createAsyncThunk(
   "services/deleteServices",
   async (id) => {
-    await axios.delete(`http://localhost:3000/services/deleteServices/${id}`);
+        console.log(id);
+
+    const responce =  await axios.delete(
+      `http://localhost:3000/services/deleteServices/${id}`
+    );
+    console.log(responce);
+
+
     return id;
   }
 );

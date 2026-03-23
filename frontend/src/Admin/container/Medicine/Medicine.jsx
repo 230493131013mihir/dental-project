@@ -5,21 +5,40 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import Box from "@mui/material/Box";
-import MenuItem from '@mui/material/MenuItem';
+import MenuItem from "@mui/material/MenuItem";
 import { Formik, useFormik } from "formik";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
-import { date, number, object, string } from "yup";
+import { date, mixed, number, object, string } from "yup";
 
-import IconButton from '@mui/material/IconButton';
+import IconButton from "@mui/material/IconButton";
 
-import DeleteIcon from '@mui/icons-material/Delete';
-import { deleteMedicine, getMedicine, updateMedicine } from "../../../redux/slice/medicine.slice";
+import DeleteIcon from "@mui/icons-material/Delete";
+import {
+  addMedicine,
+  deleteMedicine,
+  getMedicine,
+  updateMedicine,
+} from "../../../redux/slice/medicine.slice";
 import { DataGrid } from "@mui/x-data-grid";
 import { useDispatch, useSelector } from "react-redux";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import { getBranch } from "../../../redux/slice/branch.slice";
+import { getDepartment } from "../../../redux/slice/department.slice";
+import { getVendor } from "../../../redux/slice/vendor.slice";
 
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
 
 function Medicine(props) {
   const [open, setOpen] = React.useState(false);
@@ -30,22 +49,37 @@ function Medicine(props) {
 
   const handleClose = () => {
     setOpen(false);
+    setUpdate(false);
   };
 
-  const [update,setUpdate] = useState(false)
-    console.log(update);
-  
+  const [update, setUpdate] = useState(false);
+  console.log(update);
 
   const dispatch = useDispatch();
-  
-    useEffect(() => {
-      dispatch(getMedicine());
-    }, []);
-  
-    const medicine = useSelector(state => state.medicine);
-      console.log(medicine);
 
-   const handleEdit = (values) => {
+  useEffect(() => {
+    dispatch(getMedicine());
+    dispatch(getBranch());
+    dispatch(getDepartment());
+    dispatch(getVendor());
+  }, []);
+
+  const medicine = useSelector((state) => state.medicine);
+  console.log(medicine);
+
+  const branch = useSelector((state) => state.branch);
+
+  console.log(branch.branch);
+
+  const department = useSelector((state) => state.department);
+
+  console.log(department.department);
+
+  const vendor = useSelector((state) => state.vendor);
+
+  console.log(vendor.vendor);
+
+  const handleEdit = (values) => {
     handleClose();
     console.log(values);
     formik.setValues(values);
@@ -54,9 +88,9 @@ function Medicine(props) {
   };
 
   let userschema = object({
-    branch: string().required("Please enter branch"),
-    vendor: string().required("Please enter vendor"),
-    department: string().required("Please enter department"),
+    branch_id: string().required("Please enter branch_id"),
+    vendor_id: string().required("Please enter vendor_id"),
+    department_id: string().required("Please enter department_id"),
     name: string().required("Please Select name"),
     description: string().required("Please Select description"),
     price: number()
@@ -64,41 +98,43 @@ function Medicine(props) {
       .positive("Amount must be greater than 0"),
     expirydate: date().required("Please Select date"),
     stock: number().required("Please enter stock"),
-
+    medicine_img: mixed().required("Please Select image"),
   });
   // console.log(userschema)
 
   const formik = useFormik({
     initialValues: {
-      branch: "",
-      vendor: "",
-      department: "",
+      branch_id: "",
+      vendor_id: "",
+      department_id: "",
       name: "",
       description: "",
       price: "",
       stock: "",
       expirydate: "",
+      medicine_img: "",
     },
 
     validationSchema: userschema,
 
-  onSubmit: (values, { resetForm }) => {
-        console.log(values);
-       
-        if (update){
-          console.log("update data")
-          dispatch(updateMedicine(values))
-        }else{
+    onSubmit: (values, { resetForm }) => {
+      console.log(values);
+      console.log(updateMedicine);
+
+      if (update) {
+        console.log("update data");
         dispatch(updateMedicine(values));
-        }
-       handleClose();
-       resetForm();
-      },
-    });
+      } else {
+        dispatch(addMedicine(values));
+      }
+      handleClose();
+      resetForm();
+    },
+  });
 
   console.log(formik.errors, formik.touched);
 
-  const branch = [
+  const branch_id = [
     {
       value: "",
       label: "-- Select Branch --",
@@ -117,7 +153,7 @@ function Medicine(props) {
     },
   ];
 
-  const vendor = [
+  const vendor_id = [
     {
       value: "",
       label: "-- Select Vendor --",
@@ -136,7 +172,7 @@ function Medicine(props) {
     },
   ];
 
-  const department = [
+  const department_id = [
     {
       value: "",
       label: "-- Select Department --",
@@ -156,24 +192,34 @@ function Medicine(props) {
   ];
 
   const columns = [
-      { field: "branch", headerName: "Branch", width: 130 },
-      { field: "vendor", headerName: "Vendor", width: 130 },
-      { field: "department", headerName: "Department", width: 130 },
-      { field: "name", headerName: "Name", width: 130 },
-      { field: "type", headerName: "Type", width: 130 },
-      { field: "description", headerName: "Description ", width: 130 },
-      { field: "price", headerName: "Price ", width: 130 },
-      { field: "stock", headerName: "Stock ", width: 130 },
-      { field: "expirydate", headerName: "Expirydate", width: 130 },
-       { field: "action", 
-        headerName: "Action ",
-         width: 130,
-          renderCell: (params) => (
+    { field: "branch_id", headerName: "branch_id", width: 130 },
+    { field: "vendor_id", headerName: "vendor_id", width: 130 },
+    { field: "department_id", headerName: "department_id", width: 130 },
+    { field: "name", headerName: "Name", width: 130 },
+    { field: "type", headerName: "Type", width: 130 },
+    { field: "description", headerName: "Description ", width: 130 },
+    { field: "price", headerName: "Price ", width: 130 },
+    { field: "stock", headerName: "Stock ", width: 130 },
+    { field: "expirydate", headerName: "Expirydate", width: 130 },
+    {
+      field: "medicine_img",
+      headerName: "medicine_img",
+      width: 130,
+      renderCell: (params) => (
+        <img
+          src={"http://localhost:3000/" + params.row.medicine_img}
+          width={"50px"}
+          height={"50px"}
+        />
+      ),
+    },
+    {
+      field: "action",
+      headerName: "Action ",
+      width: 130,
+      renderCell: (params) => (
         <>
-          <IconButton
-            aria-label="Edit"
-            onClick={() => handleEdit(params.row)}
-          >
+          <IconButton aria-label="Edit" onClick={() => handleEdit(params.row)}>
             <ModeEditIcon />
           </IconButton>
           <IconButton
@@ -186,8 +232,8 @@ function Medicine(props) {
       ),
     },
   ];
-  
-    const paginationModel = { page: 0, pageSize: 5 };
+
+  const paginationModel = { page: 0, pageSize: 5 };
 
   return (
     <div>
@@ -208,71 +254,73 @@ function Medicine(props) {
           <DialogContent>
             <form onSubmit={formik.handleSubmit} id="subscription-form">
               <TextField
-                error={formik.errors.branch && formik.touched.branch}
-                id="branch"
-                name="branch"
+                error={formik.errors.branch_id && formik.touched.branch_id}
+                id="branch_id"
+                name="branch_id"
                 select
                 label="Branch"
                 fullWidth
                 variant="standard"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.branch}
+                value={formik.values.branch_id}
                 helperText={
-                  formik.errors.branch && formik.touched.branch
-                    ? formik.errors.branch
+                  formik.errors.branch_id && formik.touched.branch_id
+                    ? formik.errors.branch_id
                     : ""
                 }
               >
-                {branch.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
+                {branch.branch.map((v) => (
+                  <MenuItem key={v.id} value={v.id}>
+                    {v.name}
                   </MenuItem>
                 ))}
               </TextField>
               <TextField
-                error={formik.errors.vendor && formik.touched.vendor}
-                id="vendor"
-                name="vendor"
+                error={formik.errors.vendor_id && formik.touched.vendor_id}
+                id="vendor_id"
+                name="vendor_id"
                 select
                 label="Vendor"
                 fullWidth
                 variant="standard"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.vendor}
+                value={formik.values.vendor_id}
                 helperText={
-                  formik.errors.vendor && formik.touched.vendor
-                    ? formik.errors.vendor
+                  formik.errors.vendor_id && formik.touched.vendor_id
+                    ? formik.errors.vendor_id
                     : ""
                 }
               >
-                {vendor.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
+                {vendor.vendor.map((v) => (
+                  <MenuItem key={v.id} value={v.id}>
+                    {v.name}
                   </MenuItem>
                 ))}
               </TextField>
               <TextField
-                error={formik.errors.department && formik.touched.department}
-                id="department"
-                name="department"
+                error={
+                  formik.errors.department_id && formik.touched.department_id
+                }
+                id="department_id"
+                name="department_id"
                 select
                 label="Department"
                 fullWidth
                 variant="standard"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.department}
+                value={formik.values.department_id}
                 helperText={
-                  formik.errors.department && formik.touched.department
-                    ? formik.errors.department
+                  formik.errors.department_id && formik.touched.department_id
+                    ? formik.errors.department_id
                     : ""
                 }
               >
-                {department.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
+                {department.department.map((v) => (
+                  <MenuItem key={v.id} value={v.id}>
+                    {v.name}
                   </MenuItem>
                 ))}
               </TextField>
@@ -358,7 +406,6 @@ function Medicine(props) {
                 type="date"
                 fullWidth
                 variant="standard"
-
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.expirydate}
@@ -368,6 +415,45 @@ function Medicine(props) {
                     : ""
                 }
               />
+              <Button
+                component="label"
+                role={undefined}
+                variant="contained"
+                tabIndex={-1}
+                startIcon={<CloudUploadIcon />}
+              >
+                Upload medicine_img image
+                <VisuallyHiddenInput
+                  type="file"
+                  name="medicine_img"
+                  // onChange={(event) => console.log(event.target.files)}
+                  multiple
+                  onChange={(event) =>
+                    formik.setFieldValue("medicine_img", event.target.files[0])
+                  }
+                  onBlur={formik.handleBlur}
+                  //  value={formik.values.department_img}
+                ></VisuallyHiddenInput>
+              </Button>
+              <img
+                src={
+                  formik.values.medicine_img instanceof File
+                    ? URL.createObjectURL(formik.values.medicine_img)
+                    : typeof formik.values.medicine_img === "string"
+                      ? "http://localhost:3000/" + formik.values.medicine_img
+                      : ""
+                }
+                width={"50px"}
+                height={"50px"}
+              />
+              <br />
+              {formik.errors.medicine_img && formik.errors.medicine_img ? (
+                <span className="error">
+                  please select insfrastructure image
+                </span>
+              ) : (
+                ""
+              )}
             </form>
           </DialogContent>
           <DialogActions>
@@ -379,14 +465,14 @@ function Medicine(props) {
         </Dialog>
       </React.Fragment>
 
-            <DataGrid
-              rows={medicine.medicine}
-              columns={columns}
-              initialState={{ pagination: { paginationModel } }}
-              pageSizeOptions={[5, 10]}
-              checkboxSelection
-              sx={{ border: 0 }}
-            />
+      <DataGrid
+        rows={medicine.medicine}
+        columns={columns}
+        initialState={{ pagination: { paginationModel } }}
+        pageSizeOptions={[5, 10]}
+        checkboxSelection
+        sx={{ border: 0 }}
+      />
     </div>
   );
 }

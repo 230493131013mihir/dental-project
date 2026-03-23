@@ -7,18 +7,38 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Box from "@mui/material/Box";
-import MenuItem from '@mui/material/MenuItem';
+import MenuItem from "@mui/material/MenuItem";
 import { Formik, useFormik } from "formik";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
-import { number, object, string } from "yup";
-import { addInsfrastructure, deleteInsfrastructure, getInsfrastructure, updateInsfrastructure } from "../../../redux/slice/insfrastructure.slice";
+import { mixed, number, object, string } from "yup";
+import {
+  addInsfrastructure,
+  deleteInsfrastructure,
+  getInsfrastructure,
+  updateInsfrastructure,
+} from "../../../redux/slice/insfrastructure.slice";
 import { useDispatch, useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from "@mui/icons-material/Delete";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import { getBranch } from "../../../redux/slice/branch.slice";
+import { getDepartment } from "../../../redux/slice/department.slice";
+import { getVendor } from "../../../redux/slice/vendor.slice";
+
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
 
 function Insfrastructure(props) {
   const [open, setOpen] = React.useState(false);
@@ -29,26 +49,39 @@ function Insfrastructure(props) {
 
   const handleClose = () => {
     setOpen(false);
+    setUpdate(false);
   };
 
-  const [update,setUpdate] = useState(false)
-    console.log(update);
-  
-
+  const [update, setUpdate] = useState(false);
+  console.log(update);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getInsfrastructure());
+    dispatch(getBranch());
+    dispatch(getDepartment());
+    dispatch(getVendor());
   }, []);
 
-  const insfrastructure = useSelector(state => state.insfrastructure);
-    console.log(insfrastructure);
+  const insfrastructure = useSelector((state) => state.insfrastructure);
+  console.log(insfrastructure);
 
-      // const branch = useSelector((state) => state.branch);
-    
-      // console.log(branch.branch);
-    const handleEdit = (values) => {
+  const branch = useSelector((state) => state.branch);
+
+  console.log(branch.branch);
+
+  const department = useSelector((state) => state.department);
+
+  console.log(department.department);
+
+  const vendor = useSelector((state) => state.vendor);
+
+  console.log(vendor.vendor);
+  // const branch = useSelector((state) => state.branch);
+
+  // console.log(branch.branch);
+  const handleEdit = (values) => {
     handleClose();
     console.log(values);
     formik.setValues(values);
@@ -65,8 +98,8 @@ function Insfrastructure(props) {
     price: number()
       .required("Enter amount")
       .positive("Amount must be greater than 0"),
-    type_id: string().required("Please Select type")
-
+    type_id: string().required("Please Select type"),
+    insfrastructure_img: mixed().required("Please Select image"),
   });
 
   const formik = useFormik({
@@ -78,25 +111,25 @@ function Insfrastructure(props) {
       description: "",
       price: "",
       type_id: "",
-      
+      insfrastructure_img: "",
     },
 
     validationSchema: userschema,
-onSubmit: (values, { resetForm }) => {
-        console.log(values);
-       
-        if (update){
-          console.log("update data")
-          dispatch(updateInsfrastructure(values))
-        }else{
-        dispatch(addInsfrastructure(values));
-        }
-       handleClose();
-       resetForm();
-      },
-    });
+    onSubmit: (values, { resetForm }) => {
+      console.log(values);
 
-  console.log(formik.errors, formik.touched);
+      if (update) {
+        console.log("update data");
+        dispatch(updateInsfrastructure(values));
+      } else {
+        dispatch(addInsfrastructure(values));
+      }
+      handleClose();
+      resetForm();
+    },
+  });
+
+  console.log(branch.branch, department.department,  formik.values.branch_id);
 
   const branch_id = [
     {
@@ -173,7 +206,7 @@ onSubmit: (values, { resetForm }) => {
       label: "type 3",
     },
   ];
-const columns = [
+  const columns = [
     { field: "branch_id", headerName: "branch_id", width: 130 },
     { field: "vendor_id", headerName: "vendor_id", width: 130 },
     { field: "department_id", headerName: "department_id", width: 130 },
@@ -181,15 +214,25 @@ const columns = [
     { field: "type_id", headerName: "type_id", width: 130 },
     { field: "description", headerName: "Description ", width: 130 },
     { field: "price", headerName: "Price ", width: 130 },
-     { field: "action", 
+    {
+      field: "insfrastructure_img",
+      headerName: "insfrastructure_img",
+      width: 130,
+      renderCell: (params) => (
+        <img
+          src={"http://localhost:3000/" + params.row.insfrastructure_img}
+          width={"50px"}
+          height={"50px"}
+        />
+      ),
+    },
+    {
+      field: "action",
       headerName: "Action ",
-       width: 130,
-        renderCell: (params) => (
+      width: 130,
+      renderCell: (params) => (
         <>
-          <IconButton
-            aria-label="Edit"
-            onClick={() => handleEdit(params.row)}
-          >
+          <IconButton aria-label="Edit" onClick={() => handleEdit(params.row)}>
             <ModeEditIcon />
           </IconButton>
           <IconButton
@@ -204,7 +247,6 @@ const columns = [
   ];
 
   const paginationModel = { page: 0, pageSize: 5 };
-
 
   return (
     <div>
@@ -241,14 +283,16 @@ const columns = [
                     : ""
                 }
               >
-                {branch_id.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
+                {branch.branch.map((v) => (
+                  <MenuItem key={v.id} value={v.id}>
+                    {v.name}
                   </MenuItem>
                 ))}
               </TextField>
               <TextField
-                error={formik.errors.department_id && formik.touched.department_id}
+                error={
+                  formik.errors.department_id && formik.touched.department_id
+                }
                 id="department_id"
                 name="department_id"
                 select
@@ -264,9 +308,9 @@ const columns = [
                     : ""
                 }
               >
-                {department_id.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
+                {department.department?.filter(v1 => v1.branch_id == formik.values.branch_id)?.map((v) => (
+                  <MenuItem key={v.id} value={v.id}>
+                    {v.name}
                   </MenuItem>
                 ))}
               </TextField>
@@ -287,9 +331,9 @@ const columns = [
                     : ""
                 }
               >
-                {vendor_id.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
+                {vendor.vendor.map((v) => (
+                  <MenuItem key={v.id} value={v.id}>
+                    {v.name}
                   </MenuItem>
                 ))}
               </TextField>
@@ -371,6 +415,51 @@ const columns = [
                     : ""
                 }
               />
+              <Button
+                component="label"
+                role={undefined}
+                variant="contained"
+                tabIndex={-1}
+                startIcon={<CloudUploadIcon />}
+              >
+                Upload insfrastructure image
+                <VisuallyHiddenInput
+                  type="file"
+                  name="insfrastructure_img"
+                  // onChange={(event) => console.log(event.target.files)}
+                  multiple
+                  onChange={(event) =>
+                    formik.setFieldValue(
+                      "insfrastructure_img",
+                      event.target.files[0],
+                    )
+                  }
+                  onBlur={formik.handleBlur}
+                  //  value={formik.values.department_img}
+                ></VisuallyHiddenInput>
+              </Button>
+
+              <img
+                src={
+                  formik.values.insfrastructure_img instanceof File
+                    ? URL.createObjectURL(formik.values.insfrastructure_img)
+                    : typeof formik.values.insfrastructure_img === "string"
+                      ? "http://localhost:3000/" +
+                        formik.values.insfrastructure_img
+                      : ""
+                }
+                width={"50px"}
+                height={"50px"}
+              />
+              <br />
+              {formik.errors.insfrastructure_img &&
+              formik.errors.insfrastructure_img ? (
+                <span className="error">
+                  please select insfrastructure image
+                </span>
+              ) : (
+                ""
+              )}
             </form>
           </DialogContent>
           <DialogActions>
@@ -383,13 +472,13 @@ const columns = [
       </React.Fragment>
 
       <DataGrid
-              rows={insfrastructure.insfrastructure}
-              columns={columns}
-              initialState={{ pagination: { paginationModel } }}
-              pageSizeOptions={[5, 10]}
-              checkboxSelection
-              sx={{ border: 0 }}
-            />
+        rows={insfrastructure.insfrastructure}
+        columns={columns}
+        initialState={{ pagination: { paginationModel } }}
+        pageSizeOptions={[5, 10]}
+        checkboxSelection
+        sx={{ border: 0 }}
+      />
     </div>
   );
 }

@@ -1,146 +1,159 @@
 const pool = require("../db/mysql");
 const fs = require("fs");
-const getDepartment = async (req, res) => {
+
+const getTreatment = async (req, res) => {
   try {
-    const [rows] = await pool.query("SELECT * FROM department");
+    const [rows] = await pool.query("SELECT * FROM treatment");
 
     console.log(rows);
     res.status(200).json({
       success: true,
       data: rows,
-      message: "department fetched successfully",
+      message: "treatment fetched successfully",
     });
   } catch (error) {
     console.log(error);
     res.status(500).json({
       success: true,
       data: null,
-      message: "department not-fetched successfully"+ error.message,
+      message: "treatment not-fetched successfully" + error.message,
     });
   }
 };
 
-const addDepartment = async (req, res) => {
+const addTreatment = async (req, res) => {
   try {
     console.log(req.body);
 
-    const { branch_id, name, description, mobile, email, address } = req.body;
+    const { appointment_id, date, amount, prescription, disease } = req.body;
 
     console.log(req.file);
 
     const [rows] = await pool.query(
-      "INSERT INTO department(branch_id, name, description, mobile, email, address,department_img) VALUES (?,?,?,?,?,?,?)",
-      [branch_id, name, description, mobile, email, address, req.file.path],
+      "INSERT INTO treatment(appointment_id, date4, amount, prescription, disease,treatment_img) VALUES (?,?,?,?,?,?)",
+      [appointment_id, date, amount, prescription, disease, req.file.path],
     );
     res.status(200).json({
       success: true,
-      data:  {...req.body, id: rows.insertId,department_img: req.file.path},
-      message: "department added successfully",
+      data: { ...req.body, id: rows.insertId, treatment_img: req.file.path },
+      message: "treatment added successfully",
     });
     console.log(rows, fields, result);
   } catch (error) {
-
     console.log(error);
     res.status(500).json({
       success: true,
       data: null,
-      message: "Internal Server Error (addDepartment)" + error.message,
+      message: "Internal Server Error)" + error.message,
     });
   }
 };
 
-const updateDepartment = async (req, res) => {
+const updateTreatment = async (req, res) => {
   try {
     console.log(req.body);
 
-    const { branch_id, name, description, mobile, email, address } = req.body;
+    const { appointment_id, date, amount, prescription, disease } = req.body;
 
-    const departmentId = req.params.id;
+    const treatmentId = req.params.id;
 
-     const [rows] = await pool.query(
-      `SELECT * FROM department WHERE id=${departmentId}`,);
+    const [rows] = await pool.query(
+      `SELECT * FROM treatment WHERE id=${treatmentId}`,
+    );
 
-    console.log(branch_id, name, description, mobile, email, address,departmentId,rows[0].department_img,);
+    console.log(
+      appointment_id,
+      date,
+      amount,
+      prescription,
+      disease,
+      rows[0].treatment_img,
+    );
 
-     let fileImg = "";
-        if (req.file) {
-          fs.unlinkSync(rows[0].department_img, (error) => {
-            console.log(error);
-          });
-          fileImg = req.file.path;
-        } else {
-          fileImg = rows[0].department_img;
-        }
+    let fileImg = "";
+    if (req.file) {
+      fs.unlinkSync(rows[0].treatment_img, (error) => {
+        console.log(error);
+      });
+      fileImg = req.file.path;
+    } else {
+      fileImg = rows[0].treatment_img;
+    }
 
     await pool.query(
-      "UPDATE department SET branch_id = ?,name= ?,mobile= ?,address= ?,description= ?,department_img=? WHERE id=?",
-      [branch_id, name, mobile, address, description,fileImg, departmentId],
+      "UPDATE treatment SET appointment_id = ?,date= ?,amount= ?,prescription= ?,disease= ?,treatment_img=? WHERE id=?",
+      [
+        appointment_id,
+        date,
+        amount,
+        prescription,
+        disease,
+        fileImg,
+        treatmentId,
+      ],
     );
 
     res.status(200).json({
-  success: true,
-  data: {
-    branch_id,
-    name,
-    description,
-    mobile,
-    email,
-    address,
-    department_img: fileImg,
-    id: departmentId,
-  },
-  message: "department update successfully",
-});
-     console.log(fields,results);
+      success: true,
+      data: {
+        appointment_id,
+        date,
+        amount,
+        prescription,
+        disease,
+        fileImg,
+        treatmentId,
+        treatment_img: fileImg,
+        id: treatmentId,
+      },
+      message: "treatment update successfully",
+    });
+    console.log(fields, results);
   } catch (error) {
     console.log(error);
     res.status(500).json({
       success: true,
       data: null,
-      message: "department not-update successfully",
+      message: "treatment not-update successfully",
     });
   }
 };
 
-const deleteDepartment = async (req, res) => {
+const deleteTreatment = async (req, res) => {
   try {
     // console.log(req.body);
-    const departmentId = req.params.id;
+    const treatmentId = req.params.id;
 
-     const [rows] = await pool.query(
-      `SELECT * FROM department WHERE id=${departmentId}`,
+    const [rows] = await pool.query(
+      `SELECT * FROM treatment WHERE id=${treatmentId}`,
     );
 
-    fs.unlinkSync(rows[0].department_img, (error) => {
+    fs.unlinkSync(rows[0].treatment_img, (error) => {
       console.log(error);
     });
 
+    console.log(treatmentId);
 
-    console.log(departmentId);
-
-    await pool.query(
-      `DELETE FROM department WHERE id=${departmentId}`,
-      [departmentId],
-    );
+    await pool.query(`DELETE FROM treatment WHERE id=${treatmentId}`);
 
     res.status(200).json({
       success: true,
       data: null,
-      message: "department deleted successfully",
+      message: "treatment deleted successfully",
     });
   } catch (error) {
     console.log(error);
     res.status(500).json({
       success: true,
       data: null,
-      message: "department not-deleted successfully"+ error.message,
+      message: "treatment not-deleted successfully" + error.message,
     });
   }
 };
 
 module.exports = {
-  getDepartment,
-  addDepartment,
-  updateDepartment,
-  deleteDepartment,
+  getTreatment,
+  addTreatment,
+  updateTreatment,
+  deleteTreatment,
 };

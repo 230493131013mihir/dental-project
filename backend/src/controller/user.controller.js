@@ -59,7 +59,7 @@ const addUser = async (req, res) => {
       message: "user added successfully",
     });
 
-    console.log(rows);
+    console.log(rows, fields, result);
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -91,17 +91,26 @@ const updateUser = async (req, res) => {
       `SELECT * FROM user WHERE id=${userId}`
     );
 
-    let fileImg = "";
-    if (req.file) {
-      try {
-        fs.unlinkSync(rows[0].user_img);
-      } catch (err) {
-        console.log(err);
-      }
-      fileImg = req.file.path;
-    } else {
-      fileImg = rows[0].user_img;
-    }
+    console.log(branch_id,
+      department_id,
+      role_id,
+      name,
+      dob,
+      email,
+      qualification,
+      address,
+      rows[0].user_img,
+    )
+
+     let fileImg = "";
+              if (req.file) {
+                fs.unlinkSync(rows[0].user_img, (error) => {
+                  console.log(error);
+                });
+                fileImg = req.file.path;
+              } else {
+                fileImg = rows[0].user_img;
+              }
 
     await pool.query(
       "UPDATE user SET branch_id=?,department_id=?,role_id=?,name=?,dob=?,email=?,qualification=?,address=?,user_img=? WHERE id=?",
@@ -135,6 +144,7 @@ const updateUser = async (req, res) => {
       },
       message: "user update successfully",
     });
+     console.log(fields,results);
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -153,15 +163,14 @@ const deleteUser = async (req, res) => {
       `SELECT * FROM user WHERE id=${userId}`
     );
 
-    try {
-      fs.unlinkSync(rows[0].user_img);
-    } catch (err) {
-      console.log(err);
-    }
+      fs.unlinkSync(rows[0].user_img, (error) => {
+               console.log(error);
+             });
+   
+              console.log(userId);
 
-    console.log(userId);
-
-    await pool.query(`DELETE FROM user WHERE id=${userId}`);
+    await pool.query(
+      `DELETE FROM user WHERE id=${userId}`);
 
     res.status(200).json({
       success: true,

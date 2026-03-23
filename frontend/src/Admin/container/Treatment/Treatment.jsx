@@ -58,10 +58,14 @@ function Treatment(props) {
 
   useEffect(() => {
     dispatch(getTreatment());
+    // dispatch(getAppointment());
   }, []);
 
   const treatment = useSelector((state) => state.treatment);
   console.log(treatment);
+
+//    const appointment = useSelector((state) => state.appointment);
+//            console.log(appointment.appointment);
 
   const handleEdit = (values) => {
     handleClose();
@@ -81,7 +85,7 @@ function Treatment(props) {
         amount: number().required("Please Select startdate"),
         prescription: string().required("Please Select prescription"),
         disease: string().required("Please Select disease"),
-        Treatment_img: mixed().required("Please Select image"),
+        treatment_img: mixed().required("Please Select image"),
 
     });
     // console.log(userschema)
@@ -93,7 +97,7 @@ function Treatment(props) {
             prescription: "",
             disease: "",
             date4: "",
-            Treatment_img: "",
+            treatment_img: "",
         },
 
         validationSchema: userschema,
@@ -364,16 +368,17 @@ const paginationModel = { page: 0, pageSize: 5 };
   ></VisuallyHiddenInput>
 </Button>
 
-<img
+  <img
   src={
-    typeof formik.values.treatment_img === "string"
+    formik.values.treatment_img instanceof File
+      ? URL.createObjectURL(formik.values.treatment_img)
+      : typeof formik.values.treatment_img === "string"
       ? "http://localhost:3000/" + formik.values.treatment_img
-      : URL.createObjectURL(formik.values.treatment_img)
+      : ""
   }
   width={"50px"}
   height={"50px"}
 />
-
 <br />
 
 {formik.errors.treatment_img && formik.errors.treatment_img ? (
@@ -394,7 +399,7 @@ const paginationModel = { page: 0, pageSize: 5 };
             </React.Fragment>
 
             <DataGrid
-  rows={treatment.treatment}
+  rows={[]}
   columns={columns}
   initialState={{ pagination: { paginationModel } }}
   pageSizeOptions={[5, 10]}
