@@ -37,7 +37,7 @@ const addTimeslot = async (req, res) => {
       message: "timeslot added successfully",
     });
 
-    console.log(rows);
+    console.log(rows, fields, result);
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -78,6 +78,8 @@ const updateTimeslot = async (req, res) => {
       },
       message: "timeslot update successfully",
     });
+
+          console.log(fields,results);
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -92,12 +94,19 @@ const deleteTimeslot = async (req, res) => {
   try {
     const timeslotId = req.params.id;
 
+  const [rows] = await pool.query(
+      `SELECT * FROM timeslot WHERE id=${timeslotId}`
+    );
+
+
     console.log(timeslotId);
 
+    
     await pool.query(
       `DELETE FROM timeslot WHERE id=${timeslotId}`,
       [timeslotId]
     );
+  
 
     res.status(200).json({
       success: true,

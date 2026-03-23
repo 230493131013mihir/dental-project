@@ -30,12 +30,12 @@ const addTreatment = async (req, res) => {
     console.log(req.file);
 
     const [rows] = await pool.query(
-      "INSERT INTO treatment(appointment_id, date4, amount, prescription, disease,treatment_img) VALUES (?,?,?,?,?,?)",
+      "INSERT INTO treatment(appointment_id, date, amount, prescription, disease,treatment_img) VALUES (?,?,?,?,?,?)",
       [appointment_id, date, amount, prescription, disease, req.file.path],
     );
     res.status(200).json({
       success: true,
-      data: { ...req.body, id: rows.insertId, treatment_img: req.file.path },
+      data: { ...req.body, id: rows.insertId, treatment_img: req.file.path, },
       message: "treatment added successfully",
     });
     console.log(rows, fields, result);

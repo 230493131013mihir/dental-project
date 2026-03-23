@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+  import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -132,7 +132,8 @@ function Medicine(props) {
     },
   });
 
-  console.log(formik.errors, formik.touched);
+  console.log(branch.branch, department.department,  formik.values.branch_id);
+
 
   const branch_id = [
     {
@@ -318,7 +319,7 @@ function Medicine(props) {
                     : ""
                 }
               >
-                {department.department.map((v) => (
+                {department.department?.filter(v1 => v1.branch_id == formik.values.branch_id)?.map((v) => (
                   <MenuItem key={v.id} value={v.id}>
                     {v.name}
                   </MenuItem>

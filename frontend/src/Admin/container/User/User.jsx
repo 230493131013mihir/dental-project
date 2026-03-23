@@ -122,7 +122,8 @@ function User(props) {
     },
   });
 
-  console.log(formik.errors, formik.touched);
+    console.log(branch.branch, department.department,  formik.values.branch_id);
+
 
   const columns = [
     { field: "branch_id", headerName: "Branch", width: 130 },
@@ -306,7 +307,7 @@ function User(props) {
                     : ""
                 }
               >
-              {department.department.map((v) => (
+                {department.department?.filter(v1 => v1.branch_id == formik.values.branch_id)?.map((v) => (
                   <MenuItem key={v.id} value={v.id}>
                     {v.name}
                   </MenuItem>
@@ -373,7 +374,8 @@ function User(props) {
                 margin="dense"
                 id="dob"
                 name="dob"
-                label=""
+                label="dob"
+                placeholder="dob"
                 type="date"
                 fullWidth
                 variant="standard"

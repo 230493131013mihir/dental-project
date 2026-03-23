@@ -19,6 +19,7 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import { useState } from "react";
+import { getBranch } from "../../../redux/slice/branch.slice";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -52,6 +53,7 @@ function Expence(props) {
 
   useEffect(() => {
     dispatch(getExpence());
+        dispatch(getBranch());
   }, []);
 
   const expence = useSelector(state => state.expence);
@@ -104,7 +106,7 @@ function Expence(props) {
         console.log("update data")
         dispatch(updateExpence(values))
       } else {
-        dispatch(updateExpence(values));
+        dispatch(addExpence(values));
       }
       handleClose();
       resetForm();
@@ -245,7 +247,7 @@ function Expence(props) {
                     : ""
                 }
               >
-                {branch_id.map((v) => (
+              {branch.branch.map((v) => (
                   <MenuItem key={v.id} value={v.id}>
                     {v.name}
                   </MenuItem>

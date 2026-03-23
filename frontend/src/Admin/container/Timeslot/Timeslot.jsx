@@ -36,6 +36,7 @@ function Timeslot(props) {
 
     const handleClose = () => {
         setOpen(false);
+         setUpdate(false);
     };
 
     const [update, setUpdate] = useState(false);
@@ -181,9 +182,9 @@ function Timeslot(props) {
                                         : ""
                                 }
                             >
-                                {user_id.map((option) => (
-                                    <MenuItem key={option.value} value={option.value}>
-                                        {option.label}
+                                {user.user.map((v) => (
+                                    <MenuItem key={v.id} value={v.id}>
+                                        {v.name}
                                     </MenuItem>
                                 ))}
                             </TextField>
@@ -193,7 +194,7 @@ function Timeslot(props) {
                                 margin="dense"
                                 id="date"
                                 name="date"
-                                label=""
+                                label="date"
                                 type="date"
                                 fullWidth
                                 variant="standard"
@@ -211,7 +212,7 @@ function Timeslot(props) {
                                 margin="dense"
                                 id="startdate"
                                 name="startdate"
-                                label=""
+                                label="startdate"
                                 type="date"
                                 fullWidth
                                 variant="standard"
@@ -229,7 +230,7 @@ function Timeslot(props) {
                                 margin="dense"
                                 id="enddate"
                                 name="enddate"
-                                label=""
+                                label="enddate"
                                 type="date"
                                 fullWidth
                                 variant="standard"
