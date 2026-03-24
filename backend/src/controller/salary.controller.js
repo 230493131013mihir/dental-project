@@ -44,7 +44,7 @@ const addSalary = async (req, res) => {
       message: "salary added successfully",
     });
 
-    console.log(rows);
+   console.log(rows, fields, result);
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -110,7 +110,7 @@ const updateSalary = async (req, res) => {
       },
       message: "salary update successfully",
     });
-    console.log(fields);
+          console.log(fields,results);
   } catch (error) {
     console.log(error);
     res.status(500).json({

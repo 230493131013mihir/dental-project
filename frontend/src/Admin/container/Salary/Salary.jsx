@@ -25,7 +25,8 @@ import { DataGrid } from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { addBranch, updateBranch } from "../../../redux/slice/branch.slice";
+import { getUser } from "../../../redux/slice/user.slice";
+// import { addBranch, updateBranch } from "../../../redux/slice/branch.slice";
 
 function Salary(props) {
   const [open, setOpen] = React.useState(false);
@@ -46,9 +47,14 @@ const dispatch = useDispatch();
 
 useEffect(() => {
   dispatch(getSalary());
+      dispatch(getUser());
 }, []);
 
 const salary = useSelector((state) => state.salary);
+ const user = useSelector((state) => state.user);
+
+  console.log(user.user);
+
 
 const handleEdit = (values) => {
   handleClose();
@@ -87,9 +93,9 @@ const handleEdit = (values) => {
 
       if (update) {
         console.log("update data");
-        dispatch(updateBranch(values));
+        dispatch(updateSalary(values));
       } else {
-        dispatch(addBranch(values));
+        dispatch(addSalary(values));
       }
       handleClose();
       resetForm();
@@ -99,7 +105,7 @@ const handleEdit = (values) => {
   console.log(formik.errors, formik.touched);
 
   const columns = [
-  { field: "user_id", headerName: "User", width: 130 },
+  { field: "user_id", headerName: "user_id", width: 130 },
   { field: "payment_id", headerName: "Payment", width: 130 },
   { field: "paymenttype", headerName: "Payment Type", width: 130 },
   { field: "status", headerName: "Status", width: 130 },
@@ -125,7 +131,7 @@ const handleEdit = (values) => {
 ];
   const paginationModel = { page: 0, pageSize: 5 };
 
-  const user = [
+  const user_id = [
     {
       value: "",
       label: "--select user--",
@@ -179,25 +185,25 @@ const handleEdit = (values) => {
           <DialogContent>
             <form onSubmit={formik.handleSubmit} id="subscription-form">
               <TextField
-                error={formik.errors.user && formik.touched.user}
-                id="user"
-                name="user"
+                error={formik.errors.user_id && formik.touched.user_id}
+                id="user_id"
+                name="user_id"
                 fullWidth
                 select
                 variant="standard"
-                label="Select user"
+                label="Select user_id"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.user}
+                value={formik.values.user_id}
                 helperText={
-                  formik.errors.user && formik.touched.user
-                    ? formik.errors.user
+                  formik.errors.user_id && formik.touched.user_id
+                    ? formik.errors.user_id
                     : ""
                 }
               >
-                {user.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
+{user.user.map((v) => (
+                  <MenuItem key={v.id} value={v.id}>
+                    {v.name}
                   </MenuItem>
                 ))}
               </TextField>
@@ -312,7 +318,7 @@ const handleEdit = (values) => {
 
       
             <DataGrid
-              rows={salary  .salary }
+              rows={salary.salary }
               columns={columns}
               initialState={{ pagination: { paginationModel } }}
               pageSizeOptions={[5, 10]}

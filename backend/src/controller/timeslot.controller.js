@@ -26,6 +26,8 @@ const addTimeslot = async (req, res) => {
 
     const { user_id, date, startdate, enddate } = req.body;
 
+    console.log(req.file);
+
     const [rows] = await pool.query(
       "INSERT INTO timeslot(user_id,date,startdate,enddate) VALUES(?,?,?,?)",
       [user_id, date, startdate, enddate]
@@ -33,7 +35,7 @@ const addTimeslot = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      data: { ...req.body, id: rows.insertId },
+      data: { ...req.body, id: rows.insertId, },
       message: "timeslot added successfully",
     });
 
