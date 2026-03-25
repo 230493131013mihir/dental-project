@@ -87,4 +87,4 @@ function RegisterDetails(props) {
   );
 }
 
-export default RegisterDetails;
+export default RegisterDetails; 
