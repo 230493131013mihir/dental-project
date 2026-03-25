@@ -91,6 +91,7 @@ function User(props) {
     dob: date().required("Please Select date"),
     email: string().required("Please Select type"),
     user_img: mixed().required("Please Select image"),
+    salary: string().required("Please enter salary"),
   });
 
   const formik = useFormik({
@@ -104,6 +105,7 @@ function User(props) {
       dob: "",
       email: "",
       user_img: "",
+      salary: "",
     },
 
     validationSchema: userschema,
@@ -134,6 +136,7 @@ function User(props) {
     { field: "email", headerName: "Email", width: 130 },
     { field: "qualification", headerName: "Qualification", width: 130 },
     { field: "address", headerName: "Address", width: 130 },
+    { field: "salary", headerName: "salary", width: 130 },
 
     {
       field: "user_img",
@@ -404,6 +407,24 @@ function User(props) {
                 helperText={
                   formik.errors.address && formik.touched.address
                     ? formik.errors.address
+                    : ""
+                }
+              />
+                            <TextField
+                error={formik.errors.salary && formik.touched.salary}
+                margin="dense"
+                id="salary"
+                name="salary"
+                label="salary"
+                type="text"
+                fullWidth
+                variant="standard"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.salary}
+                helperText={
+                  formik.errors.salary && formik.touched.salary
+                    ? formik.errors.salary
                     : ""
                 }
               />

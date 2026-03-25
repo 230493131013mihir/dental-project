@@ -12,7 +12,7 @@ import { Formik, useFormik } from "formik";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { styled } from "@mui/material/styles";
-import { number, object, string } from "yup";
+import { date, number, object, string } from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addSalary,
@@ -71,6 +71,8 @@ function Salary(props) {
       .required("Enter amount")
       .positive("Amount must be greater than 0"),
     workingdays: string().required("Please Select workingdays"),
+    startdate: date().required("Please Select startdate"),
+    enddate: date().required("Please Select enddate"),
   });
   // console.log(userschema)
 
@@ -82,6 +84,8 @@ function Salary(props) {
       status: "",
       amount: "",
       workingdays: "",
+      startdate: "",
+      enddate: "",
     },
 
     validationSchema: userschema,
@@ -109,6 +113,9 @@ function Salary(props) {
     { field: "status", headerName: "Status", width: 130 },
     { field: "workingdays", headerName: "Working Days", width: 130 },
     { field: "amount", headerName: "Amount", width: 130 },
+      { field: "startdate", headerName: "startdate", width: 130 },
+            { field: "enddate", headerName: "enddate", width: 130 },
+      
     {
       field: "action",
       headerName: "Action",

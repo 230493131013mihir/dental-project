@@ -32,6 +32,7 @@ export const addUser = createAsyncThunk(
       formData.append("email", values.email);
       formData.append("qualification", values.qualification);
       formData.append("address", values.address);
+       formData.append("salary", values.salary);
       formData.append("user_img", values.user_img);
 
       const responce = await axios.post(
@@ -58,6 +59,7 @@ export const updateUser = createAsyncThunk(
       formData.append("email", values.email);
       formData.append("qualification", values.qualification);
       formData.append("address", values.address);
+       formData.append("salary", values.salary);
       formData.append("user_img", values.user_img);
 
       const responce = await axios.put(

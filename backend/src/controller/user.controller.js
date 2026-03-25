@@ -34,12 +34,13 @@ const addUser = async (req, res) => {
       email,
       qualification,
       address,
+      salary,
     } = req.body;
 
     console.log(req.file);
 
     const [rows] = await pool.query(
-      "INSERT INTO user(branch_id,department_id,role_id,name,dob,email,qualification,address,user_img) VALUES(?,?,?,?,?,?,?,?,?)",
+      "INSERT INTO user(branch_id,department_id,role_id,name,dob,email,qualification,address,salary,user_img) VALUES(?,?,?,?,?,?,?,?,?,?)",
       [
         branch_id,
         department_id,
@@ -49,6 +50,7 @@ const addUser = async (req, res) => {
         email,
         qualification,
         address,
+        salary,
         req.file.path,
       ]
     );
@@ -83,6 +85,7 @@ const updateUser = async (req, res) => {
       email,
       qualification,
       address,
+      salary,
     } = req.body;
 
     const userId = req.params.id;
@@ -99,6 +102,7 @@ const updateUser = async (req, res) => {
       email,
       qualification,
       address,
+      salary,
       rows[0].user_img,
     )
 
@@ -113,7 +117,7 @@ const updateUser = async (req, res) => {
               }
 
     await pool.query(
-      "UPDATE user SET branch_id=?,department_id=?,role_id=?,name=?,dob=?,email=?,qualification=?,address=?,user_img=? WHERE id=?",
+      "UPDATE user SET branch_id=?,department_id=?,role_id=?,name=?,dob=?,email=?,qualification=?,address=?,salary=?,user_img=? WHERE id=?",
       [
         branch_id,
         department_id,
@@ -123,6 +127,7 @@ const updateUser = async (req, res) => {
         email,
         qualification,
         address,
+        salary,
         fileImg,
         userId,
       ]
@@ -139,6 +144,7 @@ const updateUser = async (req, res) => {
         email,
         qualification,
         address,
+        salary,
         user_img: fileImg,
         id: userId,
       },
