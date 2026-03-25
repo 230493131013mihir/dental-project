@@ -155,11 +155,11 @@ function Home(props) {
         <div className="col-12">
           <div className="ourservices">
             <div className="service-icon">
-              <span className="badge"><i>●</i> Our services</span>
+              <span className="badge"><i>●</i> Our department</span>
               <h2>Quality Care Across Every Medical Specialty</h2>
             </div>
             <div className="service-cta">
-              <a href="javascript:void(0);" className="btn">View All Services</a>
+              <a href="javascript:void(0);" className="btn">View All department</a>
             </div>
           </div>
         </div>

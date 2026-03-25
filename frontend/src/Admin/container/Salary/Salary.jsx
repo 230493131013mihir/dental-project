@@ -43,30 +43,29 @@ function Salary(props) {
   const [update, setUpdate] = useState(false);
   console.log(update);
 
-const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-useEffect(() => {
-  dispatch(getSalary());
-      dispatch(getUser());
-}, []);
+  useEffect(() => {
+    dispatch(getSalary());
+    dispatch(getUser());
+  }, []);
 
-const salary = useSelector((state) => state.salary);
- const user = useSelector((state) => state.user);
+  const salary = useSelector((state) => state.salary);
+  const user = useSelector((state) => state.user);
 
   console.log(user.user);
 
-
-const handleEdit = (values) => {
-  handleClose();
-  formik.setValues(values);
-  handleClickOpen();
-  setUpdate(true);
-};
+  const handleEdit = (values) => {
+    handleClose();
+    formik.setValues(values);
+    handleClickOpen();
+    setUpdate(true);
+  };
 
   let userschema = object({
     user_id: string().required("Please select user"),
     payment_id: number().required("Please enter amount"),
-    paymenttype: number().required("Please select paymenttype"),
+    transaction_id: number().required("Please select transaction_id"),
     status: string().required("Please Select status"),
     amount: number()
       .required("Enter amount")
@@ -79,11 +78,10 @@ const handleEdit = (values) => {
     initialValues: {
       user_id: "",
       payment_id: "",
-      paymenttype: "",
+      transaction_id: "",
       status: "",
       amount: "",
       workingdays: "",
-
     },
 
     validationSchema: userschema,
@@ -105,30 +103,28 @@ const handleEdit = (values) => {
   console.log(formik.errors, formik.touched);
 
   const columns = [
-  { field: "user_id", headerName: "user_id", width: 130 },
-  { field: "payment_id", headerName: "Payment", width: 130 },
-  { field: "paymenttype", headerName: "Payment Type", width: 130 },
-  { field: "status", headerName: "Status", width: 130 },
-  { field: "workingdays", headerName: "Working Days", width: 130 },
-  { field: "amount", headerName: "Amount", width: 130 },
-  {
-    field: "action",
-    headerName: "Action",
-    width: 130,
-    renderCell: (params) => (
-      <>
-        <IconButton onClick={() => handleEdit(params.row)}>
-          <ModeEditIcon />
-        </IconButton>
-        <IconButton
-          onClick={() => dispatch(deleteSalary(params.row.id))}
-        >
-          <DeleteIcon />
-        </IconButton>
-      </>
-    ),
-  },
-];
+    { field: "user_id", headerName: "user_id", width: 130 },
+    { field: "payment_id", headerName: "Payment", width: 130 },
+    { field: "transaction_id", headerName: "Payment Type", width: 130 },
+    { field: "status", headerName: "Status", width: 130 },
+    { field: "workingdays", headerName: "Working Days", width: 130 },
+    { field: "amount", headerName: "Amount", width: 130 },
+    {
+      field: "action",
+      headerName: "Action",
+      width: 130,
+      renderCell: (params) => (
+        <>
+          <IconButton onClick={() => handleEdit(params.row)}>
+            <ModeEditIcon />
+          </IconButton>
+          <IconButton onClick={() => dispatch(deleteSalary(params.row.id))}>
+            <DeleteIcon />
+          </IconButton>
+        </>
+      ),
+    },
+  ];
   const paginationModel = { page: 0, pageSize: 5 };
 
   const user_id = [
@@ -157,14 +153,28 @@ const handleEdit = (values) => {
     },
     {
       value: "0",
-      label: "payment",
+      label: "ONLINE",
     },
     {
       value: "1",
-      label: "payment1",
+      label: "OFFLINE",
     },
   ];
 
+  const status = [
+    {
+      value: "",
+      label: "select status",
+    },
+    {
+      value: "0",
+      label: "Complete",
+    },
+    {
+      value: "1",
+      label: "Reject",
+    },
+  ];
 
   return (
     <div>
@@ -191,7 +201,7 @@ const handleEdit = (values) => {
                 fullWidth
                 select
                 variant="standard"
-                label="Select user_id"
+                label="Select User"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.user_id}
@@ -201,7 +211,7 @@ const handleEdit = (values) => {
                     : ""
                 }
               >
-{user.user.map((v) => (
+                {user.user.map((v) => (
                   <MenuItem key={v.id} value={v.id}>
                     {v.name}
                   </MenuItem>
@@ -233,38 +243,67 @@ const handleEdit = (values) => {
               </TextField>
 
               <TextField
-                error={formik.errors.paymenttype && formik.touched.paymenttype}
+                error={
+                  formik.errors.transaction_id && formik.touched.transaction_id
+                }
                 margin="dense"
-                id="paymenttype"
-                name="paymenttype"
-                label="paymenttype"
+                id="transaction_id"
+                name="transaction_id"
+                label="transaction_id"
                 type="text"
                 fullWidth
                 variant="standard"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.paymenttype}
+                value={formik.values.transaction_id}
                 helperText={
-                  formik.errors.paymenttype && formik.touched.paymenttype
-                    ? formik.errors.paymenttype
+                  formik.errors.transaction_id && formik.touched.transaction_id
+                    ? formik.errors.transaction_id
                     : ""
                 }
               />
+
               <TextField
                 error={formik.errors.status && formik.touched.status}
-                margin="dense"
                 id="status"
                 name="status"
-                label="status"
-                type="text"
                 fullWidth
+                select
                 variant="standard"
+                label="Select status"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.status}
                 helperText={
                   formik.errors.status && formik.touched.status
                     ? formik.errors.status
+                    : ""
+                }
+              >
+                {status.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+
+              <TextField
+                error={
+                  formik.errors.transaction_id && formik.touched.transaction_id
+                }
+                margin="dense"
+                id="transaction_id"
+                name="transaction_id"
+                label="transaction_id"
+                type="text"
+                fullWidth
+                variant="standard"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.transaction_id}
+                helperText={
+                  formik.errors.transaction_id && formik.touched.transaction_id
+                    ? formik.errors.transaction_id
                     : ""
                 }
               />
@@ -304,7 +343,6 @@ const handleEdit = (values) => {
                     : ""
                 }
               />
-
             </form>
           </DialogContent>
           <DialogActions>
@@ -316,17 +354,14 @@ const handleEdit = (values) => {
         </Dialog>
       </React.Fragment>
 
-      
-            <DataGrid
-              rows={salary.salary }
-              columns={columns}
-              initialState={{ pagination: { paginationModel } }}
-              pageSizeOptions={[5, 10]}
-              checkboxSelection
-              sx={{ border: 0 }}
-            />
-
-      
+      <DataGrid
+        rows={salary.salary}
+        columns={columns}
+        initialState={{ pagination: { paginationModel } }}
+        pageSizeOptions={[5, 10]}
+        checkboxSelection
+        sx={{ border: 0 }}
+      />
     </div>
   );
 }

@@ -15,9 +15,12 @@ function Header(props) {
           <li>
             <NavLink to="/">Home </NavLink>
           </li>
+          <li>
+            <NavLink to="/branch">Branch </NavLink>
+          </li>
           <li><NavLink to="/about">About Us</NavLink></li>
           <li>
-            <a href="#serv">Services</a>
+           <NavLink to="/department">Department </NavLink>
           </li>
           <li>
             <a href="#tst">Testonomial</a>
@@ -27,6 +30,13 @@ function Header(props) {
           </li>
           <li><a href="#con">Contact <i className="fa-sharp fa-solid fa-down" /></a></li>
           <li><a href="javascript:void(0);">Pricing</a></li>
+           <li>
+            <NavLink to={"/register"}>Register</NavLink>
+          </li>
+
+          <li>
+            <NavLink to={"/login"}>Login</NavLink>
+          </li>
         </ul>
       </nav>
       <div className="header-button">
