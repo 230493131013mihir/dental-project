@@ -459,7 +459,7 @@ function Home(props) {
             <div className="call-us">
               <div className="call-text">
                 <a href="#">Dr. Harish Vyas</a>
-                <p>Oral Medicine &amp; Radiology</p>
+                <p>Oral Medicine & amp; Radiology</p>
               </div>
             </div>
           </div>

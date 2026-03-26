@@ -41,7 +41,7 @@ function BranchDetails(props) {
                 {bD.name}
               </h2>
               {/* Description */}
-              <p className="card-text text-muted" style={{fontSize: '20px',marginTop: '15px'}}>Description:
+              <p className="card-text text-muted" style={{fontSize: '20px',marginTop: '15px'}}>
                 {bD.description}
               </p>
               {/* address */}
@@ -69,8 +69,10 @@ function BranchDetails(props) {
               <div
                 className="mt-4"
                 style={{
-                  display: "flex",
-                  justifyContent: "space-between",
+                  // display: "flex",
+                  // justifyContent: "space-between",
+                  // marginRight: "100px",
+                  
                   marginTop: "15px",
                 }}
               >

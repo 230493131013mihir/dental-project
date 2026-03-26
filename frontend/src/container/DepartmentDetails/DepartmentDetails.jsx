@@ -39,7 +39,7 @@ function DepartmentDetails(props) {
                 {deptData.name}
               </h2>
               {/* Description */}
-              <p className="mt-3 text-muted"style={{fontSize: '20px'}}>Description: {deptData.description}</p>
+              <p className="mt-3 text-muted"style={{fontSize: '20px'}}> {deptData.description}</p>
               <hr />
               {/* Info */}
               <div className="row mb-2"style={{fontSize: '20px',marginTop: '15px'}}>
