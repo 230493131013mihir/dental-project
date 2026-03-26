@@ -15,6 +15,8 @@ const treatmentRoutes=require ("./treatment.routes");
 const userRoutes=require ("./user.routes");
 const vendorRoutes=require ("./vendor.routes");
 
+const patientRoutes=require("./patient.routes")
+
 
 
 router.use("/branch" ,branchRoutes);
@@ -29,6 +31,8 @@ router.use("/timeslot", timeslotRoutes);
 router.use("/treatment", treatmentRoutes);
 router.use("/user", userRoutes);
 router.use("/vendor", vendorRoutes);
+
+router.use("/patient", patientRoutes);
 
 
 

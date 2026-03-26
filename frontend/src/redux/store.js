@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import  branchSlice  from './slice/branch.slice'
 import  departmentSlice  from './slice/department.slice'
 import  expenceSlice  from './slice/expence.slice'
@@ -10,10 +10,29 @@ import  userSlice  from './slice/user.slice'
 import treatmentSlice  from './slice/treatment.slice'
 import servicesSlice  from './slice/services.slice'
 import  timeslotSlice  from './slice/timeslot.slice'
+import  authenthicationSlice  from './slice/authenthication.slice'
 
-export const store = configureStore({
-  reducer: {
-    branch: branchSlice,
+// export const store = configureStore({
+//   reducer: {
+//     branch: branchSlice,
+//     department: departmentSlice,
+//     expence: expenceSlice,
+//     insfrastructure: insfrastructureSlice,
+//     medicine: medicineSlice,
+//     salary: salarySlice,
+//     timeslot: timeslotSlice,
+//      treatment: treatmentSlice,
+//     user: userSlice,
+//     vendor: vendorSlice,
+//     services: servicesSlice,
+//     authenthication: authenthicationSlice
+
+//   },
+// })
+
+
+const reducers = combineReducers({
+  branch: branchSlice,
     department: departmentSlice,
     expence: expenceSlice,
     insfrastructure: insfrastructureSlice,
@@ -24,6 +43,22 @@ export const store = configureStore({
     user: userSlice,
     vendor: vendorSlice,
     services: servicesSlice,
+    authenthication: authenthicationSlice
 
-  },
-})
+});
+
+const persistConfig = {
+  key: 'root',
+  storage,
+  whitelist: ['authenthication']
+};
+
+const persistedReducer = persistReducer(persistConfig, reducers);
+
+const store = configureStore(
+  {
+    reducer: persistedReducer,
+  }
+)
+
+export default store;
