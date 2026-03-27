@@ -11,6 +11,7 @@ import treatmentSlice  from './slice/treatment.slice'
 import servicesSlice  from './slice/services.slice'
 import  timeslotSlice  from './slice/timeslot.slice'
 import  authenthicationSlice  from './slice/authenthication.slice'
+import  appointmentSlice  from './slice/appointment.slice'
 
 export const store = configureStore({
   reducer: {
@@ -25,7 +26,7 @@ export const store = configureStore({
     user: userSlice,
     vendor: vendorSlice,
     services: servicesSlice,
-    authenthication: authenthicationSlice
-
+    authenthication: authenthicationSlice,
+    appointment: appointmentSlice
   },
 })

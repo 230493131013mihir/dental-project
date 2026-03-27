@@ -135,6 +135,7 @@ export default function Layout({ children }) {
       { icon: <CleaningServicesIcon />, label: "Timeslot", to: "/admin/Timeslot" },
     { icon: <AttachMoneyIcon />, label: "Treatment", to: "/admin/Treatment" },
 
+     { icon: <MedicationLiquidIcon />, label: "Appointment", to: "/admin/appointment"},
     
   ];
 

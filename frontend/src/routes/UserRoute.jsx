@@ -10,6 +10,7 @@ import BranchDetails from "../container/BranchDetails/BranchDetails";
 import DepartmentDetails from "../container/DepartmentDetails/DepartmentDetails";
 import RegisterDetails from "../container/RegisterDetails/RegisterDetails";
 import Login from "../container/Login/Login";
+import Appointment from "../container/Appointment/Appointment";
 
 
 function Userroute(props) {
@@ -26,6 +27,8 @@ function Userroute(props) {
         <Route path="/department_details/:id" element={<DepartmentDetails />} />
         <Route path="/register" element={<RegisterDetails />} />
         <Route path="/login" element={<Login />} />
+
+        <Route path="/appointment" element={<Appointment />} />
       </Routes>
 
       <Footer />

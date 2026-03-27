@@ -51,7 +51,7 @@ function Header(props) {
         </ul>
       </nav>
       <div className="header-button">
-        <a href="javascript:void(0);" className="btn">Get Appointment</a>
+        <NavLink to={"/appointment"} className="btn">Get Appointment</NavLink>
       </div>
     </div>
   </div>

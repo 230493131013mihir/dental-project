@@ -17,6 +17,9 @@ const vendorRoutes=require ("./vendor.routes");
 
 const patientRoutes=require("./patient.routes")
 
+const appointmentRoutes=require("./appointment.routes")
+
+
 
 
 router.use("/branch" ,branchRoutes);
@@ -33,6 +36,9 @@ router.use("/user", userRoutes);
 router.use("/vendor", vendorRoutes);
 
 router.use("/patient", patientRoutes);
+
+router.use("/appointment", appointmentRoutes);
+    
 
 
 

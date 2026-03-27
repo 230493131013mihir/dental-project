@@ -30,7 +30,7 @@ function BranchDetails(props) {
               src={"http://localhost:3000/" + bD.branch_img}
               className="img-fluid rounded-start h-100 object-fit-cover"
               alt="Branch Image"
-              style={{ width: "100%", height: "500px" }}
+              style={{ width: "100%", height: "400px" }}
             />
           </div>
           {/* Branch Details */}
@@ -50,6 +50,7 @@ function BranchDetails(props) {
               <div className="row mb-3" style={{fontSize: '20px',marginTop: '10px'}}>
                 <div className="col-sm-4 fw-bold">
                   <i class="fa-solid fa-at"></i>
+                  
                 </div>
                 <div className="col-sm-8">{bD.email}</div>
               </div>
@@ -69,8 +70,8 @@ function BranchDetails(props) {
               <div
                 className="mt-4"
                 style={{
-                  // display: "flex",
-                  // justifyContent: "space-between",
+                  display: "flex",
+                  justifyContent: "space-between",
                   // marginRight: "100px",
                   
                   marginTop: "15px",

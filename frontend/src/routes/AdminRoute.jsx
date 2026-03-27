@@ -12,6 +12,7 @@ import Department from "../Admin/container/Department/Department";
 import Medicine from "../Admin/container/Medicine/Medicine";
 import Timeslot from "../Admin/container/Timeslot/Timeslot";
 import Treatment from "../Admin/container/Treatment/Treatment";
+import Appointment from "../Admin/container/Appointment/Appointment";
 
 function AdminRoute(props) {
   return (
@@ -29,6 +30,7 @@ function AdminRoute(props) {
 
         <Route path="/treatment" element={<Treatment />} />
         <Route path="/timeslot" element={<Timeslot />} />
+        <Route path="/appointment" element={<Appointment />} />
       </Routes>
     </Layout>
   );
