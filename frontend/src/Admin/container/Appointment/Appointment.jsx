@@ -275,7 +275,7 @@ function Appointment(props) {
       </React.Fragment>
 
       <DataGrid
-        rows={appointment || []}
+        rows={appointment.appointment}
         columns={columns}
         initialState={{ pagination: { paginationModel } }}
         pageSizeOptions={[5, 10]}
