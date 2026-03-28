@@ -199,7 +199,7 @@ function AppointmentEdit(props) {
 
           <div className="col-6"></div>
         </div>
-        <Button type="submit" form="subscription-form">
+        <Button type="submit" form="prescription-form">
           Submit
         </Button>
       </form>
