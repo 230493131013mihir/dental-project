@@ -13,9 +13,9 @@ function AppointmentEdit(props) {
 
   let userschema = object({
     prescription: string().required("Please add prescription"),
-    treatamt: number().required("Please enter Amount"),
+    treatamt: string().required("Please enter Amount"),
     medicine: string().required("Please select medicine"),
-    Amount: number().required("Please enter Amount"),
+    Amount: string().required("Please enter Amount"),
     quantity: string().required("Please Select quantity"),
   });
 
@@ -155,7 +155,7 @@ function AppointmentEdit(props) {
               id="Amount"
               label="Medicine-Amount"
               variant="standard"
-              name="quantity"
+              name="Amount"
               style={{ width: "100%" }}
               onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
