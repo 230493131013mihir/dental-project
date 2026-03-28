@@ -193,9 +193,34 @@ function Medicine(props) {
   ];
 
   const columns = [
-    { field: "branch_id", headerName: "branch_id", width: 130 },
-    { field: "vendor_id", headerName: "vendor_id", width: 130 },
-    { field: "department_id", headerName: "department_id", width: 130 },
+    { field: "branch_id", headerName: "branch_id", width: 130,
+        renderCell: (params) => {
+        const d = branch.branch?.find(v => v.id == params.row.branch_id)?.name
+
+        console.log(branch.branch_id, params.row.id, d);
+
+        return d
+      }
+     },
+    { field: "vendor_id", headerName: "vendor_id", width: 130,
+      renderCell: (params) => {
+        const d = vendor.vendor?.find(v => v.id == params.row.vendor_id)?.name
+
+        console.log(vendor.vendor_id, params.row.id, d);
+
+        return d
+      }
+      
+     },
+    { field: "department_id", headerName: "department_id", width: 130,
+       renderCell: (params) => {
+        const d = department.department?.find(v => v.id == params.row.department_id)?.name
+
+        console.log(department.department_id, params.row.id, d);
+
+        return d
+      }
+     },
     { field: "name", headerName: "Name", width: 130 },
     { field: "type", headerName: "Type", width: 130 },
     { field: "description", headerName: "Description ", width: 130 },

@@ -18,7 +18,10 @@ import { DataGrid } from "@mui/x-data-grid";
 import { getAppointment } from "../../../redux/slice/appointment.slice";
 import { getBranch } from "../../../redux/slice/branch.slice";
 import { getDepartment } from "../../../redux/slice/department.slice";
+import IconButton from "@mui/material/IconButton";
 
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import { useNavigate } from "react-router-dom";
 
 function Appointment(props) {
   const [open, setOpen] = React.useState(false);
@@ -96,6 +99,8 @@ function Appointment(props) {
 
   console.log(formik.errors, formik.touched);
 
+  const navigate = useNavigate();
+
   const columns = [
     {
       field: "branch",
@@ -135,15 +140,9 @@ function Appointment(props) {
       width: 130,
       renderCell: (params) => (
         <>
-          {/* <IconButton aria-label="Edit" onClick={() => handleEdit(params.row)}>
+          <IconButton aria-label="Edit" onClick={() => navigate("/admin/appointmentedit")}>
             <ModeEditIcon />
           </IconButton>
-          <IconButton
-            aria-label="delete"
-            onClick={() => dispatch(deleteAppointment(params.row.id))}
-          >
-            <DeleteIcon />
-          </IconButton> */}
         </>
       ),
     },
