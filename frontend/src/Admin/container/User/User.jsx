@@ -128,8 +128,26 @@ function User(props) {
 
 
   const columns = [
-    { field: "branch_id", headerName: "Branch", width: 130 },
-    { field: "department_id", headerName: "Department", width: 130 },
+    { field: "branch_id", headerName: "Branch", 
+      width: 130,
+              renderCell: (params) => {
+        const d = branch.branch?.find(v => v.id == params.row.branch_id)?.name
+
+        console.log(branch.branch_id, params.row.id, d);
+
+        return d
+      }
+     },
+    { field: "department_id", headerName: "Department", 
+      width: 130,
+              renderCell: (params) => {
+        const d = department.department?.find(v => v.id == params.row.department_id)?.name
+
+        console.log(department.department_id, params.row.id, d);
+
+        return d
+      }
+     },
     { field: "role_id", headerName: "Role", width: 130 },
     { field: "name", headerName: "Name", width: 130 },
     { field: "dob", headerName: "DOB", width: 130 },

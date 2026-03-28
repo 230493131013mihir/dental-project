@@ -36,7 +36,7 @@ function Timeslot(props) {
 
     const handleClose = () => {
         setOpen(false);
-         setUpdate(false);
+        setUpdate(false);
     };
 
     const [update, setUpdate] = useState(false);
@@ -46,15 +46,15 @@ function Timeslot(props) {
 
     useEffect(() => {
         dispatch(getTimeslot());
-         dispatch(getUser());
+        dispatch(getUser());
     }, []);
 
     const timeslot = useSelector((state) => state.timeslot);
     console.log(timeslot);
 
-     const user = useSelector((state) => state.user);
-         
-           console.log(user.user);
+    const user = useSelector((state) => state.user);
+
+    console.log(user.user);
 
     const handleEdit = (values) => {
         handleClose();
@@ -117,7 +117,16 @@ function Timeslot(props) {
     ];
 
     const columns = [
-        { field: "user_id", headerName: "User", width: 130 },
+        {
+            field: "user_id", headerName: "User", width: 130,
+            renderCell: (params) => {
+                const d = user.user?.find(v => v.id == params.row.user_id)?.name
+
+                console.log(department.user_id, params.row.id, d);
+
+                return d
+            }
+        },
         { field: "date", headerName: "Date", width: 130 },
         { field: "startdate", headerName: "Start Date", width: 130 },
         { field: "enddate", headerName: "End Date", width: 130 },

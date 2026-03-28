@@ -8,20 +8,16 @@ import Box from "@mui/material/Box";
 import { object, string, number, mixed } from "yup";
 import MenuItem from "@mui/material/MenuItem";
 import { Formik, useFormik } from "formik";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
-import { styled } from "@mui/material/styles";
 
 import { useDispatch, useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
-import IconButton from "@mui/material/IconButton";
 
-import DeleteIcon from "@mui/icons-material/Delete";
-import ModeEditIcon from "@mui/icons-material/ModeEdit";
-import { getBranch } from "../../../redux/slice/branch.slice";
-// import { getAppointment } from "../../../../../backend/src/controller/appointment.controller";
-// import { getBranch } from "../../../redux/slice/branch.slice";
+
+
 import { getAppointment } from "../../../redux/slice/appointment.slice";
+import { getBranch } from "../../../redux/slice/branch.slice";
+import { getDepartment } from "../../../redux/slice/department.slice";
 
 
 function Appointment(props) {
@@ -33,20 +29,31 @@ function Appointment(props) {
 
   const handleClose = () => {
     setOpen(false);
-    setUpdate(false);
+
   };
 
- const [update, setUpdate] = useState(false);
+  const [update, setUpdate] = useState(false);
   console.log(update);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getAppointment());
+    dispatch(getBranch());
+    dispatch(getDepartment());
   }, []);
 
-  const appointment = useSelector((state) => state.appointment.appointment);
+  const appointment = useSelector((state) => state.appointment);
   //console.log(error);
+  console.log(appointment);
+
+  const branch = useSelector((state) => state.branch);
+
+  console.log(branch.branch);
+
+  const department = useSelector((state) => state.department);
+
+  console.log(department.department);
 
   const handleEdit = (values) => {
     handleClose();
@@ -90,8 +97,33 @@ function Appointment(props) {
   console.log(formik.errors, formik.touched);
 
   const columns = [
-    { field: "branch", headerName: "branch", width: 130 },
-    { field: "department", headerName: "department", width: 130 },
+    {
+      field: "branch",
+      headerName: "branch",
+      width: 130,
+      renderCell: (params) => {
+        const d = branch.branch?.find(v => v.id == params.row.branch)?.name
+
+        console.log(branch.branch, params.row.id, d);
+
+        return d
+      }
+
+
+    },
+    {
+      field: "department",
+      headerName: "department",
+      width: 130,
+      renderCell: (params) => {
+        const d = department.department?.find(v => v.id == params.row.department)?.name
+
+        
+
+        return d
+        
+      }
+    },
     { field: "name", headerName: "name", width: 130 },
     { field: "phone", headerName: "phone", width: 130 },
     { field: "email", headerName: "email", width: 130 },
@@ -133,7 +165,7 @@ function Appointment(props) {
           Add Appointment
         </Button>
       </Box>
-      <React.Fragment>
+      {/* <React.Fragment>
         <Dialog open={open} onClose={handleClose}>
           <DialogContent>
             <form onSubmit={formik.handleSubmit} id="subscription-form">
@@ -262,7 +294,7 @@ function Appointment(props) {
                     : ""
                 }
               />
-             
+
             </form>
           </DialogContent>
           <DialogActions>
@@ -272,7 +304,7 @@ function Appointment(props) {
             </Button>
           </DialogActions>
         </Dialog>
-      </React.Fragment>
+      </React.Fragment> */}
 
       <DataGrid
         rows={appointment.appointment}

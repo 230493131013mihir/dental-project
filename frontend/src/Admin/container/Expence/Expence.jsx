@@ -53,15 +53,15 @@ function Expence(props) {
 
   useEffect(() => {
     dispatch(getExpence());
-        dispatch(getBranch());
+    dispatch(getBranch());
   }, []);
 
   const expence = useSelector(state => state.expence);
   console.log(expence);
 
   const branch = useSelector((state) => state.branch);
-  
-    console.log(branch.branch);
+
+  console.log(branch.branch);
 
   const handleEdit = (values) => {
     handleClose();
@@ -80,8 +80,8 @@ function Expence(props) {
       .required("Enter amount")
       .positive("Amount must be greater than 0"),
     date: date().required("Please Select date"),
-        expence_img: mixed().required("Please Select image"),
-    
+    expence_img: mixed().required("Please Select image"),
+
   });
   // console.log(userschema)
 
@@ -165,7 +165,16 @@ function Expence(props) {
   ];
 
   const columns = [
-    { field: "branch_id", headerName: "Branch", width: 130 },
+    {
+      field: "branch_id", headerName: "Branch", width: 130,
+      renderCell: (params) => {
+        const d = branch.branch?.find(v => v.id == params.row.branch_id)?.name
+
+        console.log(branch.branch_id, params.row.id, d);
+
+        return d
+      }
+    },
     { field: "payment_id", headerName: "Payment", width: 130 },
     { field: "paymenttype_id", headerName: "Paymenttype", width: 130 },
     { field: "email", headerName: "Email", width: 130 },
@@ -247,7 +256,7 @@ function Expence(props) {
                     : ""
                 }
               >
-              {branch.branch.map((v) => (
+                {branch.branch.map((v) => (
                   <MenuItem key={v.id} value={v.id}>
                     {v.name}
                   </MenuItem>

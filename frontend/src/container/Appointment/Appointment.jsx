@@ -16,11 +16,11 @@ function Appointment(props) {
     dispatch(getDepartment());
   }, []);
 
-  const branchData = useSelector((state) => state.branch);
+  const branch = useSelector((state) => state.branch);
   const department = useSelector((state) => state.department);
 
   console.log(department.department);
-  console.log(branchData.branch);
+  console.log(branch.branch);
 
   let userschema = object({
     branch: string().required("please select your branch"),
@@ -50,7 +50,7 @@ function Appointment(props) {
     },
   });
 
-console.log(branchData.branch, department.department, formik.values.branch);
+console.log(branch.branch, department.department, formik.values.branch);
   return (
     <main>
       <section>
@@ -67,7 +67,7 @@ console.log(branchData.branch, department.department, formik.values.branch);
                     value={formik.values.branch}
                   >
                     <option value="">--Select Branch--</option>
-                    {branchData.branch.map((v) => (
+                    {branch.branch.map((v) => (
                       <option value={v.id}>{v.name}</option>
                     ))}
                   </select>
@@ -96,7 +96,15 @@ console.log(branchData.branch, department.department, formik.values.branch);
                   )}
                   {department.department
                     ?.filter((v1) => v1.branch == formik.values.branch)
-                    ?.map((v) => (
+                    ?.map((v
+
+
+
+
+
+
+                      
+                    ) => (
                       <MenuItem key={v.id} value={v.id}>
                         {v.name}
                       </MenuItem>

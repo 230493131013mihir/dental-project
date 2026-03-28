@@ -47,7 +47,7 @@ function Department(props) {
 
   const handleClose = () => {
     setOpen(false);
-     setUpdate(false);
+    setUpdate(false);
   };
 
   const [update, setUpdate] = useState(false);
@@ -129,7 +129,19 @@ function Department(props) {
   ];
 
   const columns = [
-    { field: "branch_id", headerName: "branch_id", width: 130 },
+    {
+      field: "branch_id",
+      headerName: "branch_id",
+      width: 130,
+      renderCell: (params) => {
+        const d = branch.branch?.find(v => v.id == params.row.branch_id)?.name
+
+        console.log(branch.branch_id, params.row.id, d);
+
+        return d
+      }
+
+    },
     { field: "name", headerName: "Name", width: 130 },
     { field: "description", headerName: "Description", width: 130 },
     { field: "email", headerName: "Email", width: 130 },
@@ -339,17 +351,17 @@ function Department(props) {
                 width={"50px"}
                 height={"50px"}
               /> */}
-<img
-  src={
-    formik.values.department_img instanceof File
-      ? URL.createObjectURL(formik.values.department_img)
-      : typeof formik.values.department_img === "string"
-      ? "http://localhost:3000/" + formik.values.department_img
-      : ""
-  }
-  width={"50px"}
-  height={"50px"}
-/>
+              <img
+                src={
+                  formik.values.department_img instanceof File
+                    ? URL.createObjectURL(formik.values.department_img)
+                    : typeof formik.values.department_img === "string"
+                      ? "http://localhost:3000/" + formik.values.department_img
+                      : ""
+                }
+                width={"50px"}
+                height={"50px"}
+              />
               <br />
               {formik.errors.department_img && formik.errors.department_img ? (
                 <span className="error">please select department image</span>

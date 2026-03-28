@@ -90,9 +90,36 @@ function Services(props) {
     setUpdate(true);
   };
   const columns = [
-    { field: "branch_id", headerName: "branch_id", width: 130 },
-    { field: "department_id", headerName: "department_id", width: 130 },
-    { field: "user_id", headerName: "user_id", width: 130 },
+    {
+      field: "branch_id", headerName: "branch_id", width: 130,
+      renderCell: (params) => {
+        const d = branch.branch?.find(v => v.id == params.row.branch_id)?.name
+
+        console.log(branch.branch_id, params.row.id, d);
+
+        return d
+      }
+    },
+    {
+      field: "department_id", headerName: "department_id", width: 130,
+      renderCell: (params) => {
+        const d = department.department?.find(v => v.id == params.row.department_id)?.name
+
+        console.log(department.department_id, params.row.id, d);
+
+        return d
+      }
+    },
+    {
+      field: "user_id", headerName: "user_id", width: 130,
+      renderCell: (params) => {
+        const d = user.user?.find(v => v.id == params.row.user_id)?.name
+
+        console.log(department.user_id, params.row.id, d);
+
+        return d
+      }
+    },
     { field: "name", headerName: "name", width: 130 },
     { field: "description", headerName: "Description", width: 130 },
 
@@ -405,13 +432,13 @@ function Services(props) {
       </React.Fragment>
 
       <DataGrid
-              rows={services.services}
-              columns={columns}
-              initialState={{ pagination: { paginationModel } }}
-              pageSizeOptions={[5, 10]}
-              checkboxSelection
-              sx={{ border: 0 }}
-            />
+        rows={services.services}
+        columns={columns}
+        initialState={{ pagination: { paginationModel } }}
+        pageSizeOptions={[5, 10]}
+        checkboxSelection
+        sx={{ border: 0 }}
+      />
     </div>
   );
 }

@@ -107,15 +107,24 @@ function Salary(props) {
   console.log(formik.errors, formik.touched);
 
   const columns = [
-    { field: "user_id", headerName: "user_id", width: 130 },
+    {
+      field: "user_id", headerName: "user_id", width: 130,
+      renderCell: (params) => {
+        const d = user.user?.find(v => v.id == params.row.user_id)?.name
+
+        console.log(user.user_id, params.row.id, d);
+
+        return d
+      }
+    },
     { field: "payment_id", headerName: "Payment", width: 130 },
     { field: "transaction_id", headerName: "Payment Type", width: 130 },
     { field: "status", headerName: "Status", width: 130 },
     { field: "workingdays", headerName: "Working Days", width: 130 },
     { field: "amount", headerName: "Amount", width: 130 },
-      { field: "startdate", headerName: "startdate", width: 130 },
-            { field: "enddate", headerName: "enddate", width: 130 },
-      
+    { field: "startdate", headerName: "startdate", width: 130 },
+    { field: "enddate", headerName: "enddate", width: 130 },
+
     {
       field: "action",
       headerName: "Action",

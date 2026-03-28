@@ -129,7 +129,7 @@ function Insfrastructure(props) {
     },
   });
 
-  console.log(branch.branch, department.department,  formik.values.branch_id);
+  console.log(branch.branch, department.department, formik.values.branch_id);
 
   const branch_id = [
     {
@@ -207,9 +207,40 @@ function Insfrastructure(props) {
     },
   ];
   const columns = [
-    { field: "branch_id", headerName: "branch_id", width: 130 },
-    { field: "vendor_id", headerName: "vendor_id", width: 130 },
-    { field: "department_id", headerName: "department_id", width: 130 },
+    {
+      field: "branch_id", headerName: "branch_id",
+      width: 130,
+      renderCell: (params) => {
+        const d = branch.branch?.find(v => v.id == params.row.branch_id)?.name
+
+        console.log(branch.branch_id, params.row.id, d);
+
+        return d
+      }
+    },
+    {
+      field: "vendor_id", headerName: "vendor_id",
+      width: 130,
+      renderCell: (params) => {
+        const d = vendor.vendor?.find(v => v.id == params.row.vendor_id)?.name
+
+        console.log(vendor.vendor_id, params.row.id, d);
+
+        return d
+      }
+
+    },
+    {
+      field: "department_id", headerName: "department_id",
+      width: 130,
+      renderCell: (params) => {
+        const d = department.department?.find(v => v.id == params.row.department_id)?.name
+
+        console.log(department.department_id, params.row.id, d);
+
+        return d
+      }
+    },
     { field: "name", headerName: "Name", width: 130 },
     { field: "type_id", headerName: "type_id", width: 130 },
     { field: "description", headerName: "Description ", width: 130 },
@@ -435,7 +466,7 @@ function Insfrastructure(props) {
                     )
                   }
                   onBlur={formik.handleBlur}
-                  //  value={formik.values.department_img}
+                //  value={formik.values.department_img}
                 ></VisuallyHiddenInput>
               </Button>
 
@@ -445,7 +476,7 @@ function Insfrastructure(props) {
                     ? URL.createObjectURL(formik.values.insfrastructure_img)
                     : typeof formik.values.insfrastructure_img === "string"
                       ? "http://localhost:3000/" +
-                        formik.values.insfrastructure_img
+                      formik.values.insfrastructure_img
                       : ""
                 }
                 width={"50px"}
@@ -453,7 +484,7 @@ function Insfrastructure(props) {
               />
               <br />
               {formik.errors.insfrastructure_img &&
-              formik.errors.insfrastructure_img ? (
+                formik.errors.insfrastructure_img ? (
                 <span className="error">
                   please select insfrastructure image
                 </span>
