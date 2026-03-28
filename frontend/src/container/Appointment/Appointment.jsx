@@ -16,6 +16,10 @@ function Appointment(props) {
     dispatch(getDepartment());
   }, []);
 
+
+  const appointment = useSelector((state) => state.appointment);
+    console.log(appointment);
+  
   const branch = useSelector((state) => state.branch);
   const department = useSelector((state) => state.department);
 
@@ -96,15 +100,7 @@ console.log(branch.branch, department.department, formik.values.branch);
                   )}
                   {department.department
                     ?.filter((v1) => v1.branch == formik.values.branch)
-                    ?.map((v
-
-
-
-
-
-
-                      
-                    ) => (
+                    ?.map((v) => (
                       <MenuItem key={v.id} value={v.id}>
                         {v.name}
                       </MenuItem>
