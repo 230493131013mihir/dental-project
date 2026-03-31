@@ -19,6 +19,8 @@ const patientRoutes=require("./patient.routes")
 
 const appointmentRoutes=require("./appointment.routes")
 
+const blogRoutes= require("./blog.routes")
+
 
 
 
@@ -38,6 +40,8 @@ router.use("/vendor", vendorRoutes);
 router.use("/patient", patientRoutes);
 
 router.use("/appointment", appointmentRoutes);
+
+router.use("/blog", blogRoutes);
     
 
 
