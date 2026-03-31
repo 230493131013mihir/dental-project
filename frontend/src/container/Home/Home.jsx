@@ -1,6 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getDepartment } from '../../redux/slice/department.slice';
+import { NavLink } from "react-router-dom";
 
 function Home(props) {
+    const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getDepartment());
+  }, []);
+
+    const departmentData = useSelector((state) => state.department);
+
+    
     return (
         <main>
   {/* Hero Section */}
@@ -163,62 +175,41 @@ function Home(props) {
             </div>
           </div>
         </div>
-        <div className="col-12 col-md-6 col-lg-4">
-          <div className="service-box">
-            <div className="service-head">
-              <div className="icons">
-                <a href="#"><i className="fa-solid fa-tooth" /></a>
+      {departmentData.department?.map((v) => (
+              <div className="col-12 col-md-6 col-lg-4">
+
+                <NavLink to={`/department_details/${v.id}`}>
+                <div className="service-box">
+                  <div className="service-head">
+                    <div className="icons">
+                      <img
+                        src={"http://localhost:3000/" + v.department_img}
+                        style={{
+                          width: "55px",
+                          height: "45px",
+                        }}
+                      />
+                    </div>
+                    <div className="label">
+                      <label htmlFor>Dental</label>
+                    </div>
+                  </div>
+                  <div className="header-dental">
+                    <h4>{v.name}</h4>
+                    <p>{v.description}</p>
+                    <div className="read">
+                      {" "}
+                      <a href="#">Read more</a>
+                    </div>
+                  </div>
+                 
+                </div>
+                </NavLink>
               </div>
-              <div className="label">
-                <label htmlFor>Dental</label>
-              </div>
-            </div>
-            <div className="header-dental">
-              <h4><a href="service-details.html">Periodontology</a></h4>
-              <p>Periodontology is the branch of dentistry that deals with the prevention, diagnosis,
-                and treatment of diseases affecting the supporting structures of the teeth.</p>
-              <div className="read"> <a href="#">Read more</a></div>
-            </div>
-          </div>
-        </div>
-        <div className="col-12 col-md-6 col-lg-4">
-          <div className="service-box">
-            <div className="service-head">
-              <div className="icons">
-                <a href="#"><i className="fa-solid fa-user-doctor" /></a>
-              </div>
-              <div className="label">
-                <label htmlFor>Dental</label>
-              </div>
-            </div>
-            <div className="header-dental">
-              <h4><a href="#">Oral Medicine &amp; Radiology</a></h4>
-              <p>Oral Medicine and Radiology is a dental specialty concerned with the diagnosis &amp;
-                non-surgical management of diseases affecting the oral and maxillofacial region.</p>
-              <div className="read"> <a href="#">Read more</a></div>
-            </div>
-          </div>
-        </div>
-        <div className="col-12 col-md-6 col-lg-4">
-          <div className="service-box">
-            <div className="service-head">
-              <div className="icons">
-                <a href="#"><i className="fa-solid fa-brain" /></a>
-              </div>
-              <div className="label">
-                <label htmlFor>Dental</label>
-              </div>
-            </div>
-            <div className="header-dental">
-              <h4><a href="#">Oral &amp; Maxillofacial Surgery</a></h4>
-              <p> It is a specialized branch of dentistry and
-                medicine that focuses on diagnosing and surgically treating injuries, and
-                defects of the mouth, jaws, face, and neck. </p>
-              <div className="read"> <a href="#">Read more</a></div>
-            </div>
-          </div>
-        </div>
-      </div></div></section>
+            ))}
+      </div>
+      </div>
+    </section>
   {/*-treatment*/}
   <section className="treatment">
     <div className="containerfluid">
@@ -377,63 +368,10 @@ function Home(props) {
   {/* Booking */}
   <section className="booking">
     <div className="container">
-      <div className="row">
-        <div className="col-lg-6">
-          <div className="heading">
-            <span className="badge"><i>●</i> Booking</span>
-            <h2>Book Your Appointment Schedule Today</h2>
-            <p>Book your appointment today for expert medical &amp; personalized And treatment,
-              compassionate
-              support for a healthier.</p>
-          </div>
-          <div className="book-image">
-            <img src="images/booking-img.jpg" alt="BookingImG" />
-          </div>
-        </div>
-        <div className="col-lg-6">
           <div className="appointment">
-            <form>
-              <h3>Make an Appointment</h3>
-              <div className="row">
-                <div className="col-6">
-                  <input type="text" placeholder="Patient Name" required />
-                </div>
-                <div className="col-6">
-                  <input type="tel" placeholder="Phone Number" required />
-                </div>
-                <div className="col-6">
-                  <input type="date" />
-                </div>
-                <div className="col-6">
-                  <select>
-                    <option>10:00 AM -- 11:00 AM</option>
-                    <option>11:00 AM -- 12:00 PM</option>
-                    <option>13:00 PM -- 14:00 PM</option>
-                  </select>
-                </div>
-                <div className="col-12">
-                  <select>
-                    <option>Select Department</option>
-                    <option>Neurologists</option>
-                    <option>Oncologists</option>
-                    <option>Hematologists</option>
-                  </select>
-                </div>
-                <div className="col-12">
-                  <select>
-                    <option>Select Doctor</option>
-                    <option>Dr. M.D.patel</option>
-                    <option>Dr. S.J.patil</option>
-                  </select>
-                </div>
-                <div className="col-12">
-                  <input type="submit" defaultValue="Appointment" className="btn" />
-                </div>
-              </div>
-            </form></div>
+            
+          </div>
         </div>
-      </div>
-    </div>
   </section>
   {/* Team */}
   <section className="team">

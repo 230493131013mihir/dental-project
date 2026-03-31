@@ -28,6 +28,8 @@ export const login = createAsyncThunk("branch/login", async (data) => {
     );
     console.log(responce.data.data);
 
+    localStorage.setItem("user_id", responce.data.data.id)
+
     if (!responce.data.data) {
       alert(responce.data.message);
     }

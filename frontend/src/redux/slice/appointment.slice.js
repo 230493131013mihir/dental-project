@@ -27,7 +27,7 @@ export const bookAppointment = createAsyncThunk(
       
       const responce = await axios.post(
         "http://localhost:3000/appointment/bookAppointment",
-        values
+        {...values, user_id: localStorage.getItem("user_id")}
       );
 
       return responce.data.data;
@@ -35,6 +35,23 @@ export const bookAppointment = createAsyncThunk(
   }
 );
 
+export const addTreatment = createAsyncThunk(
+  "appointment/addTreatment",
+  async (values) => {
+    try {
+      
+      const responce = await axios.post(
+        "http://localhost:3000/appointment/addTreatment",
+        values
+      );
+
+      return responce.data.data;
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+);
 
 
 export const appointmentSlice = createSlice({
@@ -48,7 +65,10 @@ export const appointmentSlice = createSlice({
       console.log(action.payload);
       state.appointment = action.payload;
     });
-    
+     builder.addCase(addTreatment.fulfilled, (state, action) => {
+      console.log(action.payload);
+      state.appointment = action.payload;
+    });
   },
 });
 

@@ -18,6 +18,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { getAppointment } from "../../../redux/slice/appointment.slice";
 import { getBranch } from "../../../redux/slice/branch.slice";
 import { getDepartment } from "../../../redux/slice/department.slice";
+import { getUser } from "../../../redux/slice/user.slice";
 import IconButton from "@mui/material/IconButton";
 
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
@@ -44,11 +45,12 @@ function Appointment(props) {
     dispatch(getAppointment());
     dispatch(getBranch());
     dispatch(getDepartment());
+    dispatch(getUser());
   }, []);
 
   const appointment = useSelector((state) => state.appointment);
   //console.log(error);
-  console.log(appointment);
+  console.log(appointment.appointment);
 
   const branch = useSelector((state) => state.branch);
 
@@ -57,6 +59,10 @@ function Appointment(props) {
   const department = useSelector((state) => state.department);
 
   console.log(department.department);
+
+   const user = useSelector((state) => state.user);
+
+  console.log(user.user);
 
   const handleEdit = (values) => {
     handleClose();
@@ -67,12 +73,14 @@ function Appointment(props) {
   };
 
   let userschema = object({
-    branch: string().required("Please select branch"),
-    department: string().required("Please enter department"),
+    branch_id: number().required("Please select branch"),
+    department_id: number().required("Please enter department"),
+     user_id: number().required("Please select user"),
     name: string().required("Please Select name"),
     phone: string()
       .required("Please enter mobile number")
       .matches(/^[0-9]{10}$/, "Mobile number must be 10 digits"),
+      email: string().required("Please Select email"),
     date: string().required("Please Select date"),
     time: string().required("Please Select time"),
   });
@@ -80,8 +88,9 @@ function Appointment(props) {
 
   const formik = useFormik({
     initialValues: {
-      branch: "",
-      department: "",
+      branch_id: "",
+      department_id: "",
+      user_id: "",
       name: "",
       phone: "",
       email: "",
@@ -97,19 +106,20 @@ function Appointment(props) {
     },
   });
 
-  console.log(formik.errors, formik.touched);
+  // console.log(formik.errors, formik.touched);
+   console.log(branch.branch, department.department, formik.values.branch_id);
 
   const navigate = useNavigate();
 
   const columns = [
     {
-      field: "branch",
+      field: "branch_id",
       headerName: "branch",
       width: 130,
       renderCell: (params) => {
-        const d = branch.branch?.find(v => v.id == params.row.branch)?.name
+        const d = branch.branch?.find(v => v.id == params.row.branch_id)?.name
 
-        console.log(branch.branch, params.row.id, d);
+        console.log(branch.branch_id, params.row.id, d);
 
         return d
       }
@@ -117,21 +127,28 @@ function Appointment(props) {
 
     },
     {
-      field: "department",
+      field: "department_id",
       headerName: "department",
       width: 130,
       renderCell: (params) => {
-        const d = department.department?.find(v => v.id == params.row.department)?.name
+        const d = department.department?.find(v => v.id == params.row.department_id)?.name
 
-        
+        console.log(department.department_id, params.row.id, d);
 
         return d
         
       }
     },
+     { field: "user_id", headerName: "user", width: 130,
+      renderCell: (params) => {
+        const d = user.user?.find(v => v.id == params.row.user_id)?.name
+         console.log(user.user_id, params.row.id, d);
+        return d
+        
+      }
+      },
     { field: "name", headerName: "name", width: 130 },
     { field: "phone", headerName: "phone", width: 130 },
-    { field: "email", headerName: "email", width: 130 },
     { field: "date", headerName: "date", width: 130 },
     { field: "time", headerName: "time", width: 130 },
     {
@@ -140,7 +157,7 @@ function Appointment(props) {
       width: 130,
       renderCell: (params) => (
         <>
-          <IconButton aria-label="Edit" onClick={() => navigate("/admin/appointmentedit")}>
+          <IconButton aria-label="Edit" onClick={() => navigate("/admin/appointmentedit", {state: {appointment_id: params.row.id}})}>
             <ModeEditIcon />
           </IconButton>
         </>
@@ -164,44 +181,81 @@ function Appointment(props) {
           Add Appointment
         </Button>
       </Box>
-      {/* <React.Fragment>
+      { <React.Fragment>
         <Dialog open={open} onClose={handleClose}>
           <DialogContent>
             <form onSubmit={formik.handleSubmit} id="subscription-form">
               <TextField
-                error={formik.errors.branch && formik.touched.branch}
-                id="branch"
-                name="branch"
+                error={formik.errors.branch_id && formik.touched.branch_id}
+                id="branch_id"
+                name="branch_id"
                 fullWidth
                 select
                 variant="standard"
                 label="Select Branch"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.branch}
+                value={formik.values.branch_id}
                 helperText={
-                  formik.errors.branch && formik.touched.branch
-                    ? formik.errors.branch
+                  formik.errors.branch_id && formik.touched.branch_id
+                    ? formik.errors.branch_id
                     : ""
                 }
-              />
+                
+              >
+                  {branch.branch.map((v) => (
+                  <MenuItem key={v.id} value={v.id}>
+                    {v.name}
+                  </MenuItem>
+                ))}
+              </TextField>
               <TextField
-                error={formik.errors.department && formik.touched.department}
-                id="department"
-                name="department"
+                error={formik.errors.department_id && formik.touched.department_id}
+                id="department_id"
+                name="department_id"
                 fullWidth
                 select
                 variant="standard"
                 label="Select Branch"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.department}
+                value={formik.values.department_id}
                 helperText={
-                  formik.errors.department && formik.touched.department
-                    ? formik.errors.department
+                  formik.errors.department_id && formik.touched.department_id
+                    ? formik.errors.department_id
                     : ""
                 }
-              />
+              >
+                {department.department?.filter(v1 => v1.branch_id == formik.values.branch_id)?.map((v) => (
+                  <MenuItem key={v.id} value={v.id}>
+                    {v.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+               <TextField
+                error={formik.errors.user_id && formik.touched.user_id}
+                id="user_id"
+                name="user_id"
+                fullWidth
+                select
+                variant="standard"
+                label="Select Branch"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.user_id}
+                helperText={
+                  formik.errors.user_id && formik.touched.user_id
+                    ? formik.errors.user_id
+                    : ""
+                }
+              >
+                {user.user?.filter(v1 => v1.branch_id == formik.values.branch_id)?.map((v) => (
+                  <MenuItem key={v.id} value={v.id}>
+                    {v.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+               
 
               <TextField
                 error={formik.errors.name && formik.touched.name}
@@ -303,7 +357,7 @@ function Appointment(props) {
             </Button>
           </DialogActions>
         </Dialog>
-      </React.Fragment> */}
+      </React.Fragment> }
 
       <DataGrid
         rows={appointment.appointment}

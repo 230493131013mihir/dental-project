@@ -14,6 +14,7 @@ function Appointment(props) {
   useEffect(() => {
     dispatch(getBranch());
     dispatch(getDepartment());
+
   }, []);
 
 
@@ -27,8 +28,8 @@ function Appointment(props) {
   console.log(branch.branch);
 
   let userschema = object({
-    branch: string().required("please select your branch"),
-    department: string().required("Please Select department"),
+    branch_id: number().required("please select your branch"),
+    department_id: number().required("Please Select department"),
     name: string().required("Please enter your name"),
     phone: string()
       .required("Please enter phone number")
@@ -39,8 +40,8 @@ function Appointment(props) {
 
   const formik = useFormik({
     initialValues: {
-      branch: "",
-      department: "",
+      branch_id: "",
+      department_id: "",
       name: "",
       phone: "",
       date: "",
@@ -54,7 +55,7 @@ function Appointment(props) {
     },
   });
 
-console.log(branch.branch, department.department, formik.values.branch);
+console.log(branch.branch, department.department, formik.values.branch_id);
   return (
     <main>
       <section>
@@ -65,41 +66,41 @@ console.log(branch.branch, department.department, formik.values.branch);
               <div className="row">
                 <div className="col-6">
                   <select
-                    name="branch"
+                    name="branch_id"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    value={formik.values.branch}
+                    value={formik.values.branch_id}
                   >
                     <option value="">--Select Branch--</option>
                     {branch.branch.map((v) => (
                       <option value={v.id}>{v.name}</option>
                     ))}
                   </select>
-                  {formik.errors.branch && formik.touched.branch ? (
-                    <span className="error"> {formik.errors.branch}</span>
+                  {formik.errors.branch_id && formik.touched.branch_id ? (
+                    <span className="error"> {formik.errors.branch_id}</span>
                   ) : (
                     ""
                   )}
                 </div>
                 <div className="col-6">
                   <select
-                    name="department"
+                    name="department_id"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    value={formik.values.department}
+                    value={formik.values.department_id}
                   >
                     <option value="">--Select Department--</option>
                     {department.department.map((v) => (
                       <option value={v.id}>{v.name}</option>
                     ))}
                   </select>
-                  {formik.errors.department && formik.touched.department ? (
-                    <span className="error">{formik.errors.department}</span>
+                  {formik.errors.department_id && formik.touched.department_id ? (
+                    <span className="error">{formik.errors.department_id}</span>
                   ) : (
                     ""
                   )}
                   {department.department
-                    ?.filter((v1) => v1.branch == formik.values.branch)
+                    ?.filter((v1) => v1.branch_id == formik.values.branch_id)
                     ?.map((v) => (
                       <MenuItem key={v.id} value={v.id}>
                         {v.name}

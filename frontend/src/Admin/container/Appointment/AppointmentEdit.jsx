@@ -1,10 +1,48 @@
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { useFormik } from "formik";
-import React from "react";
-import { number, object, string } from "yup";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { date, number, object, string } from "yup";
+import { getMedicine } from "../../../redux/slice/medicine.slice";
+import { useLocation } from "react-router-dom";
+import {
+  addTreatment,
+  getAppointment,
+} from "../../../redux/slice/appointment.slice";
+import { getTreatment } from "../../../redux/slice/treatment.slice";
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 function AppointmentEdit(props) {
+  const { state } = useLocation();
+  const { appointment_id } = state;
+
+  console.log(appointment_id);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getMedicine());
+    dispatch(getTreatment());
+  }, []);
+
+  const medicineData = useSelector((state) => state.medicine);
+  const treData = useSelector((state) => state.treatment);
+
+  console.log(medicineData.medicine);
+
+  const fTreData = treData.treatment.filter(
+    (v) => v.appointment_id == appointment_id,
+  );
+
+  console.log(fTreData);
+
   //      const handleEdit = (values) => {
 
   //     console.log(values);
@@ -12,26 +50,40 @@ function AppointmentEdit(props) {
   //  };
 
   let userschema = object({
+    date: date().required(),
     prescription: string().required("Please add prescription"),
-    treatamt: string().required("Please enter Amount"),
-    medicine: string().required("Please select medicine"),
-    Amount: string().required("Please enter Amount"),
-    quantity: string().required("Please Select quantity"),
+    treatement_amount: string().required("Please enter Amount"),
+    medicine_id: string().required("Please select medicine"),
+    medicine_amount: string().required("Please enter Amount"),
+    medicine_quantity: string().required("Please Select quantity"),
   });
 
   const formik = useFormik({
     initialValues: {
+      date: "",
       prescription: "",
-      treatamt: "",
-      medicine: "",
-      Amount: "",
-      quantity: "",
+      treatement_amount: "",
+      medicine_id: "",
+      medicine_amount: "",
+      medicine_quantity: "",
     },
 
     validationSchema: userschema,
 
     onSubmit: (values, { resetForm }) => {
       console.log(values);
+      console.log({
+        ...values,
+        appointment_id: appointment_id,
+        medicine_id: parseInt(values.medicine_id),
+      });
+      dispatch(
+        addTreatment({
+          ...values,
+          appointment_id: appointment_id,
+          medicine_id: parseInt(values.medicine_id),
+        }),
+      );
       resetForm();
     },
   });
@@ -39,42 +91,6 @@ function AppointmentEdit(props) {
   // const dispatch = useDispatch(values);
 
   console.log(formik.errors, formik.touched);
-  const medicine = [
-    {
-      value: "",
-      label: "",
-    },
-    {
-      value: "1",
-      label: "antibiotics",
-    },
-    {
-      value: "2",
-      label: "painkillers   ",
-    },
-    {
-      value: "3",
-      label: "Antifungals",
-    },
-  ];
-  const quantity = [
-    {
-      value: "",
-      label: "",
-    },
-    {
-      value: "1",
-      label: "5",
-    },
-    {
-      value: "2",
-      label: "10   ",
-    },
-    {
-      value: "3",
-      label: "15",
-    },
-  ];
 
   return (
     <div>
@@ -83,6 +99,23 @@ function AppointmentEdit(props) {
       <form onSubmit={formik.handleSubmit} id="prescription-form">
         <div className="row">
           <div className="col-6">
+            <TextField
+              error={formik.errors.date && formik.touched.date}
+              name="date"
+              type="date"
+              id=""
+              variant="standard"
+              style={{ width: "100%" }}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.date}
+              helperText={
+                formik.errors.date && formik.touched.date
+                  ? formik.errors.date
+                  : ""
+              }
+            />
+
             <TextField
               error={formik.errors.prescription && formik.touched.prescription}
               name="prescription"
@@ -106,28 +139,33 @@ function AppointmentEdit(props) {
 
           <div className="col-6">
             <TextField
-              error={formik.errors.treatamt && formik.touched.treatamt}
-              id="Amount"
+              error={
+                formik.errors.treatement_amount &&
+                formik.touched.treatement_amount
+              }
+              id="Treatment-Amount"
               label="Treatment-Amount"
               variant="standard"
-              name="treatamt"
+              name="treatement_amount"
+              type="number"
               style={{ width: "100%" }}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.treatamt}
-                helperText={
-                  formik.errors.treatamt && formik.touched.treatamt
-                    ? formik.errors.treatamt
-                    : ""
-                }
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.treatement_amount}
+              helperText={
+                formik.errors.treatement_amount &&
+                formik.touched.treatement_amount
+                  ? formik.errors.treatement_amount
+                  : ""
+              }
             />
 
             <TextField
-             error={formik.errors.medicine && formik.touched.medicine}
+              error={formik.errors.medicine_id && formik.touched.medicine_id}
               id="Medicine"
               select
               label="Medicine"
-              name="medicine"
+              name="medicine_id"
               slotProps={{
                 select: {
                   native: true,
@@ -135,66 +173,63 @@ function AppointmentEdit(props) {
               }}
               variant="standard"
               style={{ width: "100%" }}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.medicine}
-                helperText={
-                  formik.errors.medicine && formik.touched.medicine
-                    ? formik.errors.medicine
-                    : ""
-                }
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.medicine_id}
+              helperText={
+                formik.errors.medicine_id && formik.touched.medicine_id
+                  ? formik.errors.medicine_id
+                  : ""
+              }
             >
-              {medicine.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
+              <option value="">--Select Medicine--</option>
+              {medicineData.medicine.map((option) => (
+                <option key={option.id} value={option.id}>
+                  {option.name}
                 </option>
               ))}
             </TextField>
             <TextField
-              error={formik.errors.Amount && formik.touched.Amount}
-              id="Amount"
-              label="Medicine-Amount"
+              error={
+                formik.errors.medicine_amount && formik.touched.medicine_amount
+              }
+              id="medicine_amount"
+              label="Medicine-medicine_amount"
               variant="standard"
-              name="Amount"
+              type="number"
+              name="medicine_amount"
               style={{ width: "100%" }}
               onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.Amount}
-                helperText={
-                  formik.errors.Amount && formik.touched.Amount
-                    ? formik.errors.Amount
-                    : ""
-                }
+              onBlur={formik.handleBlur}
+              value={formik.values.medicine_amount}
+              helperText={
+                formik.errors.medicine_amount && formik.touched.medicine_amount
+                  ? formik.errors.medicine_amount
+                  : ""
+              }
             />
 
             <TextField
-             error={formik.errors.quantity && formik.touched.quantity}
-              id="quantity"
-              select
-              label="Medicine Qty"
-              name="quantity"
-              slotProps={{
-                select: {
-                  native: true,
-                },
-              }}
+              error={
+                formik.errors.medicine_quantity &&
+                formik.touched.medicine_quantity
+              }
+              id="medicine_quantity"
+              label="Medicine-medicine_quantity"
               variant="standard"
+              name="medicine_quantity"
+              type="number"
               style={{ width: "100%" }}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.quantity}
-                helperText={
-                  formik.errors.quantity && formik.touched.quantity
-                    ? formik.errors.quantity
-                    : ""
-                }
-            >
-              {quantity.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </TextField>
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.medicine_quantity}
+              helperText={
+                formik.errors.medicine_quantity &&
+                formik.touched.medicine_quantity
+                  ? formik.errors.medicine_quantity
+                  : ""
+              }
+            />
           </div>
 
           <div className="col-6"></div>
@@ -203,6 +238,37 @@ function AppointmentEdit(props) {
           Submit
         </Button>
       </form>
+
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Date</TableCell>
+              <TableCell>prescription</TableCell>
+              <TableCell>treatement_amount</TableCell>
+              <TableCell>medicine_id</TableCell>
+              <TableCell>medicine_amount</TableCell>
+              <TableCell>medicine_quantity</TableCell>
+            </TableRow>
+          </TableHead>
+
+          <TableBody>
+            {fTreData.map((v) => (
+              <TableRow
+                key={v.id}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell>{v.date}</TableCell>
+                <TableCell>{v.prescription}</TableCell>
+                <TableCell>{v.treatement_amount}</TableCell>
+                <TableCell>{medicineData.medicine?.find(v1 => v1.id == v.medicine_id)?.name }</TableCell>
+                <TableCell>{v.medicine_amount}</TableCell>
+                <TableCell>{v.medicine_quantity}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 }
