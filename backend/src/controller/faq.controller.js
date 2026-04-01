@@ -79,6 +79,10 @@ const deleteFAQ = async (req, res) => {
   try {
     const faqId = req.params.id;
 
+      const [rows] = await pool.query(
+      `SELECT * FROM faq WHERE id=${faqId}`
+    );
+
     await pool.query(`DELETE FROM faq WHERE id=${faqId}`);
 
     res.status(200).json({

@@ -13,7 +13,7 @@ import { useFormik } from "formik";
 import { object, string } from "yup";
 
 import { useDispatch, useSelector } from "react-redux";
-import { addFAQ, getFAQ, updateFAQ } from "../../../redux/slice/FAQ.slice";
+import { addFAQ, deleteFAQ, getFAQ, updateFAQ } from "../../../redux/slice/FAQ.slice";
 // import {
 //   addFAQ,
 //   getFAQ,
@@ -64,15 +64,19 @@ function FAQ() {
       answer: "",
     },
     validationSchema: schema,
-    onSubmit: (values) => {
-      if (update) {
-        dispatch(updateFAQ(values));
-      } else {
-        dispatch(addFAQ(values));
-      }
-      handleClose();
-    },
-  });
+    onSubmit: (values, { resetForm }) => {
+         console.log(values);
+   
+         if (update) {
+           console.log("update data");
+           dispatch(updateFAQ(values));
+         } else {
+           dispatch(addFAQ(values));
+         }
+         handleClose();
+         resetForm();
+       },
+     });
 
   console.log(formik.errors, formik.touched);
   const columns = [
