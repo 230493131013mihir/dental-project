@@ -11,6 +11,7 @@ const getFAQ = async (req, res) => {
       message: "faq fetched successfully",
     });
   } catch (error) {
+      console.log(error);
     res.status(500).json({
       success: false,
       message: "faq not fetched",
@@ -21,7 +22,11 @@ const getFAQ = async (req, res) => {
 // ADD FAQ
 const addFAQ = async (req, res) => {
   try {
+
+     console.log(req.body);
     const { question, answer } = req.body;
+
+      console.log(question,answer,req.file);
 
     const [rows] = await pool.query(
       "INSERT INTO faq(question, answer) VALUES (?,?)",
@@ -33,6 +38,9 @@ const addFAQ = async (req, res) => {
       data: { id: rows.insertId, question, answer },
       message: "faq added successfully",
     });
+
+     console.log(rows, fields, result);
+     
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -54,9 +62,10 @@ const updateFAQ = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      data: { id: faqId, question, answer },
+      data: {  question, answer,id: faqId },
       message: "faq updated successfully",
     });
+      console.log(fields,results);
   } catch (error) {
     res.status(500).json({
       success: false,

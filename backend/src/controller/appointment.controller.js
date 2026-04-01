@@ -21,6 +21,28 @@ const getAppointment = async (req, res) => {
   }
 };
 
+const getMyAppointment = async (req, res) => {
+  try {
+    const user_id = req.params.user_id;
+
+    const [rows] = await pool.query(`SELECT * FROM appointment WHERE user_id=${user_id}`);
+
+    console.log(rows);
+    res.status(200).json({
+      success: true,
+      data: rows,
+      message: "appointment fetched successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: true,
+      data: null,
+      message: "appointment not-fetched successfully"+ error.message,
+    });
+  }
+};
+
 const bookAppointment = async (req, res) => {
   try {
     console.log(req.body);
@@ -84,6 +106,6 @@ const addTreatment = async (req, res) => {
 module.exports = {
   bookAppointment,
   getAppointment,
-  addTreatment
-
+  addTreatment,
+  getMyAppointment
 };

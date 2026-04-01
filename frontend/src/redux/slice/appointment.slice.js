@@ -4,6 +4,7 @@ import axios from "axios";
 const initialState = {
   isLoading: false,
   appointment: [],
+  myAppointment: [],
   error: false,
 };
 
@@ -19,40 +20,49 @@ export const getAppointment = createAsyncThunk(
   },
 );
 
+export const getMyAppointment = createAsyncThunk(
+  "appointment/getMyAppointment",
+  async () => {
+    const user_id = localStorage.getItem("user_id");
+
+    const responce = await axios.get(
+      "http://localhost:3000/appointment/getMyAppointment/" + user_id,
+    );
+    console.log(responce.data.data);
+
+    return responce.data.data;
+  },
+);
 
 export const bookAppointment = createAsyncThunk(
   "appointment/bookAppointment",
   async (values) => {
     try {
-      
       const responce = await axios.post(
         "http://localhost:3000/appointment/bookAppointment",
-        {...values, user_id: localStorage.getItem("user_id")}
+        { ...values, user_id: localStorage.getItem("user_id") },
       );
 
       return responce.data.data;
     } catch (error) {}
-  }
+  },
 );
 
 export const addTreatment = createAsyncThunk(
   "appointment/addTreatment",
   async (values) => {
     try {
-      
       const responce = await axios.post(
         "http://localhost:3000/appointment/addTreatment",
-        values
+        values,
       );
 
       return responce.data.data;
     } catch (error) {
       console.log(error);
-      
     }
-  }
+  },
 );
-
 
 export const appointmentSlice = createSlice({
   name: "appointment",
@@ -61,11 +71,14 @@ export const appointmentSlice = createSlice({
     builder.addCase(bookAppointment.fulfilled, (state, action) => {
       state.appointment = action.payload;
     });
-     builder.addCase(getAppointment.fulfilled, (state, action) => {
+    builder.addCase(getMyAppointment.fulfilled, (state, action) => {
+      state.myAppointment = action.payload;
+    });
+    builder.addCase(getAppointment.fulfilled, (state, action) => {
       console.log(action.payload);
       state.appointment = action.payload;
     });
-     builder.addCase(addTreatment.fulfilled, (state, action) => {
+    builder.addCase(addTreatment.fulfilled, (state, action) => {
       console.log(action.payload);
       state.appointment = action.payload;
     });

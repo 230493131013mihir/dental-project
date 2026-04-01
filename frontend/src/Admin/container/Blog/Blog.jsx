@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  TextField,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  Box,
-  IconButton,
-} from "@mui/material";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
-
+import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import { useFormik } from "formik";
 import { object, string, mixed } from "yup";
@@ -35,33 +32,42 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-function Blog() {
-  const [open, setOpen] = useState(false);
-  const [update, setUpdate] = useState(false);
+function Blog(props) {
+   const [open, setOpen] = React.useState(false);
+  
+    const handleClickOpen = () => {
+      setOpen(true);
+    };
+  
+    const handleClose = () => {
+      setOpen(false);
+      setUpdate(false);
+    };
+  
+    const [update, setUpdate] = useState(false);
+    console.log(update);
+  
+    const dispatch = useDispatch();
 
-  const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(getBlog());
+        
+      }, []);
+    
+  
+     const blog = useSelector((state) => state.blog);
 
-  const blog = useSelector((state) => state.blog);
 
-  useEffect(() => {
-    dispatch(getBlog());
-  }, [dispatch]);
+  
+    const handleEdit = (values) => {
+      handleClose();
+      console.log(values);
+      formik.setValues(values);
+      handleClickOpen();
+      setUpdate(true);
+    };
 
-  const handleClickOpen = () => setOpen(true);
-
-  const handleClose = () => {
-    setOpen(false);
-    setUpdate(false);
-    formik.resetForm();
-  };
-
-  const handleEdit = (values) => {
-    setUpdate(true);
-    setOpen(true);
-    formik.setValues(values);
-  };
-
-  // ✅ Validation
+  //  Validation
   const schema = object({
     name: string().required("Enter name"),
     description: string().required("Enter description"),
@@ -69,7 +75,7 @@ function Blog() {
     blog_img: mixed().required("Select image"),
   });
 
-  // ✅ Formik
+  //  Formik
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -78,15 +84,23 @@ function Blog() {
       blog_img: "",
     },
     validationSchema: schema,
-    onSubmit: (values) => {
-      if (update) {
-        dispatch(updateBlog(values));
-      } else {
-        dispatch(addBlog(values));
-      }
-      handleClose();
-    },
-  });
+
+
+   onSubmit: (values, { resetForm }) => {
+        console.log(values);
+  
+        if (update) {
+          console.log("update data");
+          dispatch(updateBlog(values));
+        } else {
+          dispatch(addBlog(values));
+        }
+        handleClose();
+        resetForm();
+      },
+    });
+  
+    console.log(formik.errors, formik.touched);
 
   // ✅ Table Columns
   const columns = [
@@ -124,6 +138,8 @@ function Blog() {
       ),
     },
   ];
+ 
+   const paginationModel = { page: 0, pageSize: 5 };
 
   return (
     <div>
@@ -142,11 +158,13 @@ function Blog() {
       </Box>
 
       {/* DIALOG FORM */}
+      <React.Fragment>
       <Dialog open={open} onClose={handleClose}>
         <DialogContent>
           <form onSubmit={formik.handleSubmit} id="blog-form">
             {/* NAME */}
             <TextField
+            
               fullWidth
               margin="dense"
               name="name"
@@ -246,17 +264,17 @@ function Blog() {
           </Button>
         </DialogActions>
       </Dialog>
+  </React.Fragment>    
 
-      {/* TABLE */}
-      <DataGrid
-        rows={blog.blog}
-        columns={columns}
-        pageSizeOptions={[5, 10]}
-        initialState={{
-          pagination: { paginationModel: { page: 0, pageSize: 5 } },
-        }}
-        sx={{ border: 0 }}
-      />
+
+         <DataGrid
+              rows={blog.blog}
+              columns={columns}
+              initialState={{ pagination: { paginationModel } }}
+              pageSizeOptions={[5, 10]}
+              checkboxSelection
+              sx={{ border: 0 }}
+            />
     </div>
   );
 }

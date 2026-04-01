@@ -11,6 +11,7 @@ import DepartmentDetails from "../container/DepartmentDetails/DepartmentDetails"
 import RegisterDetails from "../container/RegisterDetails/RegisterDetails";
 import Login from "../container/Login/Login";
 import Appointment from "../container/Appointment/Appointment";
+import MyAppointment from "../container/MyAppointment/MyAppointment";
 
 
 function Userroute(props) {
@@ -29,6 +30,7 @@ function Userroute(props) {
         <Route path="/login" element={<Login />} />
 
         <Route path="/appointment" element={<Appointment />} />
+        <Route path="/myappointment" element={<MyAppointment />} />
       </Routes>
 
       <Footer />

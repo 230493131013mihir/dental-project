@@ -15,12 +15,13 @@ const treatmentRoutes=require ("./treatment.routes");
 const userRoutes=require ("./user.routes");
 const vendorRoutes=require ("./vendor.routes");
 
-const patientRoutes=require("./patient.routes")
+const patientRoutes=require("./patient.routes");
 
-const appointmentRoutes=require("./appointment.routes")
+const appointmentRoutes=require("./appointment.routes");
 
-const blogRoutes= require("./blog.routes")
+const blogRoutes= require("./blog.routes");
 
+const faqRoutes= require("./faq.routes");
 
 
 
@@ -42,6 +43,8 @@ router.use("/patient", patientRoutes);
 router.use("/appointment", appointmentRoutes);
 
 router.use("/blog", blogRoutes);
+
+router.use("/faq", faqRoutes);
     
 
 

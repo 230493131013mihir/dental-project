@@ -164,7 +164,6 @@ function AppointmentEdit(props) {
               error={formik.errors.medicine_id && formik.touched.medicine_id}
               id="Medicine"
               select
-              label="Medicine"
               name="medicine_id"
               slotProps={{
                 select: {
@@ -172,7 +171,7 @@ function AppointmentEdit(props) {
                 },
               }}
               variant="standard"
-              style={{ width: "100%" }}
+              style={{ width: "100%", marginTop: '20px' }}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.medicine_id}

@@ -9,22 +9,30 @@ const initialState = {
 
 // GET
 export const getBlog = createAsyncThunk("blog/getBlog", async () => {
-  const res = await axios.get("http://localhost:3000/blog/getBlog");
-  return res.data.data;
+  const responce = await axios.get("http://localhost:3000/blog/getBlog");
+
+  console.log(responce.data.data);
+  
+  return responce.data.data;
 });
 
 // ADD
 export const addBlog = createAsyncThunk("blog/addBlog", async (values) => {
+
+  console.log(values);
+
   const formData = new FormData();
   formData.append("name", values.name);
   formData.append("description", values.description);
   formData.append("date", values.date);
   formData.append("blog_img", values.blog_img);
 
-  const res = await axios.post(
+  const responce = await axios.post(
     "http://localhost:3000/blog/addBlog",
     formData
   );
+
+   console.log(responce);
 
   return res.data.data;
 });
@@ -71,8 +79,11 @@ export const blogSlice = createSlice({
     });
     builder.addCase(updateBlog.fulfilled, (state, action) => {
       const index = state.blog.findIndex(
-        (v) => v.id === action.payload.id
+        (v) => v.id == action.payload.id
       );
+
+      console.log("iiii", index, action.payload);
+      
       state.blog[index] = action.payload;
     });
     builder.addCase(deleteBlog.fulfilled, (state, action) => {

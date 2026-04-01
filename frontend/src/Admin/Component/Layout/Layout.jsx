@@ -136,6 +136,9 @@ export default function Layout({ children }) {
     { icon: <AttachMoneyIcon />, label: "Treatment", to: "/admin/Treatment" },
 
      { icon: <MedicationLiquidIcon />, label: "Appointment", to: "/admin/appointment"},
+
+       { icon: <AccountCircleIcon />, label: "Blog", to: "/admin/blog"},
+         { icon: <PersonIcon />, label: "Faq", to: "/admin/faq"},
     
   ];
 

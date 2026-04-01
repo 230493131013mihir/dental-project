@@ -7,16 +7,27 @@ const initialState = {
 
 // GET
 export const getFAQ = createAsyncThunk("faq/getFAQ", async () => {
-  const res = await axios.get("http://localhost:3000/faq/getFAQ");
-  return res.data.data;
+  const responce = await axios.get("http://localhost:3000/faq/getFAQ");
+
+   console.log(responce.data.data);
+   
+  return responce.data.data;
 });
 
 // ADD
 export const addFAQ = createAsyncThunk("faq/addFAQ", async (values) => {
+ console.log(values);
+ 
+//  const formData = new FormData();
+//   formData.append("name", values.name);
+//   formData.append("answer", values.answer);
+
   const res = await axios.post(
     "http://localhost:3000/faq/addFAQ",
     values
   );
+
+  console.log(res);
   return res.data.data;
 });
 
@@ -57,7 +68,7 @@ export const faqSlice = createSlice({
 
     builder.addCase(updateFAQ.fulfilled, (state, action) => {
       const index = state.faq.findIndex(
-        (v) => v.id === action.payload.id
+        (v) => v.id == action.payload.id
       );
       state.faq[index] = action.payload;
     });

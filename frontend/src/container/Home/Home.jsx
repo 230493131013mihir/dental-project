@@ -3,6 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getDepartment } from '../../redux/slice/department.slice';
 import { NavLink } from "react-router-dom";
 import { useFormik } from "formik";
+import { object, string } from 'yup';
+import { getBranch } from '../../redux/slice/branch.slice';
+import { getBlog } from '../../redux/slice/blog.slice';
+import { getFAQ } from '../../redux/slice/FAQ.slice';
 
 function Home(props) {
     const dispatch = useDispatch();
@@ -10,9 +14,53 @@ function Home(props) {
   useEffect(() => {
     dispatch(getDepartment());
      dispatch(getBranch());
+     dispatch(getBlog());
+     dispatch(getFAQ())
   }, []);
     const branch = useSelector((state) => state.branch);
     const departmentData = useSelector((state) => state.department);
+     const department = useSelector((state) => state.department);
+
+      const blog = useSelector((state) => state.blog);
+
+       const faq = useSelector((state) => state.faq);
+
+
+
+
+    let userschema = object({
+        branch_id: string().required("Please enter branch_id"),
+        department_id: string().required("please enter department_id"),
+        name: string().required("Please Select name"),
+        phone: string()
+          .required("Please enter mobile_no number")
+          .matches(/^[0-9]{10}$/, "Mobile number must be 10 digits"),
+        date: string().required("Please Select date"),
+        time: string().required("Please Select time"),
+      });
+
+
+    const formik = useFormik({
+        initialValues: {
+          branch_id: "",
+          department_id: "",
+          name: "",
+          phone: "",
+          date: "",
+          time: "",
+        },
+    
+        validationSchema: userschema,
+    
+        onSubmit: (values, { resetForm }) => {
+          console.log(values);
+          resetForm();
+        },
+      });
+    
+      // const dispatch = useDispatch(values);
+    
+      console.log(formik.errors, formik.touched);
 
     
     return (
@@ -370,7 +418,25 @@ function Home(props) {
   {/* Booking */}
   <section className="booking">
       <div className="container">
-          <div className="appointment">
+
+<div className="row">
+  <div className="col-lg-6">
+    <div className="heading">
+      <span className="badge"><i>●</i> Booking</span>
+      <h2>Book Your Appointment Schedule Today</h2>
+      <p>Book your appointment today for expert medical &amp; personalized And treatment,
+        compassionate
+        support for a healthier.</p>
+    </div>
+    <div className="book-image">
+      <img src="images/booking-img.jpg" alt="BookingImG" />
+    </div>
+  </div>
+
+
+
+        <div className="col-lg-6">
+            <div className="appointment">
             <form onSubmit={formik.handleSubmit} id="appointment-form">
               <h3>Make an Appointment</h3>
               <div className="row">
@@ -504,7 +570,10 @@ function Home(props) {
                 </div>
               </div>
             </form>
-          </div>
+            </div>
+      </div>      
+        </div>
+
         </div>
   </section>
   {/* Team */}
@@ -692,6 +761,7 @@ function Home(props) {
             </div>
           </div>
         </div>
+         {faq.faq?.map((v) => (
         <div className="col-7">
           <div className="faq-content">
             <div className="heading">
@@ -703,16 +773,14 @@ function Home(props) {
             <div className="faq-accordion">
               <div className="question quest-1 open">
                 <div className="acc-header">
-                  <h4>How often should I have a general health check-up?</h4>
+                  <h4>{v.question}</h4>
                   <i className="fa-solid fa-angle-up" />
                 </div>
                 <div className="acc-body">
-                  <p>Seek emergency care if you experience severe chest pain, difficulty
-                    breathing, sudden weakness, heavy bleeding, confusion, or loss of
-                    consciousness.</p>
+                  <p>{v.answer}</p>
                 </div>
               </div>
-              <div className="question quest-2">
+              {/* <div className="question quest-2">
                 <div className="acc-header">
                   <h4>How do I know if my condition requires emergency care?</h4>
                   <i className="fa-solid fa-angle-up" />
@@ -744,10 +812,11 @@ function Home(props) {
                     breathing, sudden weakness, heavy bleeding, confusion, or loss of
                     consciousness.</p>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
+         ))}
       </div>
     </div>
   </section>
@@ -759,8 +828,10 @@ function Home(props) {
         <h2>Latest Health &amp; Dental Articles</h2>
         <p>Read our latest health tips and dental care advice from expert doctors.</p>
       </div>
+
+       {blog.blog?.map((v) => (
       <div className="row">
-        <div className="col-4">
+        {/* <div className="col-4">
           <div className="blog-card">
             <div className="blog-img">
               <img src="images/blog-1.jpg" alt />
@@ -771,20 +842,22 @@ function Home(props) {
               <a href="#">Read More</a>
             </div>
           </div>
-        </div>
+        </div> */}
         <div className="col-4">
           <div className="blog-card">
             <div className="blog-img">
-              <img src="images/blog-2.jpg" alt />
+               <img
+                        src={"http://localhost:3000/" + v.blog_img}
+                      />
             </div>
             <div className="blog-content">
-              <h3>Importance Of Regular Checkups</h3>
-              <p>Regular dental visits help detect problems early and keep your smile safe.</p>
+              <h3>{v.name}</h3>
+              <p>{v.description}</p>
               <a href="#">Read More</a>
             </div>
           </div>
         </div>
-        <div className="col-4">
+        {/* <div className="col-4">
           <div className="blog-card">
             <div className="blog-img">
               <img src="images/blog-3.jpg" alt />
@@ -795,8 +868,10 @@ function Home(props) {
               <a href="#">Read More</a>
             </div>
           </div>
-        </div>
+        </div> */}
+         
       </div>
+      ))}
     </div>
   </section>
 </main>

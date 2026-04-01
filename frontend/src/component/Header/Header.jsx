@@ -2,6 +2,8 @@ import React from 'react';
 import { NavLink, Route, Routes } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from '../../redux/slice/authenthication.slice';
+import { useEffect } from 'react';
+import { getMyAppointment } from '../../redux/slice/appointment.slice';
 
 
 function Header(props) {
@@ -10,6 +12,15 @@ function Header(props) {
   const authenthication = useSelector(state => state.authenthication);
 
   console.log(authenthication);
+
+  useEffect(() => {
+    dispatch(getMyAppointment())
+  }, []);
+
+  const myApt = useSelector(state => state.appointment);
+
+  console.log(myApt.myAppointment);
+  
 
     return (
        <header>
@@ -48,6 +59,12 @@ function Header(props) {
             <NavLink to={"/login"}>Login</NavLink>
             }
           </li>
+          
+            {
+              myApt.myAppointment.length > 0 ?
+              <li><NavLink to={"/myappointment"}>My Appointment</NavLink></li> :
+              null
+            }
         </ul>
       </nav>
       <div className="header-button">

@@ -1,49 +1,55 @@
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  TextField,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  Box,
-  IconButton,
-} from "@mui/material";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
-
+import IconButton from "@mui/material/IconButton";
 import { useFormik } from "formik";
 import { object, string } from "yup";
 
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addFAQ,
-  getFAQ,
-  updateFAQ,
-  deleteFAQ,
-} from "../../../redux/slice/faq.slice";
+import { addFAQ, getFAQ, updateFAQ } from "../../../redux/slice/FAQ.slice";
+// import {
+//   addFAQ,
+//   getFAQ,
+//   updateFAQ,
+//   deleteFAQ,
+// } from "../../../redux/slice/faq.slice";
 
 function FAQ() {
-  const [open, setOpen] = useState(false);
-  const [update, setUpdate] = useState(false);
+  const [open, setOpen] = React.useState(false);
 
-  const dispatch = useDispatch();
-  const faq = useSelector((state) => state.faq);
-
-  useEffect(() => {
-    dispatch(getFAQ());
-  }, [dispatch]);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
 
   const handleClose = () => {
     setOpen(false);
     setUpdate(false);
-    formik.resetForm();
   };
 
+  const [update, setUpdate] = useState(false);
+  console.log(update);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getFAQ());
+  }, []);
+
+  const faq = useSelector((state) => state.faq);
+
   const handleEdit = (values) => {
-    setUpdate(true);
-    setOpen(true);
+    handleClose();
+    console.log(values);
     formik.setValues(values);
+    handleClickOpen();
+    setUpdate(true);
   };
 
   // VALIDATION
@@ -68,6 +74,7 @@ function FAQ() {
     },
   });
 
+  console.log(formik.errors, formik.touched);
   const columns = [
     { field: "question", headerName: "Question", width: 250 },
     { field: "answer", headerName: "Answer", width: 350 },
@@ -80,15 +87,15 @@ function FAQ() {
           <IconButton onClick={() => handleEdit(params.row)}>
             <ModeEditIcon />
           </IconButton>
-          <IconButton
-            onClick={() => dispatch(deleteFAQ(params.row.id))}
-          >
+          <IconButton onClick={() => dispatch(deleteFAQ(params.row.id))}>
             <DeleteIcon />
           </IconButton>
         </>
       ),
     },
   ];
+
+  const paginationModel = { page: 0, pageSize: 5 };
 
   return (
     <div>
@@ -106,57 +113,56 @@ function FAQ() {
       </Box>
 
       {/* FORM */}
-      <Dialog open={open} onClose={handleClose}>
-        <DialogContent>
-          <form onSubmit={formik.handleSubmit} id="faq-form">
-            <TextField
-              fullWidth
-              margin="dense"
-              name="question"
-              label="Question"
-              variant="standard"
-              onChange={formik.handleChange}
-              value={formik.values.question}
-              error={formik.touched.question && formik.errors.question}
-              helperText={
-                formik.touched.question && formik.errors.question
-              }
-            />
+      <React.Fragment>
+        <Dialog open={open} onClose={handleClose}>
+          <DialogContent>
+            <form onSubmit={formik.handleSubmit} id="faq-form">
+              <TextField
+                fullWidth
+                margin="dense"
+                type="text"
+                name="question"
+                label="Question"
+                variant="standard"
+                onChange={formik.handleChange}
+                value={formik.values.question}
+                error={formik.touched.question && formik.errors.question}
+                helperText={formik.touched.question && formik.errors.question}
+              />
 
-            <TextField
-              fullWidth
-              margin="dense"
-              name="answer"
-              label="Answer"
-              multiline
-              rows={4}
-              variant="standard"
-              onChange={formik.handleChange}
-              value={formik.values.answer}
-              error={formik.touched.answer && formik.errors.answer}
-              helperText={
-                formik.touched.answer && formik.errors.answer
-              }
-            />
-          </form>
-        </DialogContent>
+              <TextField
+                fullWidth
+                margin="dense"
+                name="answer"
+                type="text"
+                label="Answer"
+                multiline
+                rows={4}
+                variant="standard"
+                onChange={formik.handleChange}
+                value={formik.values.answer}
+                error={formik.touched.answer && formik.errors.answer}
+                helperText={formik.touched.answer && formik.errors.answer}
+              />
+            </form>
+          </DialogContent>
 
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit" form="faq-form">
-            Submit
-          </Button>
-        </DialogActions>
-      </Dialog>
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button type="submit" form="faq-form">
+              Submit
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </React.Fragment>
 
       {/* TABLE */}
       <DataGrid
         rows={faq.faq}
         columns={columns}
+        initialState={{ pagination: { paginationModel } }}
         pageSizeOptions={[5, 10]}
-        initialState={{
-          pagination: { paginationModel: { page: 0, pageSize: 5 } },
-        }}
+        checkboxSelection
         sx={{ border: 0 }}
       />
     </div>

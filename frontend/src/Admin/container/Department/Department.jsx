@@ -335,22 +335,6 @@ function Department(props) {
                 //  value={formik.values.department_img}
                 ></VisuallyHiddenInput>
               </Button>
-              {/* <img
-                src={
-                  typeof formik.values.department_img === "string"
-                    ? "http://localhost:3000/" + formik.values.department_img
-                    : URL.createObjectURL(formik.values.department_img)
-                }
-//                 src={
-//   formik.values.department_img instanceof File
-//     ? URL.createObjectURL(formik.values.department_img)
-//     : typeof formik.values.department_img === "string"
-//     ? "http://localhost:3000/" + formik.values.department_img
-//     : ""
-// }
-                width={"50px"}
-                height={"50px"}
-              /> */}
               <img
                 src={
                   formik.values.department_img instanceof File
