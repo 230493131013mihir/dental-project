@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import  branchSlice  from './slice/branch.slice'
 import  departmentSlice  from './slice/department.slice'
 import  expenceSlice  from './slice/expence.slice'
@@ -18,6 +18,12 @@ import testimonialSlice from './slice/testimonial.slice'
 
 export const store = configureStore({
   reducer: {
+
+  },
+})
+
+
+const reducers = combineReducers({
     branch: branchSlice,
     department: departmentSlice,
     expence: expenceSlice,
@@ -34,7 +40,28 @@ export const store = configureStore({
     blog: blogSlice,
     faq: faqSlice,
     testimonial: testimonialSlice
-  },
 })
+
+
+const persistConfig = {
+  key: 'root',
+  storage,
+  whitelist: ['auth']
+}
+
+const persistReducer = persistReducer(persistConfig,reducers);
+
+const store = configureStore(
+  {
+    reducer: persistReducer,
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
+
+  }
+)
+
+
+export let persister = persisterStore(store)
+
+export default store;
 
 

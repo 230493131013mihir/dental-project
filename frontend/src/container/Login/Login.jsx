@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { object, string } from "yup";
 import { login } from "../../redux/slice/authenthication.slice";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 function Login(props) {
   const dispatch = useDispatch();
@@ -12,8 +12,8 @@ function Login(props) {
   const navigate = useNavigate();
 
   let userschema = object({
-    password: string().required("please enter your password"),
-    email: string().required("Please Select email id"),
+    password: string().required("please Enter your password"),
+    email: string().required("Please Enter email id"),
   });
 
   const formik = useFormik({
@@ -109,6 +109,7 @@ function Login(props) {
                     </div>
                   </div>
                 </form>
+                <span>Create New Account: <NavLink to={"/register"}>Register</NavLink></span>
               </div>
             </div>
           </div>
