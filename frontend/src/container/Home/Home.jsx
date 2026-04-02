@@ -8,6 +8,7 @@ import { getBranch } from "../../redux/slice/branch.slice";
 import { getBlog } from "../../redux/slice/blog.slice";
 import { getFAQ } from "../../redux/slice/FAQ.slice";
 import { bookAppointment } from "../../redux/slice/appointment.slice";
+import { getReviews } from "../../redux/slice/testimonial.slice";
 
 function Home(props) {
   const dispatch = useDispatch();
@@ -17,11 +18,13 @@ function Home(props) {
     dispatch(getBranch());
     dispatch(getBlog());
     dispatch(getFAQ());
+    dispatch(getReviews())
   }, []);
   const branch = useSelector((state) => state.branch);
   const departmentData = useSelector((state) => state.department);
   const department = useSelector((state) => state.department);
   const auth = useSelector((state) => state.authenthication);
+    const reviews = useSelector((state) => state.testimonial);
 
   console.log(auth);
 
@@ -797,29 +800,22 @@ function Home(props) {
               </div>
               <div className="swiper mySwiper">
                 <div className="swiper-wrapper">
-                  <div className="swiper-slide">
+                  {
+                    reviews.testimonal?.map((v) => (
+                      <div className="swiper-slide">
                     <div className="test-slide">
                       <div className="rating">
-                        <div>
+                        {
+                          [...Array(v.rating).keys()].map((v1) => (
+                              <div>
                           <i className="fa-solid fa-star" />
                         </div>
-                        <div>
-                          <i className="fa-solid fa-star" />
-                        </div>
-                        <div>
-                          <i className="fa-solid fa-star" />
-                        </div>
-                        <div>
-                          <i className="fa-solid fa-star" />
-                        </div>
-                        <div>
-                          <i className="fa-solid fa-star" />
-                        </div>
+                          ))
+                        }
+                        
                       </div>
                       <p className="test-data">
-                        Discover real patient testimonials highlighting our
-                        expert medical care, personalized treatments, and
-                        compassionate support. See how our dedicated{" "}
+                        {v.description}
                       </p>
                       <div className="person">
                         <div className="call-us">
@@ -834,6 +830,9 @@ function Home(props) {
                       </div>
                     </div>
                   </div>
+                    ))
+                  }
+                  
                   <div className="swiper-slide">
                     <div className="test-slide">
                       <div className="rating">
@@ -882,7 +881,7 @@ function Home(props) {
           </div>
           <div className="review-btn" style={{marginTop: '20px'}}>
             <a href="javascript:void(0);" className="btn">
-            <NavLink to= "/Review">Add Review</NavLink>
+            <NavLink to= "/addReview">Add Review</NavLink>
             </a>
           </div>
         </div>

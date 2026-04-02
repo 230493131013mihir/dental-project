@@ -12,6 +12,7 @@ import RegisterDetails from "../container/RegisterDetails/RegisterDetails";
 import Login from "../container/Login/Login";
 import Appointment from "../container/Appointment/Appointment";
 import MyAppointment from "../container/MyAppointment/MyAppointment";
+import Review from "../container/Review/Review";
 
 
 function Userroute(props) {
@@ -28,7 +29,7 @@ function Userroute(props) {
         <Route path="/department_details/:id" element={<DepartmentDetails />} />
         <Route path="/register" element={<RegisterDetails />} />
         <Route path="/login" element={<Login />} />
-
+        <Route path="/addReview" element={<Review />} />
         <Route path="/appointment" element={<Appointment />} />
         <Route path="/myappointment" element={<MyAppointment />} />
       </Routes>

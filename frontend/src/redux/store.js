@@ -14,6 +14,7 @@ import  authenthicationSlice  from './slice/authenthication.slice'
 import  appointmentSlice  from './slice/appointment.slice'
 import  blogSlice  from './slice/blog.slice'
 import  faqSlice  from './slice/FAQ.slice'
+import testimonialSlice from './slice/testimonial.slice'
 
 export const store = configureStore({
   reducer: {
@@ -31,7 +32,8 @@ export const store = configureStore({
     authenthication: authenthicationSlice,
     appointment: appointmentSlice,
     blog: blogSlice,
-    faq: faqSlice
+    faq: faqSlice,
+    testimonial: testimonialSlice
   },
 })
 
