@@ -41,6 +41,7 @@ export const login = createAsyncThunk("branch/login", async (data) => {
 
 export const logout = createAsyncThunk("branch/logout", async (data) => {
   try {
+    localStorage.removeItem("user_id");
     return null;
   } catch (error) {
     console.log(error);

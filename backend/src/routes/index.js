@@ -23,6 +23,8 @@ const blogRoutes= require("./blog.routes");
 
 const faqRoutes= require("./faq.routes");
 
+const testimonialRoutes= require("./testimonial.routes")
+
 
 
 router.use("/branch" ,branchRoutes);
@@ -45,6 +47,8 @@ router.use("/appointment", appointmentRoutes);
 router.use("/blog", blogRoutes);
 
 router.use("/faq", faqRoutes);
+
+router.use("/testimonial", testimonialRoutes);
     
 
 

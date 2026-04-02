@@ -34,3 +34,5 @@ export const store = configureStore({
     faq: faqSlice
   },
 })
+
+

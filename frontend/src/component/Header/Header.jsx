@@ -61,14 +61,14 @@ function Header(props) {
           </li>
           
             {
-              myApt.myAppointment.length > 0 ?
+              myApt.myAppointment.length >0 && authenthication.patient ?
               <li><NavLink to={"/myappointment"}>My Appointment</NavLink></li> :
               null
             }
         </ul>
       </nav>
       <div className="header-button">
-        <NavLink to={"/appointment"} className="btn">Get Appointment</NavLink>
+        <NavLink to={"/appointment"} className="btn">Book Appointment</NavLink>
       </div>
     </div>
   </div>

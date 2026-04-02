@@ -59,6 +59,8 @@ export const faqSlice = createSlice({
   initialState,
   extraReducers: (builder) => {
     builder.addCase(getFAQ.fulfilled, (state, action) => {
+      console.log(action.payload);
+      
       state.faq = action.payload;
     });
 

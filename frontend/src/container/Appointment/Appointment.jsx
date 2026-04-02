@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { getBranch } from "../../redux/slice/branch.slice";
 import { getDepartment } from "../../redux/slice/department.slice";
 import { date, number, object, string } from "yup";
@@ -20,6 +20,9 @@ function Appointment(props) {
 
   const appointment = useSelector((state) => state.appointment);
     console.log(appointment);
+
+      const authenthication = useSelector(state => state.authenthication);
+    
   
   const branch = useSelector((state) => state.branch);
   const department = useSelector((state) => state.department);
@@ -54,6 +57,13 @@ function Appointment(props) {
       resetForm();
     },
   });
+
+  const navigate = useNavigate();
+
+  if (authenthication.patient == null) {
+    // alert("Please login first.")
+    navigate("/login")
+  }
 
 console.log(branch.branch, department.department, formik.values.branch_id);
   return (
