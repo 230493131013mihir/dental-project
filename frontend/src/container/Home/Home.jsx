@@ -684,10 +684,84 @@ const uniqueDept = [...new Map(department?.department.map(item => [item[key], it
                   </form>
                 </div>
               ) : (
-                <div>
-                  <h2>Please Login to Book an Appointment</h2>
-                  <NavLink to={"/login"}>Login</NavLink>
-                </div>
+                      <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
+        minHeight: "100%",
+      }}
+    >
+      {/* col-6 style */}
+      <div
+        style={{
+          width: "50%",
+          minWidth: "320px",
+        }}
+      >
+        <div
+          style={{
+            background: "linear-gradient(135deg, #e0f7fa, #ffffff)",
+            borderRadius: "25px",
+            padding: "50px 40px",
+            textAlign: "center",
+            boxShadow: "0 15px 40px rgba(0, 150, 136, 0.2)",
+            fontFamily: "Poppins, sans-serif",
+          }}
+        >
+          <h2
+            style={{
+              color: "#00695c",
+              fontSize: "26px",
+              marginBottom: "15px",
+              fontWeight: "600",
+              lineHeight: "1.4",
+            }}
+          >
+            Please Login to Book an Appointment
+          </h2>
+
+          <p
+            style={{
+              color: "#555",
+              fontSize: "15px",
+              marginBottom: "25px",
+            }}
+          >
+            Access your account to schedule your dental visit quickly and easily.
+          </p>
+
+          <NavLink
+            to={"/login"}
+            style={{
+              display: "inline-block",
+              padding: "14px 35px",
+              background: "linear-gradient(135deg, #009688, #26a69a)",
+              color: "#fff",
+              borderRadius: "35px",
+              textDecoration: "none",
+              fontWeight: "600",
+              fontSize: "16px",
+              transition: "0.3s",
+            }}
+            onMouseOver={(e) => {
+              e.target.style.transform = "scale(1.05)";
+              e.target.style.boxShadow =
+                "0 8px 20px rgba(0, 150, 136, 0.3)";
+            }}
+            onMouseOut={(e) => {
+              e.target.style.transform = "scale(1)";
+              e.target.style.boxShadow = "none";
+            }}
+          >
+            Login
+          </NavLink>
+        </div>
+      </div>
+    </div>
+
+
               )}
             </div>
           </div>
@@ -1058,7 +1132,7 @@ const uniqueDept = [...new Map(department?.department.map(item => [item[key], it
         </div>
       </section>
       {/*blog*/}
-      <section className="blog">
+      <section className="blog" id="blog">
         <div className="container">
           <div
             className="heading"

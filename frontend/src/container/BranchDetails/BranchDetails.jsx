@@ -21,74 +21,135 @@ function BranchDetails(props) {
   console.log(bD);
 
   return (
-    <div className="container my-5" style={{marginTop: '120px'}}>
-      <div className="card shadow-lg border-0">
-        <div className="row g-0">
-          {/* Branch Image */}
-          <div className="col-md-5">
-            <img
-              src={"http://localhost:3000/" + bD.branch_img}
-              className="img-fluid rounded-start h-100 object-fit-cover"
-              alt="Branch Image"
-              style={{ width: "100%", height: "400px" }}
-            />
-          </div>
-          {/* Branch Details */}
-          <div className="col-md-7">
-            <div className="card-body p-4">
-              {/* Branch Name */}
-              <h2 className="card-title mb-6" style={{ marginBottom: "20px" }}>
-                {bD.name}
-              </h2>
-              {/* Description */}
-              <p className="card-text text-muted" style={{fontSize: '20px',marginTop: '15px'}}>
-                {bD.description}
-              </p>
-              {/* address */}
+    <div
+  className="container"
+  style={{
+    marginTop: "120px",
+    marginBottom: "120px",
+    display: "flex",
+    justifyContent: "center",
+  }}
+>
+  <div
+    style={{
+      width: "100%",
+      maxWidth: "1100px",
+      borderRadius: "20px",
+      background: "#ffffff", // light background
+      boxShadow: "0 10px 40px rgba(0,0,0,0.2)",
+      overflow: "hidden",
+      display: "flex",
+      flexWrap: "wrap",
+    }}
+  >
+    {/* LEFT IMAGE */}
+    <div style={{ flex: "1 1 45%" }}>
+      <img
+        src={"http://localhost:3000/" + bD.branch_img}
+        alt="Branch"
+        style={{
+          width: "100%",
+          height: "100%",
+          minHeight: "350px",
+          objectFit: "cover",
+        }}
+      />
+    </div>
 
-              {/* Contact Info */}
-              <div className="row mb-3" style={{fontSize: '20px',marginTop: '10px'}}>
-                <div className="col-sm-4 fw-bold">
-                  <i class="fa-solid fa-at"></i>
-                  
-                </div>
-                <div className="col-sm-8">{bD.email}</div>
-              </div>
-              <div className="row mb-3"style={{fontSize: '20px',marginTop: '10px'}}>
-                <div className="col-sm-4 fw-bold">
-                  <i class="fa-solid fa-phone"></i>
-                </div>
-                <div className="col-sm-8">{bD.mobile_no}</div>
-              </div>
-              <div className="row mb-3" style={{fontSize: '20px',marginTop: '10px'}}>
-                <div className="col-sm-4 fw-bold">
-                  <i class="fa-solid fa-address-book"></i>
-                </div>
-                <p className="card-text text-muted"style={{fontSize: '20px',marginTop: '10px'}}>{bD.address}</p>
-              </div>
-              {/* Optional Buttons */}
-              <div
-                className="mt-4"
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  // marginRight: "100px",
-                  
-                  marginTop: "15px",
-                }}
-              >
-                <a href={`tel:${bD.mobile_no}`} className="btn btn-primary">
-                  Contact Branch
-                </a>
-                <NavLink to={"/branch"} className="btn btn-outline-secondary">
-                  Back
-                </NavLink>
-              </div>
-            </div>
-          </div>
-        </div>
+    {/* RIGHT CONTENT */}
+    <div
+      style={{
+        flex: "1 1 55%",
+        padding: "30px",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+      }}
+    >
+      {/* Title */}
+      <h2
+        style={{
+          fontSize: "26px",
+          marginBottom: "10px",
+          color: "#020617", // dark text
+          fontWeight: "600",
+        }}
+      >
+        {bD.name}
+      </h2>
+
+      {/* Description */}
+      <p
+        style={{
+          fontSize: "16px",
+          color: "#334155",
+          marginBottom: "20px",
+          lineHeight: "1.6",
+        }}
+      >
+        {bD.description}
+      </p>
+
+      {/* Email */}
+      <div style={{ marginBottom: "10px", color: "#0f172a", fontSize: "16px" }}>
+        📧 {bD.email}
+      </div>
+
+      {/* Phone */}
+      <div style={{ marginBottom: "10px", color: "#0f172a", fontSize: "16px" }}>
+        📞 {bD.mobile_no}
+      </div>
+
+      {/* Address */}
+      <div style={{ marginBottom: "20px", color: "#0f172a", fontSize: "16px" }}>
+        📍 {bD.address}
+      </div>
+
+      {/* Buttons */}
+      <div
+        style={{
+          display: "flex",
+          gap: "15px",
+          marginTop: "10px",
+        }}
+      >
+        <a
+          href={`tel:${bD.mobile_no}`}
+          style={{
+            padding: "10px 20px",
+            borderRadius: "10px",
+            background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+            color: "#fff",
+            textDecoration: "none",
+            fontWeight: "500",
+            transition: "0.3s",
+          }}
+          onMouseEnter={(e) => (e.target.style.transform = "scale(1.05)")}
+          onMouseLeave={(e) => (e.target.style.transform = "scale(1)")}
+        >
+          Contact Branch
+        </a>
+
+        <NavLink
+          to="/branch"
+          style={{
+            padding: "10px 20px",
+            borderRadius: "10px",
+            border: "1px solid #94a3b8",
+            color: "#334155",
+            textDecoration: "none",
+            fontWeight: "500",
+            transition: "0.3s",
+          }}
+          onMouseEnter={(e) => (e.target.style.background = "#f1f5f9")}
+          onMouseLeave={(e) => (e.target.style.background = "transparent")}
+        >
+          Back
+        </NavLink>
       </div>
     </div>
+  </div>
+</div>
   );
 }
 

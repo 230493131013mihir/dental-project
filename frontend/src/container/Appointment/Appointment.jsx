@@ -70,135 +70,233 @@ console.log(branch.branch, department.department, formik.values.branch_id);
     <main>
       <section style={{marginTop: '120px'}}>
         <div className="container">
-          <div className="appointment">
-            <form onSubmit={formik.handleSubmit} id="appointment-form">
-              <h3>Make an Appointment</h3>
-              <div className="row">
-                <div className="col-6">
-                  <select
-                    name="branch_id"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.branch_id}
-                  >
-                    <option value="">--Select Branch--</option>
-                    {branch.branch.map((v) => (
-                      <option value={v.id}>{v.name}</option>
-                    ))}
-                  </select>
-                  {formik.errors.branch_id && formik.touched.branch_id ? (
-                    <span className="error"> {formik.errors.branch_id}</span>
-                  ) : (
-                    ""
-                  )}
-                </div>
-                <div className="col-6">
-                  <select
-                    name="department_id"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.department_id}
-                  >
-                    <option value="">--Select Department--</option>
-                    {department.department?.filter((v1) => v1.branch_id == formik.values.branch_id)?.map((v) => (
-                      <option value={v.id}>{v.name}</option>
-                    ))}
-                  </select>
-                  {formik.errors.department_id && formik.touched.department_id ? (
-                    <span className="error">{formik.errors.department_id}</span>
-                  ) : (
-                    ""
-                  )}
-                  
-                </div>
-                <div className="col-6">
-                  <input
-                    type="text"
-                    placeholder="Patient Name"
-                    name="name"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.name}
-                  />
-                  {formik.errors.name && formik.touched.name ? (
-                    <span className="error">{formik.errors.name}</span>
-                  ) : (
-                    ""
-                  )}
-                </div>
-                <div className="col-6">
-                  <input
-                    type="phone"
-                    placeholder="Phone Number"
-                    name="phone"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.phone}
-                  />
-                  {formik.errors.phone && formik.touched.phone ? (
-                    <span className="error">{formik.errors.phone}</span>
-                  ) : (
-                    ""
-                  )}
-                </div>
-                <div className="col-6">
-                  <input
-                    type="date"
-                    name="date"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.date}
-                  />
-                  {formik.errors.date && formik.touched.date ? (
-                    <span className="error" style={{ marginBottom: "20px" }}>
-                      {formik.errors.date}
-                    </span>
-                  ) : (
-                    ""
-                  )}
-                </div>
-                <div className="col-6">
-                  <select
-                    name="time"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.time}
-                  >
-                    <option>--Select Timeslot--</option>
-                    <option value={"10:00 AM -- 11:00 AM"}>
-                      10:00 AM -- 11:00 AM
-                    </option>
-                    <option value={"11:00 AM -- 12:00 PM"}>
-                      11:00 AM -- 12:00 PM
-                    </option>
-                    <option value={"13:00 PM -- 14:00 PM"}>
-                      13:00 PM -- 14:00 PM
-                    </option>
-                  </select>
-                  {formik.errors.time && formik.touched.time ? (
-                    <span className="error"> {formik.errors.time}</span>
-                  ) : (
-                    ""
-                  )}
-                </div>
+          <div
+  className="appointment"
+  style={{
+    maxWidth: "900px",
+    margin: "40px auto",
+    padding: "30px",
+    borderRadius: "20px",
+    background: "rgba(255,255,255,0.95)",
+    boxShadow: "0 10px 40px rgba(0,0,0,0.2)",
+  }}
+>
+  <form onSubmit={formik.handleSubmit}>
 
-                {/* <div className="col-12">
-                  <select>
-                    <option>Select Doctor</option>
-                    <option>Dr. M.D.patel</option>
-                    <option>Dr. S.J.patil</option>
-                  </select>
-                </div> */}
-                <div className="col-12">
-                  <input
-                    type="submit"
-                    defaultValue="Appointment"
-                    className="btn"
-                  />
-                </div>
-              </div>
-            </form>
-          </div>
+    <h3
+      style={{
+        textAlign: "center",
+        marginBottom: "25px",
+        color: "#020617",
+        fontWeight: "600",
+      }}
+    >
+      Make an Appointment
+    </h3>
+
+    <div className="row">
+
+      {/* Branch */}
+      <div className="col-6">
+        <select
+          name="branch_id"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.branch_id}
+          style={{
+            width: "100%",
+            padding: "12px",
+            borderRadius: "10px",
+            border: "1px solid #cbd5f5",
+            marginTop: "10px",
+            background: "#f8fafc",
+          }}
+        >
+          <option value="">--Select Branch--</option>
+          {branch.branch.map((v) => (
+            <option value={v.id}>{v.name}</option>
+          ))}
+        </select>
+
+        {formik.errors.branch_id && formik.touched.branch_id && (
+          <span style={{ color: "red", fontSize: "12px" }}>
+            {formik.errors.branch_id}
+          </span>
+        )}
+      </div>
+
+      {/* Department */}
+      <div className="col-6">
+        <select
+          name="department_id"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.department_id}
+          style={{
+            width: "100%",
+            padding: "12px",
+            borderRadius: "10px",
+            border: "1px solid #cbd5f5",
+            marginTop: "10px",
+            background: "#f8fafc",
+          }}
+        >
+          <option value="">--Select Department--</option>
+          {department.department
+            ?.filter((v1) => v1.branch_id == formik.values.branch_id)
+            ?.map((v) => (
+              <option value={v.id}>{v.name}</option>
+            ))}
+        </select>
+
+        {formik.errors.department_id && formik.touched.department_id && (
+          <span style={{ color: "red", fontSize: "12px" }}>
+            {formik.errors.department_id}
+          </span>
+        )}
+      </div>
+
+      {/* Name */}
+      <div className="col-6">
+        <input
+          type="text"
+          placeholder="Patient Name"
+          name="name"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.name}
+          style={{
+            width: "100%",
+            padding: "12px",
+            borderRadius: "10px",
+            border: "1px solid #cbd5f5",
+            marginTop: "10px",
+            background: "#f8fafc",
+          }}
+        />
+
+        {formik.errors.name && formik.touched.name && (
+          <span style={{ color: "red", fontSize: "12px" }}>
+            {formik.errors.name}
+          </span>
+        )}
+      </div>
+
+      {/* Phone */}
+      <div className="col-6">
+        <input
+          type="phone"
+          placeholder="Phone Number"
+          name="phone"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.phone}
+          style={{
+            width: "100%",
+            padding: "12px",
+            borderRadius: "10px",
+            border: "1px solid #cbd5f5",
+            marginTop: "10px",
+            background: "#f8fafc",
+          }}
+        />
+
+        {formik.errors.phone && formik.touched.phone && (
+          <span style={{ color: "red", fontSize: "12px" }}>
+            {formik.errors.phone}
+          </span>
+        )}
+      </div>
+
+      {/* Date */}
+      <div className="col-6">
+        <input
+          type="date"
+          name="date"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.date}
+          style={{
+            width: "100%",
+            padding: "12px",
+            borderRadius: "10px",
+            border: "1px solid #cbd5f5",
+            marginTop: "10px",
+            background: "#f8fafc",
+          }}
+        />
+
+        {formik.errors.date && formik.touched.date && (
+          <span style={{ color: "red", fontSize: "12px" }}>
+            {formik.errors.date}
+          </span>
+        )}
+      </div>
+
+      {/* Time */}
+      <div className="col-6">
+        <select
+          name="time"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.time}
+          style={{
+            width: "100%",
+            padding: "12px",
+            borderRadius: "10px",
+            border: "1px solid #cbd5f5",
+            marginTop: "10px",
+            background: "#f8fafc",
+          }}
+        >
+          <option>--Select Timeslot--</option>
+          <option value={"10:00 AM -- 11:00 AM"}>
+            10:00 AM -- 11:00 AM
+          </option>
+          <option value={"11:00 AM -- 12:00 PM"}>
+            11:00 AM -- 12:00 PM
+          </option>
+          <option value={"13:00 PM -- 14:00 PM"}>
+            13:00 PM -- 14:00 PM
+          </option>
+        </select>
+
+        {formik.errors.time && formik.touched.time && (
+          <span style={{ color: "red", fontSize: "12px" }}>
+            {formik.errors.time}
+          </span>
+        )}
+      </div>
+
+      {/* Submit */}
+      <div className="col-12">
+        <input
+          type="submit"
+          value="Book Appointment"
+          style={{
+            width: "100%",
+            padding: "12px",
+            marginTop: "20px",
+            borderRadius: "10px",
+            border: "none",
+            background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+            color: "#fff",
+            fontWeight: "600",
+            cursor: "pointer",
+            transition: "0.3s",
+          }}
+          onMouseEnter={(e) =>
+            (e.target.style.transform = "scale(1.05)")
+          }
+          onMouseLeave={(e) =>
+            (e.target.style.transform = "scale(1)")
+          }
+        />
+      </div>
+
+    </div>
+  </form>
+</div>
         </div>
       </section>
     </main>
