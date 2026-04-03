@@ -128,17 +128,21 @@ export default function Layout({ children }) {
     { icon: <VaccinesIcon />, label: "Vendor", to: "/admin/vendor" },
     { icon: <PersonIcon />, label: "Medicine", to: "/admin/medicine" },
     { icon: <CleaningServicesIcon />, label: "User", to: "/admin/user" },
-    { icon: <AttachMoneyIcon />, label: "Salary", to: "/admin/salary" },
-    { icon: <AccountCircleIcon />, label: "Expence", to: "/admin/expence" },
+    // { icon: <AttachMoneyIcon />, label: "Salary", to: "/admin/salary" },
+    // { icon: <AccountCircleIcon />, label: "Expence", to: "/admin/expence" },
     { icon: <AccountCircleIcon />, label: "Services", to: "/admin/services" },
 
-      { icon: <CleaningServicesIcon />, label: "Timeslot", to: "/admin/Timeslot" },
-    { icon: <AttachMoneyIcon />, label: "Treatment", to: "/admin/Treatment" },
+      // { icon: <CleaningServicesIcon />, label: "Timeslot", to: "/admin/Timeslot" },
+    // { icon: <AttachMoneyIcon />, label: "Treatment", to: "/admin/Treatment" },
 
      { icon: <MedicationLiquidIcon />, label: "Appointment", to: "/admin/appointment"},
 
        { icon: <AccountCircleIcon />, label: "Blog", to: "/admin/blog"},
          { icon: <PersonIcon />, label: "Faq", to: "/admin/faq"},
+
+        { icon: <PersonIcon />, label: "Patient", to: "/admin/patient"},
+
+
     
   ];
 

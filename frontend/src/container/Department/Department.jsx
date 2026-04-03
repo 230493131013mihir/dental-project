@@ -16,7 +16,7 @@ function Department(props) {
 
   return (
     <main>
-      <section className="services">
+      <section className="services" style={{marginTop: '120px'}}>
         <div className="container">
           <div className="row">
             <div className="col-12">

@@ -9,6 +9,16 @@ import { getBlog } from "../../redux/slice/blog.slice";
 import { getFAQ } from "../../redux/slice/FAQ.slice";
 import { bookAppointment } from "../../redux/slice/appointment.slice";
 import { getReviews } from "../../redux/slice/testimonial.slice";
+import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
+
+import { Swiper, SwiperSlide } from "swiper/react";
+
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
+import { getUser } from "../../redux/slice/user.slice";
 
 function Home(props) {
   const dispatch = useDispatch();
@@ -18,15 +28,32 @@ function Home(props) {
     dispatch(getBranch());
     dispatch(getBlog());
     dispatch(getFAQ());
-    dispatch(getReviews())
+    dispatch(getReviews());
+    dispatch(getUser());
   }, []);
   const branch = useSelector((state) => state.branch);
   const departmentData = useSelector((state) => state.department);
   const department = useSelector((state) => state.department);
   const auth = useSelector((state) => state.authenthication);
-    const reviews = useSelector((state) => state.testimonial);
+  const reviews = useSelector((state) => state.testimonial);
+  const users = useSelector((state) => state.user);
 
-  console.log(auth);
+  // const uniqueDept = [];
+
+  // Source - https://stackoverflow.com/a/56768137
+// Posted by V. Sambor, modified by community. See post 'Timeline' for change history
+// Retrieved 2026-04-03, License - CC BY-SA 4.0
+
+const key = 'name';
+const uniqueDept = [...new Map(department?.department.map(item => [item[key], item])).values()]
+
+
+  console.log(uniqueDept);
+  
+
+  const doctors = users.user?.filter((v) => v.role_id == "Doctor");
+
+  console.log(doctors);
 
   const blog = useSelector((state) => state.blog);
 
@@ -265,7 +292,7 @@ function Home(props) {
                 </div>
               </div>
             </div>
-            {departmentData.department?.map((v) => (
+            {uniqueDept?.map((v) => (
               <div className="col-12 col-md-6 col-lg-4">
                 <NavLink to={`/department_details/${v.id}`}>
                   <div className="service-box">
@@ -509,152 +536,159 @@ function Home(props) {
             </div>
 
             <div className="col-lg-6">
-              <div className="appointment">
-                <form onSubmit={formik.handleSubmit} id="appointment-form">
-                  <h3>Make an Appointment</h3>
-                  <div className="row">
-                    <div className="col-6">
-                      <select
-                        name="branch_id"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.branch_id}
-                      >
-                        <option value="">--Select Branch--</option>
-                        {branch.branch.map((v) => (
-                          <option value={v.id}>{v.name}</option>
-                        ))}
-                      </select>
-                      {formik.errors.branch_id && formik.touched.branch_id ? (
-                        <span className="error">
-                          {" "}
-                          {formik.errors.branch_id}
-                        </span>
-                      ) : (
-                        ""
-                      )}
-                    </div>
-                    <div className="col-6">
-                      <select
-                        name="department_id"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.department_id}
-                      >
-                        <option value="">--Select Department--</option>
-                        {department.department.map((v) => (
-                          <option value={v.id}>{v.name}</option>
-                        ))}
-                      </select>
-                      {formik.errors.department_id &&
-                      formik.touched.department_id ? (
-                        <span className="error">
-                          {formik.errors.department_id}
-                        </span>
-                      ) : (
-                        ""
-                      )}
-                      {department.department
-                        ?.filter(
-                          (v1) => v1.branch_id == formik.values.branch_id,
-                        )
-                        ?.map((v) => (
-                          <option key={v.id} value={v.id}>
-                            {v.name}
-                          </option>
-                        ))}
-                    </div>
-                    <div className="col-6">
-                      <input
-                        type="text"
-                        placeholder="Patient Name"
-                        name="name"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.name}
-                      />
-                      {formik.errors.name && formik.touched.name ? (
-                        <span className="error">{formik.errors.name}</span>
-                      ) : (
-                        ""
-                      )}
-                    </div>
-                    <div className="col-6">
-                      <input
-                        type="phone"
-                        placeholder="Phone Number"
-                        name="phone"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.phone}
-                      />
-                      {formik.errors.phone && formik.touched.phone ? (
-                        <span className="error">{formik.errors.phone}</span>
-                      ) : (
-                        ""
-                      )}
-                    </div>
-                    <div className="col-6">
-                      <input
-                        type="date"
-                        name="date"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.date}
-                      />
-                      {formik.errors.date && formik.touched.date ? (
-                        <span
-                          className="error"
-                          style={{ marginBottom: "20px" }}
+              {auth?.patient ? (
+                <div className="appointment">
+                  <form onSubmit={formik.handleSubmit} id="appointment-form">
+                    <h3>Make an Appointment</h3>
+                    <div className="row">
+                      <div className="col-6">
+                        <select
+                          name="branch_id"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.branch_id}
                         >
-                          {formik.errors.date}
-                        </span>
-                      ) : (
-                        ""
-                      )}
-                    </div>
-                    <div className="col-6">
-                      <select
-                        name="time"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.time}
-                      >
-                        <option>--Select Timeslot--</option>
-                        <option value={"10:00 AM -- 11:00 AM"}>
-                          10:00 AM -- 11:00 AM
-                        </option>
-                        <option value={"11:00 AM -- 12:00 PM"}>
-                          11:00 AM -- 12:00 PM
-                        </option>
-                        <option value={"13:00 PM -- 14:00 PM"}>
-                          13:00 PM -- 14:00 PM
-                        </option>
-                      </select>
-                      {formik.errors.time && formik.touched.time ? (
-                        <span className="error"> {formik.errors.time}</span>
-                      ) : (
-                        ""
-                      )}
-                    </div>
+                          <option value="">--Select Branch--</option>
+                          {branch.branch.map((v) => (
+                            <option value={v.id}>{v.name}</option>
+                          ))}
+                        </select>
+                        {formik.errors.branch_id && formik.touched.branch_id ? (
+                          <span className="error">
+                            {" "}
+                            {formik.errors.branch_id}
+                          </span>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                      <div className="col-6">
+                        <select
+                          name="department_id"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.department_id}
+                        >
+                          <option value="">--Select Department--</option>
+                          {department.department.map((v) => (
+                            <option value={v.id}>{v.name}</option>
+                          ))}
+                        </select>
+                        {formik.errors.department_id &&
+                        formik.touched.department_id ? (
+                          <span className="error">
+                            {formik.errors.department_id}
+                          </span>
+                        ) : (
+                          ""
+                        )}
+                        {department.department
+                          ?.filter(
+                            (v1) => v1.branch_id == formik.values.branch_id,
+                          )
+                          ?.map((v) => (
+                            <option key={v.id} value={v.id}>
+                              {v.name}
+                            </option>
+                          ))}
+                      </div>
+                      <div className="col-6">
+                        <input
+                          type="text"
+                          placeholder="Patient Name"
+                          name="name"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.name}
+                        />
+                        {formik.errors.name && formik.touched.name ? (
+                          <span className="error">{formik.errors.name}</span>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                      <div className="col-6">
+                        <input
+                          type="phone"
+                          placeholder="Phone Number"
+                          name="phone"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.phone}
+                        />
+                        {formik.errors.phone && formik.touched.phone ? (
+                          <span className="error">{formik.errors.phone}</span>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                      <div className="col-6">
+                        <input
+                          type="date"
+                          name="date"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.date}
+                        />
+                        {formik.errors.date && formik.touched.date ? (
+                          <span
+                            className="error"
+                            style={{ marginBottom: "20px" }}
+                          >
+                            {formik.errors.date}
+                          </span>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                      <div className="col-6">
+                        <select
+                          name="time"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.time}
+                        >
+                          <option>--Select Timeslot--</option>
+                          <option value={"10:00 AM -- 11:00 AM"}>
+                            10:00 AM -- 11:00 AM
+                          </option>
+                          <option value={"11:00 AM -- 12:00 PM"}>
+                            11:00 AM -- 12:00 PM
+                          </option>
+                          <option value={"13:00 PM -- 14:00 PM"}>
+                            13:00 PM -- 14:00 PM
+                          </option>
+                        </select>
+                        {formik.errors.time && formik.touched.time ? (
+                          <span className="error"> {formik.errors.time}</span>
+                        ) : (
+                          ""
+                        )}
+                      </div>
 
-                    {/* <div className="col-12">
+                      {/* <div className="col-12">
                   <select>
                     <option>Select Doctor</option>
                     <option>Dr. M.D.patel</option>
                     <option>Dr. S.J.patil</option>
                   </select>
                 </div> */}
-                    <div className="col-12">
-                      <input
-                        type="submit"
-                        defaultValue="Appointment"
-                        className="btn"
-                      />
+                      <div className="col-12">
+                        <input
+                          type="submit"
+                          defaultValue="Appointment"
+                          className="btn"
+                        />
+                      </div>
                     </div>
-                  </div>
-                </form>
-              </div>
+                  </form>
+                </div>
+              ) : (
+                <div>
+                  <h2>Please Login to Book an Appointment</h2>
+                  <NavLink to={"/login"}>Login</NavLink>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -671,114 +705,41 @@ function Home(props) {
                 <h2>Trusted Healthcare Experts at Your Service</h2>
               </div>
             </div>
-            <div className="col-sm-6 col-xl-3">
-              <div className="doctorimg">
-                <img src="images/doctor6.jpg" alt />
-                <div className="link">
-                  <a href="#">
-                    <i className="fa-brands fa-facebook-f" />
-                  </a>
-                  <a href="#">
-                    <i className="fa-brands fa-twitter" />
-                  </a>
-                  <a href="#">
-                    <i className="fa-brands fa-linkedin" />
-                  </a>
-                  <a href="#">
-                    <i className="fa-solid fa-p" />
-                  </a>
+            {doctors?.map((v) => (
+              <div className="col-sm-6 col-xl-3">
+                <div className="doctorimg">
+                  <img src={"http://localhost:3000/" + v?.user_img} alt />
+                  <div className="link">
+                    <a href="#">
+                      <i className="fa-brands fa-facebook-f" />
+                    </a>
+                    <a href="#">
+                      <i className="fa-brands fa-twitter" />
+                    </a>
+                    <a href="#">
+                      <i className="fa-brands fa-linkedin" />
+                    </a>
+                    <a href="#">
+                      <i className="fa-solid fa-p" />
+                    </a>
+                  </div>
                 </div>
-              </div>
-              <div className="about-cta">
-                <div className="call-us">
-                  <div className="call-text">
-                    <a href="#">Dr. Harish Vyas</a>
-                    <p>Oral Medicine & amp; Radiology</p>
+                <div className="about-cta">
+                  <div className="call-us">
+                    <div className="call-text">
+                      <a href="#">{v?.name}</a>
+                      <p>
+                        {
+                          department?.department?.find(
+                            (v1) => v1.id == v?.department_id,
+                          )?.name
+                        }
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="col-sm-6 col-xl-3">
-              <div className="doctorimg">
-                <img src="images/doctor7.jpg" alt />
-                <div className="link">
-                  <a href="#">
-                    <i className="fa-brands fa-facebook-f" />
-                  </a>
-                  <a href="#">
-                    <i className="fa-brands fa-twitter" />
-                  </a>
-                  <a href="#">
-                    <i className="fa-brands fa-linkedin" />
-                  </a>
-                  <a href="#">
-                    <i className="fa-solid fa-p" />
-                  </a>
-                </div>
-              </div>
-              <div className="about-cta">
-                <div className="call-us">
-                  <div className="call-text">
-                    <a href="#">Dr. Alvina Roy</a>
-                    <p>Periodontology</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-sm-6 col-xl-3">
-              <div className="doctorimg">
-                <img src="images/doctor8.jpg" alt />
-                <div className="link">
-                  <a href="#">
-                    <i className="fa-brands fa-facebook-f" />
-                  </a>
-                  <a href="#">
-                    <i className="fa-brands fa-twitter" />
-                  </a>
-                  <a href="#">
-                    <i className="fa-brands fa-linkedin" />
-                  </a>
-                  <a href="#">
-                    <i className="fa-solid fa-p" />
-                  </a>
-                </div>
-              </div>
-              <div className="about-cta">
-                <div className="call-us">
-                  <div className="call-text">
-                    <a href="#">Dr Jay Singh</a>
-                    <p>Oral &amp; Maxillofacial Surgery</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-sm-6 col-xl-3">
-              <div className="doctorimg">
-                <img src="images/doctor9.jpg" alt />
-                <div className="link">
-                  <a href="#">
-                    <i className="fa-brands fa-facebook-f" />
-                  </a>
-                  <a href="#">
-                    <i className="fa-brands fa-twitter" />
-                  </a>
-                  <a href="#">
-                    <i className="fa-brands fa-linkedin" />
-                  </a>
-                  <a href="#">
-                    <i className="fa-solid fa-p" />
-                  </a>
-                </div>
-              </div>
-              <div className="about-cta">
-                <div className="call-us">
-                  <div className="call-text">
-                    <a href="#">Dr. Sarah Gill</a>
-                    <p>Pedodontics &amp; Preventive Dentistry</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -798,80 +759,205 @@ function Home(props) {
                   support.
                 </p>
               </div>
-              <div className="swiper mySwiper">
-                <div className="swiper-wrapper">
-                  {
-                    reviews.testimonal?.map((v) => (
-                      <div className="swiper-slide">
-                    <div className="test-slide">
-                      <div className="rating">
-                        {
-                          [...Array(v.rating).keys()].map((v1) => (
-                              <div>
-                          <i className="fa-solid fa-star" />
-                        </div>
-                          ))
-                        }
-                        
+              <Swiper
+                // install Swiper modules
+                modules={[Navigation, Pagination, Scrollbar, A11y]}
+                spaceBetween={0}
+                slidesPerView={1}
+                navigation
+                onSwiper={(swiper) => console.log(swiper)}
+                onSlideChange={() => console.log("slide change")}
+              >
+                {reviews.testimonal?.map((v) => (
+                  // <SwiperSlide>
+                  //   <div className="test-slide">
+                  //     <div className="rating">
+                  //       {[...Array(v.rating).keys()].map((v1) => (
+                  //           <div>
+                  //             <i className="fa-solid fa-star" />
+                  //           </div>
+                  //         ))}
+                  //     </div>
+                  //     <p className="test-data">{v.description}</p>
+                  //     <div className="person">
+                  //       <div className="call-us">
+                  //         <div className="call-text">
+                  //           <p> -
+                  //             {
+                  //               users.user?.find(v1 => v1.id === v.user_id)?.name
+                  //             }
+                  //           </p>
+                  //         </div>
+                  //       </div>
+                  //     </div>
+                  //   </div>
+                  // </SwiperSlide>
+                  // <SwiperSlide>
+                  //   <div
+                  //     style={{
+                  //       width: "100%",
+                  //       padding: "25px",
+                  //       borderRadius: "18px",
+                  //       background: "linear-gradient(135deg, #ffffff, #f8f9fb)",
+                  //       boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
+                  //       fontFamily: "sans-serif",
+                  //     }}
+                  //   >
+                  //     {/* ⭐ Rating */}
+                  //     <div
+                  //       style={{
+                  //         display: "flex",
+                  //         gap: "6px",
+                  //         marginBottom: "15px",
+                  //       }}
+                  //     >
+                  //       {[...Array(5)].map((_, i) => (
+                  //         <i
+                  //           key={i}
+                  //           className={`fa-star ${
+                  //             i < v.rating ? "fa-solid" : "fa-regular"
+                  //           }`}
+                  //           style={{
+                  //             color: i < v.rating ? "#f5b301" : "#ddd",
+                  //             fontSize: "18px",
+                  //           }}
+                  //         />
+                  //       ))}
+                  //     </div>
+
+                  //     {/* 📝 Description */}
+                  //     <p
+                  //       style={{
+                  //         fontSize: "15px",
+                  //         color: "#444",
+                  //         lineHeight: "1.7",
+                  //         marginBottom: "20px",
+                  //       }}
+                  //     >
+                  //       {v.description}
+                  //     </p>
+
+                  //     {/* 👤 User */}
+                  //     <div
+                  //       style={{
+                  //         display: "flex",
+                  //         alignItems: "center",
+                  //         borderTop: "1px solid #eee",
+                  //         paddingTop: "12px",
+                  //       }}
+                  //     >
+                  //       <div
+                  //         style={{
+                  //           width: "40px",
+                  //           height: "40px",
+                  //           borderRadius: "50%",
+                  //           background: "#e0e0e0",
+                  //           marginRight: "10px",
+                  //         }}
+                  //       ></div>
+
+                  //       <p
+                  //         style={{
+                  //           fontSize: "14px",
+                  //           fontWeight: "600",
+                  //           color: "#222",
+                  //           margin: 0,
+                  //         }}
+                  //       >
+                  //         {users.user?.find((v1) => v1.id === v.user_id)?.name}
+                  //       </p>
+                  //     </div>
+                  //   </div>
+                  // </SwiperSlide>
+                  <SwiperSlide>
+                    <div
+                      style={{
+                        width: "100%",
+                        padding: "25px",
+                        borderRadius: "18px",
+                        background: "linear-gradient(135deg, #ffffff, #f8f9fb)",
+                        boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
+                        fontFamily: "sans-serif",
+                      }}
+                    >
+                      {/* ⭐ Rating */}
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "6px",
+                          marginBottom: "15px",
+                        }}
+                      >
+                        {[...Array(5)].map((_, i) => (
+                          <i
+                            key={i}
+                            className={`fa-star ${
+                              i < v.rating ? "fa-solid" : "fa-regular"
+                            }`}
+                            style={{
+                              color: i < v.rating ? "#f5b301" : "#ddd",
+                              fontSize: "18px",
+                            }}
+                          />
+                        ))}
                       </div>
-                      <p className="test-data">
+
+                      {/* 📝 Description */}
+                      <p
+                        style={{
+                          fontSize: "15px",
+                          color: "#444",
+                          lineHeight: "1.7",
+                          marginBottom: "20px",
+                        }}
+                      >
                         {v.description}
                       </p>
-                      <div className="person">
-                        <div className="call-us">
-                          <div className="call-image">
-                            <img src="images/author-img1.jpg" alt />
-                          </div>
-                          <div className="call-text">
-                            <a href="#">Anjelina Watson</a>
-                            <p>Health</p>
-                          </div>
+
+                      {/* 👤 User */}
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          borderTop: "1px solid #eee",
+                          paddingTop: "12px",
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: "40px",
+                            height: "40px",
+                            borderRadius: "50%",
+                            background:
+                              "linear-gradient(135deg, #f5b301, #ffd95c)",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            marginRight: "10px",
+                            boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+                          }}
+                        >
+                          <i
+                            className="fa-solid fa-user"
+                            style={{ color: "#fff", fontSize: "16px" }}
+                          />
                         </div>
+
+                        <p
+                          style={{
+                            fontSize: "14px",
+                            fontWeight: "600",
+                            color: "#222",
+                            margin: 0,
+                          }}
+                        >
+                          {users.user?.find((v1) => v1.id === v.user_id)?.name}
+                        </p>
                       </div>
                     </div>
-                  </div>
-                    ))
-                  }
-                  
-                  <div className="swiper-slide">
-                    <div className="test-slide">
-                      <div className="rating">
-                        <div>
-                          <i className="fa-solid fa-star" />
-                        </div>
-                        <div>
-                          <i className="fa-solid fa-star" />
-                        </div>
-                        <div>
-                          <i className="fa-solid fa-star" />
-                        </div>
-                        <div>
-                          <i className="fa-solid fa-star" />
-                        </div>
-                        <div>
-                          <i className="fa-solid fa-star" />
-                        </div>
-                      </div>
-                      <p className="test-data">
-                        Discover real patient testimonials highlighting our
-                        expert medical care, personalized treatments, and
-                        compassionate support. See how our dedicated{" "}
-                      </p>
-                      <div className="person">
-                        <div className="call-us">
-                          <div className="call-image">
-                            <img src="images/author-img1.jpg" alt />
-                          </div>
-                          <div className="call-text">
-                            <a href="#">Anjelina Watson</a>
-                            <p>Health</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
             </div>
             <div className="col-lg-6">
               <div className="test-image">
@@ -879,11 +965,13 @@ function Home(props) {
               </div>
             </div>
           </div>
-          <div className="review-btn" style={{marginTop: '20px'}}>
-            <a href="javascript:void(0);" className="btn">
-            <NavLink to= "/addReview">Add Review</NavLink>
-            </a>
-          </div>
+          {auth?.patient ? (
+            <div className="review-btn" style={{ marginTop: "20px" }}>
+              <a href="javascript:void(0);" className="btn">
+                <NavLink to="/addReview">Add Review</NavLink>
+              </a>
+            </div>
+          ) : null}
         </div>
       </section>
       {/* FAQ */}
@@ -986,20 +1074,8 @@ function Home(props) {
             </p>
           </div>
 
-          {blog.blog?.map((v) => (
-            <div className="row">
-              {/* <div className="col-4">
-          <div className="blog-card">
-            <div className="blog-img">
-              <img src="images/blog-1.jpg" alt />
-            </div>
-            <div className="blog-content">
-              <h3>How To Maintain Healthy Teeth</h3>
-              <p>Simple daily habits can help keep your teeth strong and healthy.</p>
-              <a href="#">Read More</a>
-            </div>
-          </div>
-        </div> */}
+          <div className="row" style={{ display: "flex" }}>
+            {blog.blog?.map((v) => (
               <div className="col-4">
                 <div className="blog-card">
                   <div className="blog-img">
@@ -1012,20 +1088,8 @@ function Home(props) {
                   </div>
                 </div>
               </div>
-              {/* <div className="col-4">
-          <div className="blog-card">
-            <div className="blog-img">
-              <img src="images/blog-3.jpg" alt />
-            </div>
-            <div className="blog-content">
-              <h3>Best Foods For Strong Teeth</h3>
-              <p>Eating the right food helps maintain good oral health.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-              <a href="#">Read More</a>
-            </div>
+            ))}
           </div>
-        </div> */}
-            </div>
-          ))}
         </div>
       </section>
     </main>

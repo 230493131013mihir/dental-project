@@ -27,6 +27,7 @@ const testimonialRoutes= require("./testimonial.routes")
 
 
 
+
 router.use("/branch" ,branchRoutes);
 router.use("/department", departmentRoutes);
 
@@ -49,7 +50,6 @@ router.use("/blog", blogRoutes);
 router.use("/faq", faqRoutes);
 
 router.use("/testimonial", testimonialRoutes);
-    
 
 
 

@@ -28,7 +28,7 @@ function DepartmentDetails(props) {
   
 
   return (
-    <div className="container my-5">
+    <div className="container my-5" style={{marginTop: '120px'}}>
       <div className="card shadow-lg border-0">
         <div className="row g-0">
           {/* Department Image */}

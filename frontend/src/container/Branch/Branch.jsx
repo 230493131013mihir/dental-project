@@ -20,7 +20,7 @@ function Branch(props) {
 
   return (
     <main>
-      <section className="blog">
+      <section className="blog" style={{marginTop: '120px'}}>
         <div className="container">
           <div
             className="heading"

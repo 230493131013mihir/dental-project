@@ -194,21 +194,25 @@ function Insfrastructure(props) {
       label: "-- Select type --",
     },
     {
-      value: "0",
-      label: "type 1",
+      value: "Dental",
+      label: "Dental",
     },
     {
-      value: "1",
-      label: "type 2",
+      value: "Furniture",
+      label: "Furniture",
     },
     {
-      value: "2",
-      label: "type 3",
+      value: "Electronics",
+      label: "Electronics",
+    },
+    {
+      value: "Other",
+      label: "Other",
     },
   ];
   const columns = [
     {
-      field: "branch_id", headerName: "branch_id",
+      field: "branch_id", headerName: "branch",
       width: 130,
       renderCell: (params) => {
         const d = branch.branch?.find(v => v.id == params.row.branch_id)?.name
@@ -219,7 +223,7 @@ function Insfrastructure(props) {
       }
     },
     {
-      field: "vendor_id", headerName: "vendor_id",
+      field: "vendor_id", headerName: "vendor",
       width: 130,
       renderCell: (params) => {
         const d = vendor.vendor?.find(v => v.id == params.row.vendor_id)?.name
@@ -231,7 +235,7 @@ function Insfrastructure(props) {
 
     },
     {
-      field: "department_id", headerName: "department_id",
+      field: "department_id", headerName: "department",
       width: 130,
       renderCell: (params) => {
         const d = department.department?.find(v => v.id == params.row.department_id)?.name
@@ -242,7 +246,7 @@ function Insfrastructure(props) {
       }
     },
     { field: "name", headerName: "Name", width: 130 },
-    { field: "type_id", headerName: "type_id", width: 130 },
+    { field: "type_id", headerName: "type", width: 130 },
     { field: "description", headerName: "Description ", width: 130 },
     { field: "price", headerName: "Price ", width: 130 },
     {

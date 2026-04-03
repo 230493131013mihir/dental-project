@@ -12,10 +12,16 @@ function Review(props) {
 
   const navigate = useNavigate();
 
+  
+  
   let userschema = object({
     rating: string().required("please enter your rating"),
     description: string().required("Please Select description id"),
   });
+
+
+  
+  
 
   const formik = useFormik({
     initialValues: {
@@ -40,6 +46,9 @@ function Review(props) {
       resetForm();
     },
   });
+  
+ 
+  
 
   console.log(formik.errors, formik.touched);
   return (
@@ -52,7 +61,7 @@ function Review(props) {
           >
             <div className="col-5">
               <img
-                src="images/register.webp"
+                src="images/review.jpg"
                 alt=""
                 width={"100%"}
                 height={"500px"}
@@ -61,7 +70,7 @@ function Review(props) {
             <div className="col-6">
               <div className="appointment">
                 <form onSubmit={formik.handleSubmit} id="login-form">
-                  <h3>Login</h3>
+                  <h3>Review</h3>
                   <div className="row">
                     <div className="col-12">
                       <select

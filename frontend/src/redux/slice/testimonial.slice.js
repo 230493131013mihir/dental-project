@@ -7,9 +7,9 @@ const initialState = {
 
 // GET
 export const getReviews = createAsyncThunk("testimonal/getReviews", async () => {
-  const responce = await axios.get("http://localhost:3000/testimonal/getReviews");
+  const responce = await axios.get("http://localhost:3000/testimonial/getReviews");
 
-   console.log(responce.data.data);
+   console.log("sdcsd",responce.data.data);
    
   return responce.data.data;
 });

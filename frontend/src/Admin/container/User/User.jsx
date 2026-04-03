@@ -213,16 +213,20 @@ function User(props) {
       label: "-- Select role --",
     },
     {
-      value: "0",
-      label: "role 1",
+      value: "Doctor",
+      label: "Doctor",
     },
     {
-      value: "1",
-      label: "role 2",
+      value: "Nurse",
+      label: "Nurse",
     },
     {
-      value: "2",
-      label: "role 3",
+      value: "Receptionist",
+      label: "Receptionist",
+    },
+    {
+      value: "Others",
+      label: "Others",
     },
   ];
 
@@ -291,7 +295,7 @@ function User(props) {
                 id="role_id"
                 name="role_id"
                 select
-                label="role_id"
+                label="Role"
                 fullWidth
                 variant="standard"
                 onChange={formik.handleChange}

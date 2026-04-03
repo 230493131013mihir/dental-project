@@ -85,6 +85,9 @@ function AppointmentEdit(props) {
         }),
       );
       resetForm();
+
+window.location.reload();
+
     },
   });
 

@@ -15,12 +15,11 @@ import  appointmentSlice  from './slice/appointment.slice'
 import  blogSlice  from './slice/blog.slice'
 import  faqSlice  from './slice/FAQ.slice'
 import testimonialSlice from './slice/testimonial.slice'
+import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
+import { persistStore, persistReducer } from 'redux-persist'
+import patientSlice  from './slice/patient.slice'
 
-export const store = configureStore({
-  reducer: {
-
-  },
-})
+// import patientdataSlice  from './slice/patientdata.slice'
 
 
 const reducers = combineReducers({
@@ -39,28 +38,30 @@ const reducers = combineReducers({
     appointment: appointmentSlice,
     blog: blogSlice,
     faq: faqSlice,
-    testimonial: testimonialSlice
+    testimonial: testimonialSlice,
+    patient: patientSlice,
+    
 })
 
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['auth']
+  whitelist: ['authenthication']
 }
 
-const persistReducer = persistReducer(persistConfig,reducers);
+const persistedReducer = persistReducer(persistConfig,reducers);
 
 const store = configureStore(
   {
-    reducer: persistReducer,
+    reducer: persistedReducer,
     middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 
   }
 )
 
 
-export let persister = persisterStore(store)
+export let persister = persistStore(store)
 
 export default store;
 

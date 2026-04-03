@@ -23,7 +23,7 @@ function Header(props) {
   
 
     return (
-       <header>
+       <header style={{position: 'fixed', top: 0, width: '100%', backgroundColor: 'white'}}>
   <div className="container">
     <div className="top-header">
       <div className="logo">
@@ -37,7 +37,6 @@ function Header(props) {
           <li>
             <NavLink to="/branch">Branch </NavLink>
           </li>
-          <li><NavLink to="/about">About Us</NavLink></li>
           <li>
            <NavLink to="/department">Department </NavLink>
           </li>
@@ -48,7 +47,7 @@ function Header(props) {
             <a href="javascript:void(0);">Blog</a>
           </li>
           <li><a href="#con">Contact <i className="fa-sharp fa-solid fa-down" /></a></li>
-          <li><a href="javascript:void(0);">Pricing</a></li>
+          {/* <li><a href="javascript:void(0);">Pricing</a></li> */}
            {/* <li>
             <NavLink to={"/register"}>Register</NavLink>
           </li> */}

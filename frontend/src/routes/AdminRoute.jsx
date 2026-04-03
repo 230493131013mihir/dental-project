@@ -16,6 +16,7 @@ import Appointment from "../Admin/container/Appointment/Appointment";
 import AppointmentEdit from "../Admin/container/Appointment/AppointmentEdit";
 import Blog from "../Admin/container/Blog/Blog";
 import FAQ from "../Admin/container/FAQ/FAQ";
+import Patientdata from "../Admin/container/Patientdata/Patientdata";
 
 function AdminRoute(props) {
   return (
@@ -38,7 +39,10 @@ function AdminRoute(props) {
 
         <Route path="/blog" element={<Blog />} />
           <Route path="/faq" element={<FAQ />} />
+
+          <Route path="/patient" element={<Patientdata />} />
       </Routes>
+
     </Layout>
   );
 }

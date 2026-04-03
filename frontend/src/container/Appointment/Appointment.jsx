@@ -68,7 +68,7 @@ function Appointment(props) {
 console.log(branch.branch, department.department, formik.values.branch_id);
   return (
     <main>
-      <section>
+      <section style={{marginTop: '120px'}}>
         <div className="container">
           <div className="appointment">
             <form onSubmit={formik.handleSubmit} id="appointment-form">
@@ -100,7 +100,7 @@ console.log(branch.branch, department.department, formik.values.branch_id);
                     value={formik.values.department_id}
                   >
                     <option value="">--Select Department--</option>
-                    {department.department.map((v) => (
+                    {department.department?.filter((v1) => v1.branch_id == formik.values.branch_id)?.map((v) => (
                       <option value={v.id}>{v.name}</option>
                     ))}
                   </select>
@@ -109,13 +109,7 @@ console.log(branch.branch, department.department, formik.values.branch_id);
                   ) : (
                     ""
                   )}
-                  {department.department
-                    ?.filter((v1) => v1.branch_id == formik.values.branch_id)
-                    ?.map((v) => (
-                      <MenuItem key={v.id} value={v.id}>
-                        {v.name}
-                      </MenuItem>
-                    ))}
+                  
                 </div>
                 <div className="col-6">
                   <input
