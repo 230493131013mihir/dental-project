@@ -41,7 +41,7 @@ function Header(props) {
            <NavLink to="/department">Department </NavLink>
           </li>
           <li>
-            <a href="#tst">Testonomial</a>
+            <a href="#tsti">Testonomial</a>
           </li>
           <li>
             <a href="#blog">Blog</a>
