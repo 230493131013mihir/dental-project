@@ -818,7 +818,7 @@ const uniqueDept = [...new Map(department?.department.map(item => [item[key], it
         </div>
       </section>
       {/*Testimonial*/}
-      <section className="testimonial" id="tst">
+      <section className="testimonial" id="tsti">
         <div className="container">
           <div className="row">
             <div className="col-lg-6">

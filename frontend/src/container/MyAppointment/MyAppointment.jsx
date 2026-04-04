@@ -4,6 +4,7 @@ import { getMyAppointment } from "../../redux/slice/appointment.slice";
 import { useDispatch, useSelector } from "react-redux";
 import { getBranch } from "../../redux/slice/branch.slice";
 import { getDepartment } from "../../redux/slice/department.slice";
+import { getTreatment } from "../../redux/slice/treatment.slice";
 
 function MyAppointment(props) {
   const dispatch = useDispatch();
@@ -12,12 +13,14 @@ function MyAppointment(props) {
     dispatch(getMyAppointment());
     dispatch(getBranch());
     dispatch(getDepartment());
+    dispatch(getTreatment());
   }, []);
 
   const myApt = useSelector((state) => state.appointment);
 
   const branch = useSelector((state) => state.branch);
   const department = useSelector((state) => state.department);
+  const treatment = useSelector((state) => state.treatment);
 
   console.log(myApt.myAppointment);
   console.log(branch.branch);
@@ -35,7 +38,10 @@ console.log(sData);
       <h2 style={{ textAlign: "center", margin: "20px 0" }}>My Appointment</h2>
 
       <div className="row">
-        {sData?.map((v) => (
+        {sData?.map((v) => {
+          const presData = treatment.treatment?.filter(
+  (t) => t.appointment_id == v.id
+);
             <>
               <div className="col-6">
                 <div
@@ -108,11 +114,17 @@ console.log(sData);
                   >
                     <span>{new Date(v.date)?.toLocaleDateString()}</span>
                     <span>{v.time}</span>
+                              {presData?.length > 0 && (
+            <div>
+              Prescription: {presData.map((p) => p.prescription).join(", ")}
+            </div>
+          )}
+
                   </div>
                 </div>
               </div>
             </>
-          ))}
+          })}
       </div>
     </div>
   );
