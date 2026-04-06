@@ -313,7 +313,9 @@ function Appointment(props) {
                     {timeslot.timeslot
 
                      
-                      ?.filter((v1) => v1.user_id == formik.values.time)
+                      ?.filter((v1) => v1.user_id == formik.values.user_id)
+
+                       ?.filter((v1) => v1.timeslot == formik.values.user_id)
 
                      
                       ?.map((v) => (
