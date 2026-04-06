@@ -767,7 +767,57 @@ const uniqueDept = [...new Map(department?.department.map(item => [item[key], it
           </div>
         </div>
       </section>
-      {/* Team */}
+      {/* Team
+      <section className="team">
+        <div className="container">
+          <div className="row">
+            <div className="col-12">
+              <div className="heading">
+                <span className="badge">
+                  <i>●</i> Our Team
+                </span>
+                <h2>Trusted Healthcare Experts at Your Service</h2>
+              </div>
+            </div>
+            {doctors?.map((v) => (
+              <div className="col-sm-6 col-xl-3">
+                <div className="doctorimg">
+                  <img src={"http://localhost:3000/" + v?.user_img} alt />
+                  <div className="link">
+                    <a href="#">
+                      <i className="fa-brands fa-facebook-f" />
+                    </a>
+                    <a href="#">
+                      <i className="fa-brands fa-twitter" />
+                    </a>
+                    <a href="#">
+                      <i className="fa-brands fa-linkedin" />
+                    </a>
+                    <a href="#">
+                      <i className="fa-solid fa-p" />
+                    </a>
+                  </div>
+                </div>
+                <div className="about-cta">
+                  <div className="call-us">
+                    <div className="call-text">
+                      <a href="#">{v?.name}</a>
+                      <p>
+                        {
+                          department?.department?.find(
+                            (v1) => v1.id == v?.department_id,
+                          )?.name
+                        }
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section> */}
+            {/* Team */}
       <section className="team">
         <div className="container">
           <div className="row">
@@ -817,6 +867,7 @@ const uniqueDept = [...new Map(department?.department.map(item => [item[key], it
           </div>
         </div>
       </section>
+
       {/*Testimonial*/}
       <section className="testimonial" id="tsti">
         <div className="container">

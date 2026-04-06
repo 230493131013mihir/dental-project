@@ -38,10 +38,10 @@ console.log(sData);
       <h2 style={{ textAlign: "center", margin: "20px 0" }}>My Appointment</h2>
 
       <div className="row">
-        {sData?.map((v) => {
-          const presData = treatment.treatment?.filter(
-  (t) => t.appointment_id == v.id
-);
+        {sData?.map((v) => (
+//           const presData = treatment.treatment?.filter(
+//   (t) => t.appointment_id == v.id
+// );
             <>
               <div className="col-6">
                 <div
@@ -114,17 +114,17 @@ console.log(sData);
                   >
                     <span>{new Date(v.date)?.toLocaleDateString()}</span>
                     <span>{v.time}</span>
-                              {presData?.length > 0 && (
+                              {/* {presData?.length > 0 && (
             <div>
               Prescription: {presData.map((p) => p.prescription).join(", ")}
             </div>
-          )}
+          )} */}
 
                   </div>
                 </div>
               </div>
             </>
-          })}
+          ))}
       </div>
     </div>
   );
