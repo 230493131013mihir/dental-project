@@ -22,15 +22,15 @@ const getTimeslot = async (req, res) => {
 
 const addTimeslot = async (req, res) => {
   try {
-    console.log(req.body);
+    console.log("hhujhjh",req.body);
 
-    const { user_id, date, startdate, enddate } = req.body;
+    const { user_id, date, starttime, endtime,handlepatient } = req.body;
 
     console.log(req.file);
 
     const [rows] = await pool.query(
-      "INSERT INTO timeslot(user_id,date,startdate,enddate) VALUES(?,?,?,?)",
-      [user_id, date, startdate, enddate]
+      "INSERT INTO timeslot(user_id,date,starttime,endtime,handlepatient) VALUES(?,?,?,?,?)",
+      [user_id, date, starttime, endtime,handlepatient]
     );
 
     res.status(200).json({
@@ -40,6 +40,8 @@ const addTimeslot = async (req, res) => {
     });
 
     console.log(rows, fields, result);
+    console.log(req.body);  
+   
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -54,7 +56,7 @@ const updateTimeslot = async (req, res) => {
   try {
     console.log(req.body);
 
-    const { user_id, date, startdate, enddate } = req.body;
+    const { user_id, date, starttime, endtime, handlepatient } = req.body;
 
     const timeslotId = req.params.id;
 
@@ -62,11 +64,11 @@ const updateTimeslot = async (req, res) => {
       `SELECT * FROM timeslot WHERE id=${timeslotId}`
     );
 
-    console.log(user_id, date, startdate, enddate, timeslotId);
+    console.log(user_id, date, starttime, endtime,handlepatient, timeslotId);
 
     await pool.query(
-      "UPDATE timeslot SET user_id=?,date=?,startdate=?,enddate=? WHERE id=?",
-      [user_id, date, startdate, enddate, timeslotId]
+      "UPDATE timeslot SET user_id=?,date=?,starttime=?,endtime=?,handlepatient=? WHERE id=?",
+      [user_id, date, starttime, endtime,handlepatient, timeslotId]
     );
 
     res.status(200).json({
@@ -74,14 +76,15 @@ const updateTimeslot = async (req, res) => {
       data: {
         user_id,
         date,
-        startdate,
-        enddate,
+        starttime,
+        endtime,
+        handlepatient,
         id: timeslotId,
       },
       message: "timeslot update successfully",
     });
 
-          console.log(fields,results);
+    console.log(fields,results);
   } catch (error) {
     console.log(error);
     res.status(500).json({

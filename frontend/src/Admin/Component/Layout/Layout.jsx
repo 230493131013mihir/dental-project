@@ -132,7 +132,7 @@ export default function Layout({ children }) {
     // { icon: <AccountCircleIcon />, label: "Expence", to: "/admin/expence" },
     { icon: <AccountCircleIcon />, label: "Services", to: "/admin/services" },
 
-      // { icon: <CleaningServicesIcon />, label: "Timeslot", to: "/admin/Timeslot" },
+      { icon: <CleaningServicesIcon />, label: "Timeslot", to: "/admin/Timeslot" },
     // { icon: <AttachMoneyIcon />, label: "Treatment", to: "/admin/Treatment" },
 
      { icon: <MedicationLiquidIcon />, label: "Appointment", to: "/admin/appointment"},

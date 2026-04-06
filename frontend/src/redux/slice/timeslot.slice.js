@@ -20,15 +20,15 @@ export const addTimeslot = createAsyncThunk(
     try {
       console.log(values);
 
-      const formData = new FormData();
-      formData.append("user_id", values.user_id);
-      formData.append("date", values.date);
-      formData.append("startdate", values.startdate);
-      formData.append("enddate", values.enddate);
+      // const formData = new FormData();
+      // formData.append("user_id", values.user_id);
+      // formData.append("date", values.date);
+      // formData.append("starttime", values.starttime);
+      // formData.append("endtime", values.endtime);
 
       const responce = await axios.post(
         "http://localhost:3000/timeslot/addTimeslot",
-        formData,
+        values,
       );
       console.log(responce);
 
@@ -41,15 +41,15 @@ export const updateTimeslot = createAsyncThunk(
   "timeslot/updateTimeslot",
   async (values) => {
     try {
-      const formData = new FormData();
-      formData.append("user_id", values.user_id);
-      formData.append("date", values.date);
-      formData.append("startdate", values.startdate);
-      formData.append("enddate", values.enddate);
+      // const formData = new FormData();
+      // formData.append("user_id", values.user_id);
+      // formData.append("date", values.date);
+      // formData.append("starttime", values.starttime);
+      // formData.append("endtime", values.endtime);
 
       const responce = await axios.put(
         `http://localhost:3000/timeslot/updateTimeslot/${values.id}`,
-        formData,
+        values,
       );
       console.log(responce);
 

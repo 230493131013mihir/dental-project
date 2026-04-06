@@ -47,13 +47,13 @@ const bookAppointment = async (req, res) => {
   try {
     console.log(req.body);
 
-    const { branch_id, department_id, name, phone, date, time, user_id } = req.body;
+    const { branch_id, department_id,doctor, name, phone, date, time, user_id } = req.body;
 
-    console.log(branch_id, department_id, name, phone, date, time);
+    console.log(branch_id, department_id,doctor, name, phone, date, time);
 
     const [rows, fields, result] = await pool.query(
-      "INSERT INTO appointment(branch_id, department_id, user_id, name, phone , date, time ) VALUES(?,?,?,?,?,?,?)",
-      [branch_id, department_id, user_id, name, phone, date, time],
+      "INSERT INTO appointment(branch_id, department_id,doctor, user_id, name, phone , date, time ) VALUES(?,?,?,?,?,?,?,?)",
+      [branch_id, department_id,doctor, user_id, name, phone, date, time],
     );
 
     res.status(200).json({
