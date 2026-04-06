@@ -300,26 +300,14 @@ function Appointment(props) {
                     }}
                   >
                     <option>--Select Timeslot--</option>
-                    <option value={"10:00 AM -- 11:00 AM"}>
-                      10:00 AM -- 11:00 AM
-                    </option>
-                    <option value={"11:00 AM -- 12:00 PM"}>
-                      11:00 AM -- 12:00 PM
-                    </option>
-                    <option value={"13:00 PM -- 14:00 PM"}>
-                      13:00 PM -- 14:00 PM
-                    </option>
-
                     {timeslot.timeslot
 
                      
                       ?.filter((v1) => v1.user_id == formik.values.user_id)
 
-                       ?.filter((v1) => v1.timeslot == formik.values.user_id)
-
                      
                       ?.map((v) => (
-                        <option value={v.id}>{v.name}</option>
+                        <option value={v.id}>{v.starttime} - {v.endtime}</option>
                       ))}
                   </select>
 
