@@ -18,6 +18,7 @@ import testimonialSlice from './slice/testimonial.slice'
 import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
 import { persistStore, persistReducer } from 'redux-persist'
 import patientSlice  from './slice/patient.slice'
+import  medicalSlice  from './slice/medical.slice'
 
 // import patientdataSlice  from './slice/patientdata.slice'
 
@@ -40,6 +41,7 @@ const reducers = combineReducers({
     faq: faqSlice,
     testimonial: testimonialSlice,
     patient: patientSlice,
+    medical: medicalSlice,
     
 })
 

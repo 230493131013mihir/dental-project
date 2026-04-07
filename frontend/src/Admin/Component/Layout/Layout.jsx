@@ -142,6 +142,8 @@ export default function Layout({ children }) {
 
         { icon: <PersonIcon />, label: "Patient", to: "/admin/patient"},
 
+        { icon: <MedicationLiquidIcon />, label: "Medical", to: "/admin/medical"},
+
 
     
   ];
