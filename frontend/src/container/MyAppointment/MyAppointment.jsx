@@ -118,16 +118,10 @@ console.log(sData);
                     <span>{new Date(v.date)?.toLocaleDateString()}</span>
                     <span>
                      {timeslot.timeslot 
-                      ?.find((v1) => v1.user_id == v.time)?.starttime
-                     
-                      
-                      }
+                      ?.find((v1) => v1.user_id == v.time)?.starttime}
                      -
                      {timeslot.timeslot 
-                      ?.find((v1) => v1.user_id == v.time)?.endtime
-                     
-                      
-                      }
+                      ?.find((v1) => v1.user_id == v.time)?.endtime}
                      </span>
                              
 

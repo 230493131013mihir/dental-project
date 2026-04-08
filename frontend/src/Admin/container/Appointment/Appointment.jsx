@@ -12,7 +12,10 @@ import { Formik, useFormik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
 
-import { bookAppointment, getAppointment } from "../../../redux/slice/appointment.slice";
+import {
+  bookAppointment,
+  getAppointment,
+} from "../../../redux/slice/appointment.slice";
 import { getBranch } from "../../../redux/slice/branch.slice";
 import { getDepartment } from "../../../redux/slice/department.slice";
 import { getUser } from "../../../redux/slice/user.slice";
@@ -21,6 +24,7 @@ import IconButton from "@mui/material/IconButton";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import { useNavigate } from "react-router-dom";
 import { getPatients } from "../../../redux/slice/patient.slice";
+import { getTimeslot } from "../../../redux/slice/timeslot.slice";
 
 function Appointment(props) {
   const [open, setOpen] = React.useState(false);
@@ -44,6 +48,7 @@ function Appointment(props) {
     dispatch(getDepartment());
     dispatch(getUser());
     dispatch(getPatients());
+    dispatch(getTimeslot());
   }, []);
 
   const appointment = useSelector((state) => state.appointment);
@@ -55,8 +60,10 @@ function Appointment(props) {
   console.log(branch.branch);
 
   const department = useSelector((state) => state.department);
-
   console.log(department.department);
+
+  const timeslot = useSelector((state) => state.timeslot);
+  console.log(timeslot.timeslot);
 
   const user = useSelector((state) => state.user);
   const patientdata = useSelector((state) => state.patient);
@@ -75,7 +82,8 @@ function Appointment(props) {
   let userschema = object({
     branch_id: number().required("Please select branch"),
     department_id: number().required("Please enter department"),
-    user_id: number().required("Please select user"),
+    // user_id: number().required("Please select user"),
+    doctor_id: number().required("Please select doctor_id"),
     name: string().required("Please Select name"),
     phone: string()
       .required("Please enter mobile number")
@@ -90,6 +98,7 @@ function Appointment(props) {
       branch_id: "",
       department_id: "",
       user_id: "",
+      doctor_id: "",
       name: "",
       phone: "",
       date: "",
@@ -99,7 +108,7 @@ function Appointment(props) {
     validationSchema: userschema,
 
     onSubmit: (values, { resetForm }) => {
-      dispatch(bookAppointment(values))
+      dispatch(bookAppointment(values));
       resetForm();
     },
   });
@@ -148,10 +157,28 @@ function Appointment(props) {
         return d;
       },
     },
+    {
+      field: "doctor_id",
+      headerName: "Doctor",
+      width: 130,
+     renderCell: (params) => {
+        const d = user.user?.find(v => v.id == params.row.doctor_id)?.name
+
+        console.log(user.doctor_id, params.row.id, d);
+
+        return d
+      }
+    },
     { field: "name", headerName: "name", width: 130 },
     { field: "phone", headerName: "phone", width: 130 },
     { field: "date", headerName: "date", width: 130 },
-    { field: "time", headerName: "time", width: 130 },
+    { field: "time", headerName: "time", width: 130 ,
+       renderCell: (params) => {
+        const d = timeslot.timeslot?.find((v) => v.id == params.row.user_id)?.name;
+        console.log(timeslot.user_id, params.row.id, d);
+        return d;
+      },
+    },
     {
       field: "action",
       headerName: "Action",
@@ -267,7 +294,39 @@ function Appointment(props) {
                       </MenuItem>
                     ))}
                 </TextField>
-                
+
+                <TextField
+                  error={formik.errors.doctor_id && formik.touched.doctor_id}
+                  id="doctor_id"
+                  name="doctor_id"
+                  fullWidth
+                  select
+                  variant="standard"
+                  label="Select Doctor"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.doctor_id}
+                  helperText={
+                    formik.errors.doctor_id && formik.touched.doctor_id
+                      ? formik.errors.doctor_id
+                      : ""
+                  }
+                >
+                  {/* <option value="">--Select Doctor--</option> */}
+                  {user.user
+                    ?.filter((v1) => v1.branch_id == formik.values.branch_id)
+                    ?.filter(
+                      (v1) => v1.department_id == formik.values.department_id,
+                    )
+                    ?.filter((v1) => v1.role_id == "Doctor")
+                    ?.map((v) => (
+                      // <option value={v.id}>{v.name}</option>
+                      <MenuItem key={v.id} value={v.id}>
+                        {v.name}
+                      </MenuItem>
+                    ))}
+                </TextField>
+
                 <TextField
                   error={formik.errors.name && formik.touched.name}
                   margin="dense"
@@ -319,14 +378,14 @@ function Appointment(props) {
                       : ""
                   }
                 />
+
                 <TextField
                   error={formik.errors.time && formik.touched.time}
                   margin="dense"
                   id="time"
-                  label="time"
-                  type="time"
                   name="time"
                   fullWidth
+                  select
                   variant="standard"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -336,13 +395,28 @@ function Appointment(props) {
                       ? formik.errors.time
                       : ""
                   }
-                />
+                >
+                  {/* <option>--Select Timeslot--</option> */}
+                  {timeslot.timeslot
+                    ?.filter((v1) => v1.user_id == formik.values.doctor_id)
+                    ?.filter(
+                      (v2) =>
+                        v2.handlepatient > v2.appointpatient &&
+                        new Date(v2.date)?.getTime() ==
+                          new Date(formik.values.date)?.getTime(),
+                    )
+                    ?.map((v) => (
+                      <MenuItem key={v.id} value={v.id}>
+                        {v.starttime} - {v.endtime}
+                      </MenuItem>
+                    ))}
+                </TextField>
               </form>
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose}>Cancel</Button>
               <Button type="submit" form="Appointment-form">
-                Book Appointment
+                Book Appointment1
               </Button>
             </DialogActions>
           </Dialog>

@@ -47,7 +47,7 @@ const bookAppointment = async (req, res) => {
   try {
     console.log(req.body);
 
-    const { branch_id, department_id,doctor_id, name, phone, date, time, user_id } = req.body;
+    const { branch_id, department_id,doctor_id, name, phone, date, time, user_id=0 } = req.body;
 
     console.log(branch_id, department_id,doctor_id, name, phone, date, time,user_id);
 
