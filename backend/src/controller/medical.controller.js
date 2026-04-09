@@ -3,7 +3,7 @@ const pool = require("../db/mysql");
 const getMedical = async (req, res) => {
   try {
     const [rows] =
-      await pool.query(`SELECT appointment.id, name, phone, appointment.date, time, appointment.doctor_id, medicine_id, medicine_quantity
+      await pool.query(`SELECT appointment.id, name, phone, appointment.date, appointment.doctor_id, medicine_id, medicine_quantity, medicine_amount
                        FROM appointment
                        INNER JOIN treatment
                        ON appointment.id = treatment.appointment_id;`);
@@ -32,18 +32,25 @@ const addMedical = async (req, res) => {
       name,
       phone,
       date,
-      time,
-
       medicine_id,
       medicine_quantity,
-      amount,
+      medicine_amount,
+      status,
     } = req.body;
 
     console.log(req.file);
 
     const [rows] = await pool.query(
-      "INSERT INTO medical( name, phone, date, time,medicine_id,medicine_quantity,amount) VALUES (?,?,?,?,?,?,?)",
-      [name, phone, date, time, medicine_id, medicine_quantity, amount],
+      "INSERT INTO medical( name, phone, date, medicine_id,medicine_quantity,medicine_amount,status) VALUES (?,?,?,?,?,?,?)",
+      [
+        name,
+        phone,
+        date,
+        medicine_id,
+        medicine_quantity,
+        medicine_amount,
+        status,
+      ],
     );
     res.status(200).json({
       success: true,
@@ -69,45 +76,53 @@ const updateMedical = async (req, res) => {
       name,
       phone,
       date,
-      time,
-
       medicine_id,
       medicine_quantity,
-      amount,
+      medicine_amount,
+      status,
     } = req.body;
 
-    const medicalId = req.params.id;
+    const appointment_id = req.params.id;
 
     const [rows] = await pool.query(
-      `SELECT * FROM medical WHERE id=${medicalId}`,
+      `SELECT * FROM medical WHERE appointment_id=${appointment_id}`,
     );
 
-    console.log(
-      name,
-      phone,
-      date,
-      time,
+    console.log("rows", rows, appointment_id);
 
-      medicine_id,
-      medicine_quantity,
-      amount,
-      medicalId,
-    );
+    if (rows.length === 0) {
+      const [rows] = await pool.query(
+        "INSERT INTO medical( appointment_id, name, phone, date, medicine_id,medicine_quantity,medicine_amount,status) VALUES (?,?,?,?,?,?,?,?)",
+        [
+          appointment_id,
+          name,
+          phone,
+          date,
+          medicine_id,
+          medicine_quantity,
+          medicine_amount,
+          status,
+        ],
+      );
 
-    await pool.query(
-      "UPDATE medical SET name= ?,phone= ?,date= ?,time= ?,medicine_id=?,medicine_quantity=?,amount=? WHERE id=?",
-      [
-        name,
-        phone,
-        date,
-        time,
+      console.log("11111", rows);
+    } else {
+      const d = await pool.query(
+        "UPDATE medical SET name= ?,phone= ?,date= ? ,medicine_id=?,medicine_quantity=?,medicine_amount=?,status=? WHERE appointment_id=?",
+        [
+          name,
+          phone,
+          date,
+          medicine_id,
+          medicine_quantity,
+          medicine_amount,
+          status,
+          appointment_id,
+        ],
+      );
 
-        medicine_id,
-        medicine_quantity,
-        medicalId,
-        amount,
-      ],
-    );
+      console.log("222222222", d);
+    }
 
     res.status(200).json({
       success: true,
@@ -115,15 +130,15 @@ const updateMedical = async (req, res) => {
         name,
         phone,
         date,
-        time,
         medicine_id,
         medicine_quantity,
-        amount,
-        id: medicalId,
+        medicine_amount,
+        status,
+        id: appointment_id,
       },
       message: "medical update successfully",
     });
-    console.log(fields, results);
+    // console.log(fields, results);
   } catch (error) {
     console.log(error);
     res.status(500).json({

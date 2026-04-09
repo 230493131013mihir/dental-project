@@ -44,7 +44,7 @@ function Medical(props) {
   }, []);
 
   const medical = useSelector((state) => state.medical);
-  console.log(medical);
+  console.log(medical.medical);
   const user = useSelector((state) => state.user);
   console.log(user);
 
@@ -70,17 +70,15 @@ function Medical(props) {
   };
 
   let userschema = object({
-   
     name: string().required("Please enter name"),
     phone: string()
       .required("Please enter mobile number")
       .matches(/^[0-9]{10}$/, "Mobile number must be 10 digits"),
     date: string().required("Please Select date"),
-    time: string().required("Please Select time"),
-    
     medicine_id: string().required("Please Select medicine_id"),
     medicine_quantity: string().required("Please Select medicine_quantity"),
-     amount: string().required("Please enter amount"),
+    medicine_amount: string().required("Please enter medicine_amount"),
+    status: string().required("Please Select status")
   });
 
   const formik = useFormik({
@@ -88,10 +86,10 @@ function Medical(props) {
       name: "",
       phone: "",
       date: "",
-      time: "",
       medicine_id: "",
       medicine_quantity: "",
-      amount: "",
+      medicine_amount: "",
+      status: ""
     },
 
     validationSchema: userschema,
@@ -112,28 +110,9 @@ function Medical(props) {
 
   console.log(formik.errors, formik.touched);
 
-  const medicine_id = [
-    {
-      value: "",
-      label: "select ",
-    },
-    {
-      value: "Amoxicillin",
-      label: "Amoxicillin",
-    },
-    {
-      value: "Ibuprofen",
-      label: "Ibuprofen",
-    },
-    {
-      value: "Paracetamol",
-      label: "Paracetamol",
-    },
-    {
-      value: "Metronidazole",
-      label: "Metronidazole",
-    },
-  ];
+ 
+
+  console.log("qqqqq", formik.errors);
 
   const columns = [
     {
@@ -144,18 +123,23 @@ function Medical(props) {
     { field: "name", headerName: "Name", width: 130 },
     { field: "phone", headerName: "Phone", width: 130 },
     { field: "date", headerName: "Date", width: 130 },
-    {
-      field: "time",
-      headerName: "Time",
-      width: 130,
-      renderCell: (params) => {
-        const d = timeslot.timeslot?.find((v) => v.id == params.row.time);
+    // {
+    //   field: "time",
+    //   headerName: "Time",
+    //   width: 130,
+    //   renderCell: (params) => {
+    //     const d = timeslot.timeslot?.find((v) => v.id == params.row.time);
 
-        console.log(timeslot.time, params.row.id, d);
+    //     console.log(timeslot.time, params.row.id, d);
 
-        return d?.starttime + "-" + d?.endtime;
-      },
-    },
+    //     if (d) {
+    //       return d?.starttime + "-" + d?.endtime;
+    //     } else {
+    //       return params.row.time
+    //     }
+
+    //   },
+    // },
     {
       field: "doctor_id",
       headerName: "Doctor ID",
@@ -187,6 +171,8 @@ function Medical(props) {
       headerName: "Qty",
       width: 130,
     },
+    { field: "medicine_amount", headerName: "Amount", width: 130 },
+    { field: "status", headerName: "Status", width: 130 },
     {
       field: "action",
       headerName: "Action",
@@ -202,6 +188,26 @@ function Medical(props) {
   ];
 
   const paginationModel = { page: 0, pageSize: 5 };
+
+   const status = [
+    {
+      value: "",
+      label: "Select Status",
+    },
+    {
+      value: "pending",
+      label: "pending",
+    },
+    {
+      value: "deliver",
+      label: "Deliver",
+    },
+    {
+      value: "reject",
+      label: "Reject",
+    },
+    
+  ];
   return (
     <div>
       {/* Header */}
@@ -214,7 +220,7 @@ function Medical(props) {
       >
         <h1>Medical</h1>
         <Button variant="outlined" onClick={handleClickOpen}>
-          Add Medical
+          Add Medicine
         </Button>
       </Box>
 
@@ -264,13 +270,20 @@ function Medical(props) {
                 margin="dense"
                 id="date"
                 name="date"
-                label="Date"
                 type="date"
                 fullWidth
                 variant="standard"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.date}
+                value={
+                  new Date(formik.values.date).getFullYear() +
+                  "-" +
+                  "0" +
+                  (new Date(formik.values.date).getMonth() + 1) +
+                  "-" +
+                  (new Date(formik.values.date).getDate() - 1)
+                }
+                // value={new Date(formik.values.date).getFullYear() + "-" + (new Date(formik.values.date).getMonth()+1) + "-" + new Date(formik.values.date).getDate()}
                 helperText={
                   formik.errors.date && formik.touched.date
                     ? formik.errors.date
@@ -278,7 +291,7 @@ function Medical(props) {
                 }
               />
 
-              <TextField
+              {/* <TextField
                 error={formik.errors.time && formik.touched.time}
                 margin="dense"
                 id="time"
@@ -295,7 +308,13 @@ function Medical(props) {
                     ? formik.errors.time
                     : ""
                 }
-              />
+              >
+                 {timeslot.timeslot.map((v) => (
+                      <option key={v.id} value={v.id}>
+                        {v.starttime} - {v.endtime}
+                      </option>
+                    ))}
+                </TextField> */}
 
               <TextField
                 error={formik.errors.medicine_id && formik.touched.medicine_id}
@@ -316,10 +335,10 @@ function Medical(props) {
                     : ""
                 }
               >
-                {medicine_id.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
+                {medicine.medicine.map((option) => (
+                  <option key={option.id} value={option.id}>
+                    {option.name}
+                  </option>
                 ))}
               </TextField>
               <TextField
@@ -330,7 +349,7 @@ function Medical(props) {
                 margin="dense"
                 id="medicine_quantity"
                 name="medicine_quantity"
-                label="medicine_quantity"
+                label="Medicine_quantity"
                 type="medicine_quantity"
                 fullWidth
                 variant="standard"
@@ -346,22 +365,51 @@ function Medical(props) {
               />
 
               <TextField
-                error={formik.errors.amount && formik.touched.amount}
-                id="amount"
-                name="amount"
+                error={
+                  formik.errors.medicine_amount &&
+                  formik.touched.medicine_amount
+                }
+                id="medicine_amount"
+                name="medicine_amount"
                 fullWidth
                 variant="standard"
                 label="Amount"
                 type="number"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.amount}
+                value={formik.values.medicine_amount}
                 helperText={
-                  formik.errors.amount && formik.touched.amount
-                    ? formik.errors.amount
+                  formik.errors.medicine_amount &&
+                  formik.touched.medicine_amount
+                    ? formik.errors.medicine_amount
                     : ""
                 }
               />
+                <TextField
+                error={formik.errors.status && formik.touched.status}
+                margin="dense"
+                id="status"
+                name="status"
+                label="Status"
+                type="status"
+                fullWidth
+                select
+                variant="standard"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.status}
+                helperText={
+                  formik.errors.status && formik.touched.status
+                    ? formik.errors.status
+                    : ""
+                }
+              >
+                {status.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
             </form>
           </DialogContent>
           <DialogActions>

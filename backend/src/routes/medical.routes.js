@@ -1,8 +1,11 @@
 
 const express = require('express')
 
+
 const {getMedical, addMedical, updateMedical } = require('../controller/medical.controller');
-// const { addMedical } = require('../../../frontend/src/redux/slice/medical.slice');
+
+
+
 const router = express.Router()
 
 //get

@@ -26,19 +26,19 @@ export const addMedical = createAsyncThunk(
     try {
       console.log(values);
 
-      const formData = new FormData();
+      // const formData = new FormData();
 
-      formData.append("name", values.name);
-      formData.append("phone", values.phone);
-      formData.append("date", values.date);
-      formData.append("time", values.time);
+      // formData.append("name", values.name);
+      // formData.append("phone", values.phone);
+      // formData.append("date", values.date);
+      // formData.append("time", values.time);
 
-      formData.append("medicine_id", values.medicine_id);
-      formData.append("medicine_quantity", values.medicine_quantity);
+      // formData.append("medicine_id", values.medicine_id);
+      // formData.append("medicine_quantity", values.medicine_quantity);
 
       const responce = await axios.post(
         "http://localhost:3000/medical/addMedical",
-        formData,
+        values,
       );
       console.log(responce);
 
@@ -53,19 +53,19 @@ export const updateMedical = createAsyncThunk(
     try {
       // console.log(values);
 
-      const formData = new FormData();
+      // const formData = new FormData();
 
-      formData.append("name", values.name);
-      formData.append("phone", values.phone);
-      formData.append("date", values.date);
-      formData.append("time", values.time);
+      // formData.append("name", values.name);
+      // formData.append("phone", values.phone);
+      // formData.append("date", values.date);
+      // formData.append("time", values.time);
 
-      formData.append("medicine_id", values.medicine_id);
-      formData.append("medicine_quantity", values.medicine_quantity);
+      // formData.append("medicine_id", values.medicine_id);
+      // formData.append("medicine_quantity", values.medicine_quantity);
 
       const responce = await axios.put(
         `http://localhost:3000/medical/updateMedical/${values.id}`,
-        formData,
+        values,
       );
       console.log(responce);
 
