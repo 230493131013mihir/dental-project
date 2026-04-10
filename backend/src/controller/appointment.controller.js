@@ -237,13 +237,14 @@ const addTreatment = async (req, res) => {
       med.medicine_id,
       med.medicine_amount,
       med.medicine_quantity,
+      "pending"
     ]);
 
     // 5. Bulk Insert Medicines
     // Note: medicineValues is wrapped in an extra array [medicineValues]
     await connection.query(
       `INSERT INTO treatment_medicines
-       (treatment_id, medicine_id, medicine_amount, medicine_quantity)
+       (treatment_id, medicine_id, medicine_amount, medicine_quantity, status)
        VALUES ?`,
       [medicineValues]
     );

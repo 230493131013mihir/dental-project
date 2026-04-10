@@ -78,7 +78,7 @@ function Medical(props) {
     medicine_id: string().required("Please Select medicine_id"),
     medicine_quantity: string().required("Please Select medicine_quantity"),
     medicine_amount: string().required("Please enter medicine_amount"),
-    status: string().required("Please Select status")
+    status: string().required("Please Select status"),
   });
 
   const formik = useFormik({
@@ -89,28 +89,29 @@ function Medical(props) {
       medicine_id: "",
       medicine_quantity: "",
       medicine_amount: "",
-      status: ""
+      status: "",
     },
 
     validationSchema: userschema,
 
-    onSubmit: (values, { resetForm }) => {
+    onSubmit: async (values, { resetForm }) => {
       console.log(values);
 
       if (update) {
         console.log("update data");
-        dispatch(updateMedical(values));
+        await dispatch(updateMedical(values));
       } else {
-        dispatch(addMedical(values));
+        await dispatch(addMedical(values));
       }
+
+      dispatch(getMedicine());
+
       handleClose();
       resetForm();
     },
   });
 
   console.log(formik.errors, formik.touched);
-
- 
 
   console.log("qqqqq", formik.errors);
 
@@ -189,7 +190,7 @@ function Medical(props) {
 
   const paginationModel = { page: 0, pageSize: 5 };
 
-   const status = [
+  const status = [
     {
       value: "",
       label: "Select Status",
@@ -206,8 +207,12 @@ function Medical(props) {
       value: "reject",
       label: "Reject",
     },
-    
   ];
+
+  const selectedMedicine = medicine?.medicine?.find(
+    (m) => m.id === formik.values.medicine_id,
+  );
+
   return (
     <div>
       {/* Header */}
@@ -336,11 +341,21 @@ function Medical(props) {
                 }
               >
                 {medicine.medicine.map((option) => (
-                  <option key={option.id} value={option.id}>
+                  <MenuItem key={option.id} value={option.id}>
                     {option.name}
-                  </option>
+                  </MenuItem>
                 ))}
               </TextField>
+              {selectedMedicine && (
+                <div style={{ marginTop: "10px" }}>
+                  <p>
+                    <b>Stock:</b> {selectedMedicine.stock - selectedMedicine.sell_qty}
+                  </p>
+                  <p>
+                    <b>Amount/pill:</b> ₹{selectedMedicine.price}
+                  </p>
+                </div>
+              )}
               <TextField
                 error={
                   formik.errors.medicine_quantity &&
@@ -385,7 +400,7 @@ function Medical(props) {
                     : ""
                 }
               />
-                <TextField
+              <TextField
                 error={formik.errors.status && formik.touched.status}
                 margin="dense"
                 id="status"
