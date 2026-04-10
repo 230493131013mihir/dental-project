@@ -3,7 +3,14 @@ const fs = require("fs");
 
 const getTreatment = async (req, res) => {
   try {
-    const [rows] = await pool.query("SELECT * FROM treatment");
+    const [rows] = await pool.query(`
+    SELECT appointment_id, date, prescription, treatement_amount, medicine_id, medicine_amount, medicine_quantity 
+FROM treatment
+INNER JOIN treatment_medicines
+ON treatment.id = treatment_medicines.treatment_id
+  
+      
+    `);
 
     console.log(rows);
     res.status(200).json({
@@ -21,30 +28,76 @@ const getTreatment = async (req, res) => {
   }
 };
 
+
 const addTreatment = async (req, res) => {
   try {
-    console.log(req.body);
+    console.log("okok");
 
-    const { appointment_id, date, amount, prescription, disease } = req.body;
+    const {
+      date,
+      prescription,
+      treatement_amount,
+      medicines,
+      
+      appointment_id,
+    } = req.body;
 
-    console.log(req.file);
+    console.log("BODY:", req.body);
 
-    const [rows] = await pool.query(
-      "INSERT INTO treatment(appointment_id, date, amount, prescription, disease,treatment_img) VALUES (?,?,?,?,?,?)",
-      [appointment_id, date, amount, prescription, disease, req.file.path],
+    if (!Array.isArray(medicines)) {
+      return res.status(400).json({
+        message: "Medicines must be array",
+      });
+    }
+
+    const treatmentQuery = `
+      INSERT INTO treatment (appointment_id, date, prescription, treatement_amount)
+      VALUES (?, ?, ?, ?)
+    `;
+
+    pool.query(
+      treatmentQuery,
+      [appointment_id, date, prescription, treatement_amount],
+      (err, result) => {
+        if (err) {
+          console.log("SQL ERROR 1:", err);
+          return res.status(500).json({ error: err.message });
+        }
+
+        const treatmentId = result.insertId;
+
+        const medicineValues = medicines.map((med) => [
+          treatmentId,
+          med.medicine_id,
+          med.medicine_amount,
+          med.medicine_quantity,
+        ]);
+
+        const medicineQuery = `
+          INSERT INTO treatment_medicines
+          (treatment_id, medicine_id, medicine_amount, medicine_quantity)
+          VALUES ?
+        `;
+
+        pool.query(medicineQuery, [medicineValues], (err2) => {
+          if (err2) {
+            console.log("SQL ERROR 2:", err2);
+            return res.status(500).json({ error: err2.message });
+          }
+
+          return res.json({
+            success: true,
+            message: "Treatment added successfully",
+            treatment_id: treatmentId,
+          });
+        });
+      }
     );
-    res.status(200).json({
-      success: true,
-      data: { ...req.body, id: rows.insertId, treatment_img: req.file.path, },
-      message: "treatment added successfully",
-    });
-    console.log(rows, fields, result);
   } catch (error) {
-    console.log(error);
+    console.log("SERVER ERROR:", error);
     res.status(500).json({
-      success: true,
-      data: null,
-      message: "Internal Server Error)" + error.message,
+      success: false,
+      message: error.message,
     });
   }
 };

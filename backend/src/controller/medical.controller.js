@@ -3,10 +3,25 @@ const pool = require("../db/mysql");
 const getMedical = async (req, res) => {
   try {
     const [rows] =
-      await pool.query(`SELECT appointment.id, name, phone, appointment.date, appointment.doctor_id, medicine_id, medicine_quantity, medicine_amount
-                       FROM appointment
-                       INNER JOIN treatment
-                       ON appointment.id = treatment.appointment_id;`);
+      await pool.query(`SELECT 
+    tm.id AS "id", -- This is your unique key for the React DataGrid
+    COALESCE(a.id, m.appointment_id) AS "id",
+    COALESCE(a.name, m.name) AS "name",
+    COALESCE(a.phone, m.phone) AS "phone",
+    COALESCE(a.date, m.date) AS "date",
+    a.doctor_id AS "doctor_id",
+    tm.medicine_id AS "medicine_id",
+    tm.medicine_quantity AS "medicine_quantity",
+    tm.medicine_amount AS "medicine_amount",
+    m.status AS "Medical Status"
+FROM 
+    treatment_medicines tm
+LEFT JOIN 
+    treatment t ON tm.treatment_id = t.id
+LEFT JOIN 
+    appointment a ON t.appointment_id = a.id
+LEFT JOIN 
+    medical m ON tm.medical_id = m.id`);
 
     console.log(rows);
     res.status(200).json({
@@ -38,26 +53,32 @@ const addMedical = async (req, res) => {
       status,
     } = req.body;
 
-    console.log(req.file);
+    console.log("name, phone, date,status", name, phone, date,status);
 
     const [rows] = await pool.query(
-      "INSERT INTO medical( name, phone, date, medicine_id,medicine_quantity,medicine_amount,status) VALUES (?,?,?,?,?,?,?)",
+      "INSERT INTO medical(name, phone, date,status) VALUES (?,?,?,?)",
       [
         name,
         phone,
         date,
-        medicine_id,
-        medicine_quantity,
-        medicine_amount,
         status,
       ],
     );
+
+    console.log("rowsrows",rows);
+    
+
+    await pool.query(
+      "INSERT INTO treatment_medicines(medical_id, medicine_id, medicine_quantity, medicine_amount) VALUES (?,?,?,?)",
+      [rows?.insertId,medicine_id, medicine_quantity, medicine_amount]
+    )
+
     res.status(200).json({
       success: true,
       data: { ...req.body, id: rows.insertId },
       message: "medical added successfully",
     });
-    console.log(rows, fields, result);
+    // console.log(rows, fields, result);
   } catch (error) {
     console.log(error);
     res.status(500).json({
