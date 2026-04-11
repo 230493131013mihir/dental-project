@@ -19,6 +19,9 @@ import FAQ from "../Admin/container/FAQ/FAQ";
 import Patientdata from "../Admin/container/Patientdata/Patientdata";
 import Medical from "../Admin/container/Medical/Medical";
 
+
+import MyAppointmentEdit from "../Admin/container/MyAppointmentEdit/MyAppointmentEdit";
+
 function AdminRoute(props) {
   return (
     <Layout>
@@ -44,6 +47,8 @@ function AdminRoute(props) {
         <Route path="/patient" element={<Patientdata />} />
 
         <Route path="/medical" element={<Medical />} /> 
+
+
       </Routes>
     </Layout>
   );

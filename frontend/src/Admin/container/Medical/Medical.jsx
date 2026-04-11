@@ -117,8 +117,13 @@ function Medical(props) {
 
   const columns = [
     {
-      field: "id",
+      field: "appointment_id",
       headerName: "Appointment ID",
+      width: 100,
+    },
+    {
+      field: "treatment_id",
+      headerName: "Treatment ID",
       width: 100,
     },
     { field: "name", headerName: "Name", width: 130 },
@@ -162,7 +167,7 @@ function Medical(props) {
           (v) => v.id == params.row.medicine_id,
         )?.name;
 
-        console.log(medicine.medicine_id, params.row.id, d);
+        console.log(medicine.medicine, params.row.medicine_id, d);
 
         return d;
       },
@@ -224,9 +229,9 @@ function Medical(props) {
         }}
       >
         <h1>Medical</h1>
-        <Button variant="outlined" onClick={handleClickOpen}>
+        {/* <Button variant="outlined" onClick={handleClickOpen}>
           Add Medicine
-        </Button>
+        </Button> */}
       </Box>
 
       <React.Fragment>

@@ -4,7 +4,7 @@ const fs = require("fs");
 const getTreatment = async (req, res) => {
   try {
     const [rows] = await pool.query(`
-    SELECT appointment_id, date, prescription, treatement_amount, medicine_id, medicine_amount, medicine_quantity 
+    SELECT treatment.id, appointment_id, date, prescription, treatement_amount, medicine_id, medicine_amount, medicine_quantity 
 FROM treatment
 INNER JOIN treatment_medicines
 ON treatment.id = treatment_medicines.treatment_id

@@ -7,8 +7,14 @@ import { getDepartment } from "../../redux/slice/department.slice";
 import { getTreatment } from "../../redux/slice/treatment.slice";
 import { getTimeslot } from "../../redux/slice/timeslot.slice";
 
+import { useNavigate } from "react-router-dom";
+import EditIcon from "@mui/icons-material/Edit";
+import IconButton from "@mui/material/IconButton";
+import { useParams } from "react-router-dom";
+
 function MyAppointment(props) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getMyAppointment());
@@ -23,113 +29,130 @@ function MyAppointment(props) {
   const branch = useSelector((state) => state.branch);
   const department = useSelector((state) => state.department);
   const treatment = useSelector((state) => state.treatment);
-   const timeslot = useSelector((state) => state.timeslot);
+  const timeslot = useSelector((state) => state.timeslot);
 
   console.log(myApt.myAppointment);
   console.log(branch.branch);
   console.log(department.department);
-   console.log(treatment.treatment);
-      console.log(timeslot.timeslot);
-  
+  console.log(treatment.treatment);
+  console.log(timeslot.timeslot);
 
+  const { id } = useParams();
 
+  console.log(id);
 
-const sData = myApt.myAppointment.slice().sort((a, b) => new Date(b.date) - new Date(a.date))
+  const sData = myApt.myAppointment
+    .slice()
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
 
-console.log(sData);
+  console.log(sData);
 
-          
   return (
     <div className="container" style={{ marginTop: "120px" }}>
       <h2 style={{ textAlign: "center", margin: "20px 0" }}>My Appointment</h2>
 
       <div className="row">
         {sData?.map((v) => (
-            <>
-              <div className="col-6">
-                <div
+          <>
+            <div className="col-6">
+              <div
+                style={{
+                  background: "#ffffff",
+                  border: "1px solid #e5e7eb",
+                  borderRadius: "10px",
+                  padding: "14px 16px",
+                  margin: "10px 0",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+                  fontFamily: "Arial, sans-serif",
+                }}
+              >
+                <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                  <IconButton
+                    onClick={() =>
+                      navigate("/MyAppointmentEdit", {
+                        state: { appointment_id: v.id },
+                      })
+                    }
+                    size="small"
+                    color="primary"
+                  >
+                    <EditIcon />
+                  </IconButton>
+                </div>
+                <h3
                   style={{
-                    background: "#ffffff",
-                    border: "1px solid #e5e7eb",
-                    borderRadius: "10px",
-                    padding: "14px 16px",
-                    margin: "10px 0",
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
-                    fontFamily: "Arial, sans-serif",
+                    margin: "0 0 4px",
+                    fontSize: "16px",
+                    fontWeight: "600",
+                    color: "#111827",
                   }}
                 >
-                  <h3
-                    style={{
-                      margin: "0 0 4px",
-                      fontSize: "16px",
-                      fontWeight: "600",
-                      color: "#111827",
-                    }}
-                  >
-                    {v.name}
-                  </h3>
+                  {v.name}
+                </h3>
 
-                  <p
-                    style={{
-                      margin: "2px 0",
-                      fontSize: "14px",
-                      color: "#4b5563",
-                    }}
-                  >
-                    📞 {v.phone}
-                  </p>
+                <p
+                  style={{
+                    margin: "2px 0",
+                    fontSize: "14px",
+                    color: "#4b5563",
+                  }}
+                >
+                  📞 {v.phone}
+                </p>
 
-                  <p
-                    style={{
-                      margin: "2px 0",
-                      fontSize: "14px",
-                      color: "#4b5563",
-                    }}
-                  >
-                    🏥 {branch.branch?.find((v1) => v1.id == v.branch_id)?.name}
-                  </p>
+                <p
+                  style={{
+                    margin: "2px 0",
+                    fontSize: "14px",
+                    color: "#4b5563",
+                  }}
+                >
+                  🏥 {branch.branch?.find((v1) => v1.id == v.branch_id)?.name}
+                </p>
 
-                  <p
-                    style={{
-                      margin: "2px 0",
-                      fontSize: "14px",
-                      color: "#4b5563",
-                    }}
-                  >
-                    🦷{" "}
+                <p
+                  style={{
+                    margin: "2px 0",
+                    fontSize: "14px",
+                    color: "#4b5563",
+                  }}
+                >
+                  🦷{" "}
+                  {
+                    department.department?.find(
+                      (v1) => v1.id == v.department_id,
+                    )?.name
+                  }
+                </p>
+
+                <div
+                  style={{
+                    marginTop: "6px",
+                    paddingTop: "6px",
+                    borderTop: "1px solid #f1f5f9",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    fontSize: "13px",
+                    color: "#6b7280",
+                  }}
+                >
+                  <span>{new Date(v.date)?.toLocaleDateString()}</span>
+                  <span>
                     {
-                      department.department?.find(
-                        (v1) => v1.id == v.department_id,
-                      )?.name
+                      timeslot.timeslot?.find((v1) => v1.user_id == v.time)
+                        ?.starttime
                     }
-                  </p>
-
-                  <div
-                    style={{
-                      marginTop: "6px",
-                      paddingTop: "6px",
-                      borderTop: "1px solid #f1f5f9",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      fontSize: "13px",
-                      color: "#6b7280",
-                    }}
-                  >
-                    <span>{new Date(v.date)?.toLocaleDateString()}</span>
-                    <span>
-                     {timeslot.timeslot 
-                      ?.find((v1) => v1.user_id == v.time)?.starttime}
-                     -
-                     {timeslot.timeslot 
-                      ?.find((v1) => v1.user_id == v.time)?.endtime}
-                     </span>
-                             
-
-                  </div>
+                    -
+                    {
+                      timeslot.timeslot?.find((v1) => v1.user_id == v.time)
+                        ?.endtime
+                    }
+                  </span>
                 </div>
               </div>
-            </>
-          ))}
+            </div>
+          </>
+        ))}
       </div>
     </div>
   );

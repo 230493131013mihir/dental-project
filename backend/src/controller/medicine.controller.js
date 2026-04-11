@@ -5,6 +5,9 @@ const getMedicine = async (req, res) => {
   try {
     const [rows] = await pool.query("SELECT * FROM medicine");
 
+    console.log("dfvdfv df", rows);
+    
+
     res.status(200).json({
       success: true,
       data: rows,

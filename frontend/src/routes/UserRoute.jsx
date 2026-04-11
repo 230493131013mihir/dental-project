@@ -13,7 +13,7 @@ import Login from "../container/Login/Login";
 import Appointment from "../container/Appointment/Appointment";
 import MyAppointment from "../container/MyAppointment/MyAppointment";
 import Review from "../container/Review/Review";
-
+import MyAppointmentEdit from "../Admin/container/MyAppointmentEdit/MyAppointmentEdit";
 
 function Userroute(props) {
   return (
@@ -32,6 +32,7 @@ function Userroute(props) {
         <Route path="/addReview" element={<Review />} />
         <Route path="/appointment" element={<Appointment />} />
         <Route path="/myappointment" element={<MyAppointment />} />
+        <Route path="/myAppointmentEdit" element={<MyAppointmentEdit />} />
       </Routes>
 
       <Footer />

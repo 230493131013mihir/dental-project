@@ -2,27 +2,24 @@ const pool = require("../db/mysql");
 
 const getMedical = async (req, res) => {
   try {
-    const [rows] =
-      await pool.query(`SELECT 
-    tm.id AS "id", -- This is your unique key for the React DataGrid
-    COALESCE(a.id, m.appointment_id) AS "id",
-    COALESCE(a.name, m.name) AS "name",
-    COALESCE(a.phone, m.phone) AS "phone",
-    COALESCE(a.date, m.date) AS "date",
-    a.doctor_id AS "doctor_id",
-    tm.medicine_id AS "medicine_id",
-    tm.medicine_quantity AS "medicine_quantity",
-    tm.medicine_amount AS "medicine_amount",
-    tm.status AS "status",
-    t.id AS "treatment_id"
-FROM 
-    treatment_medicines tm
-LEFT JOIN 
-    treatment t ON tm.treatment_id = t.id
-LEFT JOIN 
-    appointment a ON t.appointment_id = a.id
-LEFT JOIN 
-    medical m ON tm.medical_id = m.id`);
+    const [rows] = await pool.query(`
+      SELECT 
+        ROW_NUMBER() OVER (ORDER BY tm.id) AS id, -- ✅ NEW UNIQUE ID
+        COALESCE(a.name, m.name) AS "name",
+        COALESCE(a.phone, m.phone) AS "phone",
+        COALESCE(a.date, m.date) AS "date",
+        a.doctor_id AS "doctor_id",
+        tm.medicine_id AS "medicine_id",
+        tm.medicine_quantity AS "medicine_quantity",
+        tm.medicine_amount AS "medicine_amount",
+        tm.status AS "status",
+        t.id AS "treatment_id",
+        t.appointment_id AS "appointment_id"
+      FROM treatment_medicines tm
+      LEFT JOIN treatment t ON tm.treatment_id = t.id
+      LEFT JOIN appointment a ON t.appointment_id = a.id
+      LEFT JOIN medical m ON tm.medical_id = m.id
+    `);
 
     console.log(rows);
     res.status(200).json({
@@ -117,45 +114,56 @@ const updateMedical = async (req, res) => {
     const appointment_id = req.params.id;
 
     await pool.query(
-      "UPDATE treatment_medicines SET status=? WHERE id=?",
-      ["complete", treatment_id]
+      "UPDATE treatment_medicines SET medicine_quantity=?, medicine_amount=?,  status=? WHERE treatment_id=? AND medicine_id=?",
+      [medicine_quantity, medicine_amount, "complete", treatment_id, medicine_id]
     );
 
-    const [rows] = await pool.query(
-      `SELECT * FROM medical WHERE appointment_id=${appointment_id}`,
-    );
+    const [medicineData] = await pool.query("SELECT * FROM medicine");
+    
 
-    console.log("rows", rows, appointment_id);
+    
+    const dd = medicineData.find(v => v.id == medicine_id)?.sell_qty
+    console.log("medicineData", medicineData, dd);
+    await pool.query(
+      "UPDATE medicine SET sell_qty=? WHERE id=?",
+      [dd+ parseInt(medicine_quantity), medicine_id]
+    )
 
-    if (rows.length === 0) {
-      const [rows] = await pool.query(
-        "INSERT INTO medical( treatment_id, name, phone, date, status) VALUES (?,?,?,?,?)",
-        [
-          treatment_id,
-          name,
-          phone,
-          date,
-          status,
-        ],
-      );
+    // const [rows] = await pool.query(
+    //   `SELECT * FROM medical WHERE appointment_id=${appointment_id}`,
+    // );
 
-      console.log("11111", rows);
-    } else {
-      const d = await pool.query(
-        "UPDATE medical SET name= ?,phone= ?,date= ?,status=? WHERE treatment_id=?",
-        [
-          name,
-          phone,
-          date,
-          status,
-          treatment_id,
-        ],
-      );
+    // console.log("rows", rows, appointment_id);
+
+    // if (rows.length === 0) {
+    //   // const [rows] = await pool.query(
+    //   //   "INSERT INTO medical( treatment_id, name, phone, date, status) VALUES (?,?,?,?,?)",
+    //   //   [
+    //   //     treatment_id,
+    //   //     name,
+    //   //     phone,
+    //   //     date,
+    //   //     status,
+    //   //   ],
+    //   // );
+
+    //   // console.log("11111", rows);
+    // } else {
+    //   // const d = await pool.query(
+    //   //   "UPDATE medical SET name= ?,phone= ?,date= ?,status=? WHERE treatment_id=?",
+    //   //   [
+    //   //     name,
+    //   //     phone,
+    //   //     date,
+    //   //     status,
+    //   //     treatment_id,
+    //   //   ],
+    //   // );
 
 
 
-      console.log("222222222", d);
-    }
+    //   console.log("222222222", d);
+    // }
 
     res.status(200).json({
       success: true,
