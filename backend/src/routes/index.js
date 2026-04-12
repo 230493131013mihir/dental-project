@@ -25,6 +25,7 @@ const faqRoutes= require("./faq.routes");
 
 const testimonialRoutes= require("./testimonial.routes")
 
+const medicalRoutes= require("./medical.routes")
 
 
 
@@ -50,6 +51,8 @@ router.use("/blog", blogRoutes);
 router.use("/faq", faqRoutes);
 
 router.use("/testimonial", testimonialRoutes);
+
+router.use("/medical", medicalRoutes);
 
 
 

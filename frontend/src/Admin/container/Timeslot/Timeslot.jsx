@@ -25,6 +25,7 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import { getUser } from "../../../redux/slice/user.slice";
+import { getAppointment } from "../../../redux/slice/appointment.slice";
 // import { addTimeslot, getTimeslot, updateTimeslot } from "../../../../../backend/src/controller/timeslot.controller";
 
 function Timeslot(props) {
@@ -47,14 +48,17 @@ function Timeslot(props) {
   useEffect(() => {
     dispatch(getTimeslot());
     dispatch(getUser());
+    dispatch(getAppointment());
   }, []);
 
   const timeslot = useSelector((state) => state.timeslot);
   console.log(timeslot);
 
   const user = useSelector((state) => state.user);
-
   console.log(user.user);
+
+  const appointment = useSelector((state) => state.appointment);
+  console.log(appointment.appointment);
 
   const handleEdit = (values) => {
     handleClose();
@@ -70,6 +74,7 @@ function Timeslot(props) {
     starttime: string().required("Please Select starttime"),
     endtime: string().required("Please Select endtime"),
     handlepatient: number().required("Please Select handlepatient"),
+    // appointpatient:  number().required("Please Select handlepatient"),
   });
   // console.log(userschema)
 
@@ -80,7 +85,7 @@ function Timeslot(props) {
       starttime: "",
       endtime: "",
       handlepatient: "",
-      
+      // appointpatient: "",
     },
 
     validationSchema: userschema,
@@ -135,7 +140,8 @@ function Timeslot(props) {
     { field: "date", headerName: "Date", width: 130 },
     { field: "starttime", headerName: "starttime", width: 130 },
     { field: "endtime", headerName: "endtime", width: 130 },
-     { field: "handlepatient", headerName: "handlepatient", width: 130 },
+    { field: "handlepatient", headerName: "handlepatient", width: 130 },
+    { field: "appointpatient", headerName: "appointpatient", width: 130 },
 
     {
       field: "action",
@@ -207,10 +213,9 @@ function Timeslot(props) {
                   ?.filter((v1) => v1.role_id == "Doctor")
                   ?.map((v) => (
                     <MenuItem key={v.id} value={v.id}>
-                                        {v.name}
-                                    </MenuItem>
-                  ))
-                  }
+                      {v.name}
+                    </MenuItem>
+                  ))}
               </TextField>
 
               <TextField
@@ -265,7 +270,9 @@ function Timeslot(props) {
                 }
               />
               <TextField
-                error={formik.errors.handlepatient && formik.touched.handlepatient}
+                error={
+                  formik.errors.handlepatient && formik.touched.handlepatient
+                }
                 margin="dense"
                 id="handlepatient"
                 name="handlepatient"

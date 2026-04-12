@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import Layout from '../Admin/Component/Layout/Layout'
+import Layout from "../Admin/Component/Layout/Layout";
 import Branch from "../Admin/container/Branch/Branch";
 import Expence from "../Admin/container/Expence/Expence";
 import Insfrastructure from "../Admin/container/Insfrastructure/Insfrastructure";
@@ -17,6 +17,7 @@ import AppointmentEdit from "../Admin/container/Appointment/AppointmentEdit";
 import Blog from "../Admin/container/Blog/Blog";
 import FAQ from "../Admin/container/FAQ/FAQ";
 import Patientdata from "../Admin/container/Patientdata/Patientdata";
+import Medical from "../Admin/container/Medical/Medical";
 
 function AdminRoute(props) {
   return (
@@ -38,11 +39,12 @@ function AdminRoute(props) {
         <Route path="/appointmentedit" element={<AppointmentEdit />} />
 
         <Route path="/blog" element={<Blog />} />
-          <Route path="/faq" element={<FAQ />} />
+        <Route path="/faq" element={<FAQ />} />
 
-          <Route path="/patient" element={<Patientdata />} />
+        <Route path="/patient" element={<Patientdata />} />
+
+        <Route path="/medical" element={<Medical />} /> 
       </Routes>
-
     </Layout>
   );
 }

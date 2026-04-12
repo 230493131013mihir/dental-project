@@ -49,12 +49,28 @@ const bookAppointment = async (req, res) => {
 
     const { branch_id, department_id,doctor_id, name, phone, date, time, user_id } = req.body;
 
+<<<<<<< HEAD
     console.log(branch_id, department_id,doctor_id, name, phone, date, time);
 
     const [rows, fields, result] = await pool.query(
       "INSERT INTO appointment(branch_id, department_id,doctor_id, user_id, name, phone , date, time ) VALUES(?,?,?,?,?,?,?,?)",
       [branch_id, department_id,doctor_id, user_id, name, phone, date, time],
+=======
+    console.log(branch_id, department_id,doctor_id, name, phone, date, time,user_id);
+
+    const [rows, fields, result] = await pool.query(
+      "INSERT INTO appointment(branch_id, department_id, user_id,doctor_id, name, phone , date, time ) VALUES(?,?,?,?,?,?,?,?)",
+      [branch_id, department_id, user_id,doctor_id, name, phone, date, time],
+>>>>>>> c70c24aac38abb6573e271159effabed13036e9e
     );
+
+    const appointpatientD = await pool.query(`SELECT appointpatient FROM timeslot WHERE id=${time}`);
+
+    console.log("timeSlotData", appointpatientD[0][0]?.appointpatient);
+    
+
+    await pool.query("UPDATE timeslot SET appointpatient=? WHERE id=?", [appointpatientD[0][0]?.appointpatient+1,time]);
+
 
     res.status(200).json({
       success: true,

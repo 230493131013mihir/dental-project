@@ -38,7 +38,8 @@ function Appointment(props) {
   let userschema = object({
     branch_id: number().required("please select your branch"),
     department_id: number().required("Please Select department"),
-    user_id: string().required("Please Select doctor"),
+
+      doctor_id: string().required("Please Select doctor"),
     name: string().required("Please enter your name"),
     phone: string()
       .required("Please enter phone number")
@@ -51,7 +52,8 @@ function Appointment(props) {
     initialValues: {
       branch_id: "",
       department_id: "",
-      user_id: "",
+     
+      doctor_id: "",
       name: "",
       phone: "",
       date: "",
@@ -73,14 +75,8 @@ function Appointment(props) {
   }
 
   console.log(
-    branch.branch,
-    department.department,
-    user.user,
-    timeslot.timeslot,
-
-    formik.values.branch_id,
-    formik.values.user_id,
-    formik.values.time,
+    new Date(formik.values.date)?.getTime() ,
+    timeslot.timeslot.find(v => v.id === 7)?.handlepatient > timeslot.timeslot.find(v => v.id === 7)?.appointpatient
   );
   return (
     <main>
@@ -174,10 +170,10 @@ function Appointment(props) {
                 {/* Doctor */}
                 <div className="col-6">
                   <select
-                    name="user_id"
+                    name="doctor_id"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    value={formik.values.user_id}
+                    value={formik.values.doctor_id}
                     style={{
                       width: "100%",
                       padding: "12px",
@@ -199,9 +195,9 @@ function Appointment(props) {
                       ))}
                   </select>
 
-                  {formik.errors.user_id && formik.touched.user_id && (
+                  {formik.errors.doctor_id && formik.touched.doctor_id && (
                     <span style={{ color: "red", fontSize: "12px" }}>
-                      {formik.errors.user_id}
+                      {formik.errors.doctor_id}
                     </span>
                   )}
                 </div>
@@ -300,12 +296,9 @@ function Appointment(props) {
                     }}
                   >
                     <option>--Select Timeslot--</option>
-                    {timeslot.timeslot
-
-                     
-                      ?.filter((v1) => v1.user_id == formik.values.user_id)
-
-                     
+                    {timeslot.timeslot 
+                      ?.filter((v1) => v1.user_id == formik.values.doctor_id)
+                      ?.filter((v2) => v2.handlepatient>v2.appointpatient && new Date(v2.date)?.getTime() == new Date(formik.values.date)?.getTime())
                       ?.map((v) => (
                         <option value={v.id}>{v.starttime} - {v.endtime}</option>
                       ))}

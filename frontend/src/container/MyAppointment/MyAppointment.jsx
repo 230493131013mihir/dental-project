@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getBranch } from "../../redux/slice/branch.slice";
 import { getDepartment } from "../../redux/slice/department.slice";
 import { getTreatment } from "../../redux/slice/treatment.slice";
+import { getTimeslot } from "../../redux/slice/timeslot.slice";
 
 function MyAppointment(props) {
   const dispatch = useDispatch();
@@ -14,6 +15,7 @@ function MyAppointment(props) {
     dispatch(getBranch());
     dispatch(getDepartment());
     dispatch(getTreatment());
+    dispatch(getTimeslot());
   }, []);
 
   const myApt = useSelector((state) => state.appointment);
@@ -21,10 +23,14 @@ function MyAppointment(props) {
   const branch = useSelector((state) => state.branch);
   const department = useSelector((state) => state.department);
   const treatment = useSelector((state) => state.treatment);
+   const timeslot = useSelector((state) => state.timeslot);
 
   console.log(myApt.myAppointment);
   console.log(branch.branch);
   console.log(department.department);
+   console.log(treatment.treatment);
+      console.log(timeslot.timeslot);
+  
 
 
 
@@ -110,7 +116,19 @@ console.log(sData);
                     }}
                   >
                     <span>{new Date(v.date)?.toLocaleDateString()}</span>
-                    <span>{v.time}</span>
+                    <span>
+                     {timeslot.timeslot 
+                      ?.find((v1) => v1.user_id == v.time)?.starttime
+                     
+                      
+                      }
+                     -
+                     {timeslot.timeslot 
+                      ?.find((v1) => v1.user_id == v.time)?.endtime
+                     
+                      
+                      }
+                     </span>
                              
 
                   </div>
