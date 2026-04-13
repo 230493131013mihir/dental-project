@@ -21,11 +21,13 @@ import Medical from "../Admin/container/Medical/Medical";
 
 
 import MyAppointmentEdit from "../Admin/container/MyAppointmentEdit/MyAppointmentEdit";
+import Dashboard from "../Admin/container/Dashboard/Dashboard";
 
 function AdminRoute(props) {
   return (
     <Layout>
       <Routes>
+        <Route path="/" element={<Dashboard />} />
         <Route path="/branch" element={<Branch />} />
         <Route path="/department" element={<Department />} />
         <Route path="/expence" element={<Expence />} />
