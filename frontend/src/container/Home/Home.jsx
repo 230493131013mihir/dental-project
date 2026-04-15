@@ -1049,7 +1049,7 @@ const uniqueDept = [...new Map(department?.department.map(item => [item[key], it
         </div>
       </section>
       {/* FAQ */}
-      <section className="faq">
+      <section className="faq" id="faq">
         <div className="container">
           <div className="row">
             <div className="col-5">

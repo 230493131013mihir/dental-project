@@ -46,6 +46,9 @@ function Header(props) {
           <li>
             <a href="#blog">Blog</a>
           </li>
+           <li>
+            <a href="#faq">Faq</a>
+          </li>
           <li><a href="#con">Contact <i className="fa-sharp fa-solid fa-down" /></a></li>
           {/* <li><a href="javascript:void(0);">Pricing</a></li> */}
            {/* <li>
