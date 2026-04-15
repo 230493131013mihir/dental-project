@@ -19,9 +19,10 @@ import storage from 'redux-persist/lib/storage' // defaults to localStorage for 
 import { persistStore, persistReducer } from 'redux-persist'
 import patientSlice  from './slice/patient.slice'
 import  medicalSlice  from './slice/medical.slice'
+import Dashboard from '../Admin/container/Dashboard/Dashboard'
 
 // import patientdataSlice  from './slice/patientdata.slice'
-
+import dashboardSlice from './slice/dashboard.slice';
 
 const reducers = combineReducers({
     branch: branchSlice,
@@ -42,6 +43,7 @@ const reducers = combineReducers({
     testimonial: testimonialSlice,
     patient: patientSlice,
     medical: medicalSlice,
+    dashboard:dashboardSlice,
     
 })
 

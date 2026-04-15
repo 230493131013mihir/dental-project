@@ -563,35 +563,35 @@ const uniqueDept = [...new Map(department?.department.map(item => [item[key], it
                         )}
                       </div>
                       <div className="col-6">
-                        <select
-                          name="department_id"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.department_id}
-                        >
-                          <option value="">--Select Department--</option>
-                          {department.department.map((v) => (
-                            <option value={v.id}>{v.name}</option>
-                          ))}
-                        </select>
-                        {formik.errors.department_id &&
-                        formik.touched.department_id ? (
-                          <span className="error">
-                            {formik.errors.department_id}
-                          </span>
-                        ) : (
-                          ""
-                        )}
-                        {department.department
-                          ?.filter(
-                            (v1) => v1.branch_id == formik.values.branch_id,
-                          )
-                          ?.map((v) => (
-                            <option key={v.id} value={v.id}>
-                              {v.name}
-                            </option>
-                          ))}
-                      </div>
+                  <select
+                    name="department_id"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.department_id}
+                    style={{
+                      width: "100%",
+                      padding: "12px",
+                      borderRadius: "10px",
+                      border: "1px solid #cbd5f5",
+                      marginTop: "10px",
+                      background: "#f8fafc",
+                    }}
+                  >
+                    <option value="">--Select Department--</option>
+                    {department.department
+                      ?.filter((v1) => v1.branch_id == formik.values.branch_id)
+                      ?.map((v) => (
+                        <option value={v.id}>{v.name}</option>
+                      ))}
+                  </select>
+
+                  {formik.errors.department_id &&
+                    formik.touched.department_id && (
+                      <span style={{ color: "red", fontSize: "12px" }}>
+                        {formik.errors.department_id}
+                      </span>
+                    )}
+                </div>
                       <div className="col-6">
                         <input
                           type="text"

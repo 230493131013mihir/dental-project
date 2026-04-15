@@ -1,0 +1,23 @@
+<svg width="320" height="100" viewBox="0 0 320 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background (transparent) -->
+
+  <!-- Tooth Icon -->
+  <path d="M50 20 
+           C30 20, 20 40, 25 60 
+           C30 80, 45 85, 50 70 
+           C55 85, 70 80, 75 60 
+           C80 40, 70 20, 50 20 Z" fill="#ffffff" stroke="#4f6bd6" stroke-width="3"></path>
+
+  <!-- Shine -->
+  <circle cx="40" cy="35" r="3" fill="#4f6bd6" opacity="0.6"></circle>
+
+  <!-- Brand Name -->
+  <text x="100" y="55" font-family="Segoe UI, Arial" font-size="28" font-weight="700" fill="#4f6bd6">
+    EliteDent
+  </text>
+
+  <!-- Tagline -->
+  <text x="100" y="75" font-family="Segoe UI, Arial" font-size="12" fill="#555">
+    Premium Dental Care
+  </text>
+</svg>

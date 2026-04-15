@@ -27,7 +27,7 @@ function Header(props) {
   <div className="container">
     <div className="top-header">
       <div className="logo">
-        <NavLink to="/"><img src="images/logo-main.png" alt="Main Logo" /></NavLink>
+        <NavLink to="/"><img src="images/logo4.svg" alt="Main Logo"  style={{width: "250px",height: "100px"}}/></NavLink>
       </div>
       <nav>
         <ul className="menu">

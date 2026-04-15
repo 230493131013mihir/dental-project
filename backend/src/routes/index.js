@@ -27,6 +27,8 @@ const testimonialRoutes= require("./testimonial.routes")
 
 const medicalRoutes= require("./medical.routes")
 
+const dashboardRoutes= require("./dashboard.routes")
+
 
 
 router.use("/branch" ,branchRoutes);
@@ -54,6 +56,7 @@ router.use("/testimonial", testimonialRoutes);
 
 router.use("/medical", medicalRoutes);
 
+router.use("/dashboard", dashboardRoutes);
 
 
 
