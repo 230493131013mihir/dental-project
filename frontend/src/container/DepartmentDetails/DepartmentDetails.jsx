@@ -227,6 +227,8 @@ function DepartmentDetails(props) {
     </div>
   ))}
 </div>
+
+
     </div>
   );
 }

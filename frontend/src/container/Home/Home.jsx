@@ -19,6 +19,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { getUser } from "../../redux/slice/user.slice";
+import MenuItem from "@mui/material/MenuItem";
 
 function Home(props) {
   const dispatch = useDispatch();
@@ -41,15 +42,17 @@ function Home(props) {
   // const uniqueDept = [];
 
   // Source - https://stackoverflow.com/a/56768137
-// Posted by V. Sambor, modified by community. See post 'Timeline' for change history
-// Retrieved 2026-04-03, License - CC BY-SA 4.0
+  // Posted by V. Sambor, modified by community. See post 'Timeline' for change history
+  // Retrieved 2026-04-03, License - CC BY-SA 4.0
 
-const key = 'name';
-const uniqueDept = [...new Map(department?.department.map(item => [item[key], item])).values()]
-
+  const key = "name";
+  const uniqueDept = [
+    ...new Map(
+      department?.department.map((item) => [item[key], item]),
+    ).values(),
+  ];
 
   console.log(uniqueDept);
-  
 
   const doctors = users.user?.filter((v) => v.role_id == "Doctor");
 
@@ -126,13 +129,13 @@ const uniqueDept = [...new Map(department?.department.map(item => [item[key], it
                     Discover More
                   </a> */}
                   <div className="call-us">
-                    <div className="call-image">
+                    {/* <div className="call-image">
                       <img src="images/support.jpg" alt />
-                    </div>
-                    <div className="call-text" style={{ textAlign: "center" }}>
+                    </div> */}
+                    {/* <div className="call-text" style={{ textAlign: "center" }}>
                       <p>Call Us Anytime</p>
                       <a href="tel:+00 123 456 67890">+00 123 456 67890</a>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>
@@ -215,7 +218,7 @@ const uniqueDept = [...new Map(department?.department.map(item => [item[key], it
                 {/* <a href="javascript:void(0);" className="btn">
                   About more
                 </a> */}
-                <div className="call-us">
+                {/* <div className="call-us">
                   <div className="call-image">
                     <img src="images/author-img1.jpg" alt="authore image" />
                   </div>
@@ -223,7 +226,7 @@ const uniqueDept = [...new Map(department?.department.map(item => [item[key], it
                     <h5>Anjelina Watson</h5>
                     <span className="position">Managing Director</span>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -292,7 +295,7 @@ const uniqueDept = [...new Map(department?.department.map(item => [item[key], it
                 </div>
               </div>
             </div>
-            {uniqueDept?.map((v) => (
+            {uniqueDept?.slice(0,6)?.map((v) => (
               <div className="col-12 col-md-6 col-lg-4">
                 <NavLink to={`/department_details/${v.id}`}>
                   <div className="service-box">
@@ -307,7 +310,12 @@ const uniqueDept = [...new Map(department?.department.map(item => [item[key], it
                         />
                       </div>
                       <div className="label">
-                        <label htmlFor>Dental</label>
+                        <label htmlFor>
+                          {
+                            branch.branch?.find((vv) => vv.id === v.branch_id)
+                              ?.name
+                          }
+                        </label>
                       </div>
                     </div>
                     <div className="header-dental">
@@ -563,35 +571,37 @@ const uniqueDept = [...new Map(department?.department.map(item => [item[key], it
                         )}
                       </div>
                       <div className="col-6">
-                  <select
-                    name="department_id"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.department_id}
-                    style={{
-                      width: "100%",
-                      padding: "12px",
-                      borderRadius: "10px",
-                      border: "1px solid #cbd5f5",
-                      marginTop: "10px",
-                      background: "#f8fafc",
-                    }}
-                  >
-                    <option value="">--Select Department--</option>
-                    {department.department
-                      ?.filter((v1) => v1.branch_id == formik.values.branch_id)
-                      ?.map((v) => (
-                        <option value={v.id}>{v.name}</option>
-                      ))}
-                  </select>
+                        <select
+                          name="department_id"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.department_id}
+                          style={{
+                            width: "100%",
+                            padding: "12px",
+                            borderRadius: "10px",
+                            border: "1px solid #cbd5f5",
+                            marginTop: "10px",
+                            background: "#f8fafc",
+                          }}
+                        >
+                          <option value="">--Select Department--</option>
+                          {department.department
+                            ?.filter(
+                              (v1) => v1.branch_id == formik.values.branch_id,
+                            )
+                            ?.map((v) => (
+                              <option value={v.id}>{v.name}</option>
+                            ))}
+                        </select>
 
-                  {formik.errors.department_id &&
-                    formik.touched.department_id && (
-                      <span style={{ color: "red", fontSize: "12px" }}>
-                        {formik.errors.department_id}
-                      </span>
-                    )}
-                </div>
+                        {formik.errors.department_id &&
+                          formik.touched.department_id && (
+                            <span style={{ color: "red", fontSize: "12px" }}>
+                              {formik.errors.department_id}
+                            </span>
+                          )}
+                      </div>
                       <div className="col-6">
                         <input
                           type="text"
@@ -684,84 +694,84 @@ const uniqueDept = [...new Map(department?.department.map(item => [item[key], it
                   </form>
                 </div>
               ) : (
-                      <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        width: "100%",
-        minHeight: "100%",
-      }}
-    >
-      {/* col-6 style */}
-      <div
-        style={{
-          width: "50%",
-          minWidth: "320px",
-        }}
-      >
-        <div
-          style={{
-            background: "linear-gradient(135deg, #e0f7fa, #ffffff)",
-            borderRadius: "25px",
-            padding: "50px 40px",
-            textAlign: "center",
-            boxShadow: "0 15px 40px rgba(0, 150, 136, 0.2)",
-            fontFamily: "Poppins, sans-serif",
-          }}
-        >
-          <h2
-            style={{
-              color: "#00695c",
-              fontSize: "26px",
-              marginBottom: "15px",
-              fontWeight: "600",
-              lineHeight: "1.4",
-            }}
-          >
-            Please Login to Book an Appointment
-          </h2>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "100%",
+                    minHeight: "100%",
+                  }}
+                >
+                  {/* col-6 style */}
+                  <div
+                    style={{
+                      width: "50%",
+                      minWidth: "320px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        background: "linear-gradient(135deg, #e0f7fa, #ffffff)",
+                        borderRadius: "25px",
+                        padding: "50px 40px",
+                        textAlign: "center",
+                        boxShadow: "0 15px 40px rgba(0, 150, 136, 0.2)",
+                        fontFamily: "Poppins, sans-serif",
+                      }}
+                    >
+                      <h2
+                        style={{
+                          color: "#00695c",
+                          fontSize: "26px",
+                          marginBottom: "15px",
+                          fontWeight: "600",
+                          lineHeight: "1.4",
+                        }}
+                      >
+                        Please Login to Book an Appointment
+                      </h2>
 
-          <p
-            style={{
-              color: "#555",
-              fontSize: "15px",
-              marginBottom: "25px",
-            }}
-          >
-            Access your account to schedule your dental visit quickly and easily.
-          </p>
+                      <p
+                        style={{
+                          color: "#555",
+                          fontSize: "15px",
+                          marginBottom: "25px",
+                        }}
+                      >
+                        Access your account to schedule your dental visit
+                        quickly and easily.
+                      </p>
 
-          <NavLink
-            to={"/login"}
-            style={{
-              display: "inline-block",
-              padding: "14px 35px",
-              background: "linear-gradient(135deg, #009688, #26a69a)",
-              color: "#fff",
-              borderRadius: "35px",
-              textDecoration: "none",
-              fontWeight: "600",
-              fontSize: "16px",
-              transition: "0.3s",
-            }}
-            onMouseOver={(e) => {
-              e.target.style.transform = "scale(1.05)";
-              e.target.style.boxShadow =
-                "0 8px 20px rgba(0, 150, 136, 0.3)";
-            }}
-            onMouseOut={(e) => {
-              e.target.style.transform = "scale(1)";
-              e.target.style.boxShadow = "none";
-            }}
-          >
-            Login
-          </NavLink>
-        </div>
-      </div>
-    </div>
-
-
+                      <NavLink
+                        to={"/login"}
+                        style={{
+                          display: "inline-block",
+                          padding: "14px 35px",
+                          background:
+                            "linear-gradient(135deg, #009688, #26a69a)",
+                          color: "#fff",
+                          borderRadius: "35px",
+                          textDecoration: "none",
+                          fontWeight: "600",
+                          fontSize: "16px",
+                          transition: "0.3s",
+                        }}
+                        onMouseOver={(e) => {
+                          e.target.style.transform = "scale(1.05)";
+                          e.target.style.boxShadow =
+                            "0 8px 20px rgba(0, 150, 136, 0.3)";
+                        }}
+                        onMouseOut={(e) => {
+                          e.target.style.transform = "scale(1)";
+                          e.target.style.boxShadow = "none";
+                        }}
+                      >
+                        Login
+                      </NavLink>
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
           </div>
@@ -779,7 +789,7 @@ const uniqueDept = [...new Map(department?.department.map(item => [item[key], it
                 <h2>Trusted Healthcare Experts at Your Service</h2>
               </div>
             </div>
-            {doctors?.map((v) => (
+            {doctors?.slice(0,8)?.map((v) => (
               <div className="col-sm-6 col-xl-3">
                 <div className="doctorimg">
                   <img src={"http://localhost:3000/" + v?.user_img} alt />

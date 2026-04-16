@@ -53,7 +53,7 @@ function RegisterDetails(props) {
   {/* IMAGE */}
   <div className="col-5">
     <img
-      src="images/register.webp"
+      src="images/register.png"
       alt=""
       style={{
         width: "100%",

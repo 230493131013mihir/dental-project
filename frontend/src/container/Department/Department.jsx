@@ -2,15 +2,18 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getDepartment } from "../../redux/slice/department.slice";
 import { NavLink } from "react-router-dom";
+import { getBranch } from "../../redux/slice/branch.slice";
 
 function Department(props) {
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getDepartment());
+    dispatch(getBranch());
   }, []);
 
   const departmentData = useSelector((state) => state.department);
+  const branch = useSelector((state) => state.branch);
 
   console.log(departmentData.department);
 
@@ -33,7 +36,7 @@ function Department(props) {
               <div className="col-12 col-md-6 col-lg-4">
 
                 <NavLink to={`/department_details/${v.id}`}>
-                <div className="service-box">
+                <div className="service-box" style={{marginBottom: "20px"}}>
                   <div className="service-head">
                     <div className="icons">
                       <img
@@ -45,7 +48,10 @@ function Department(props) {
                       />
                     </div>
                     <div className="label">
-                      <label htmlFor>Dental</label>
+                      <label htmlFor> {
+                            branch.branch?.find((vv) => vv.id === v.branch_id)
+                              ?.name
+                          }</label>
                     </div>
                   </div>
                   <div className="header-dental">

@@ -108,6 +108,8 @@ function Medical(props) {
 
       handleClose();
       resetForm();
+
+window.location.reload();
     },
   });
 

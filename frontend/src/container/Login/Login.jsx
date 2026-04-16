@@ -53,7 +53,7 @@ function Login(props) {
       {/* LEFT IMAGE */}
       <div className="col-6">
         <img
-          src="images/register.webp"
+          src="images/login.png"
           alt=""
           style={{
             width: "100%",
@@ -83,7 +83,7 @@ function Login(props) {
                 marginBottom: "30px",
                 fontSize: "28px",
                 fontWeight: "600",
-                color: "#004d40",
+                color: "#026df8",
               }}
             >
               Welcome Back
@@ -183,7 +183,7 @@ function Login(props) {
                   padding: "14px",
                   borderRadius: "10px",
                   border: "none",
-                  background: "#009688",
+                  background: "#0cadf8e7",
                   color: "#fff",
                   fontWeight: "600",
                   fontSize: "15px",
@@ -191,10 +191,10 @@ function Login(props) {
                   transition: "0.3s",
                 }}
                 onMouseOver={(e) => {
-                  e.target.style.background = "#00796b";
+                  e.target.style.background = "#0484fc";
                 }}
                 onMouseOut={(e) => {
-                  e.target.style.background = "#009688";
+                  e.target.style.background = "#0478fc";
                 }}
               />
             </div>

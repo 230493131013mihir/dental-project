@@ -39,8 +39,8 @@ function Insfrastructure(props) {
                       <img
                         src={"http://localhost:3000/" + v.insfrastructure_img}
                         style={{
-                          width: "45px",
-                          height: "55px",
+                          width: "60px",
+                          height: "65px",
                         }}
                       />
                     </div>

@@ -113,7 +113,7 @@ function Appointment(props) {
     },
   });
 
-  console.log(formik.errors, formik.touched);
+  console.log(formik.errors, formik.touched); 
   console.log(branch.branch, department.department, formik.values.branch_id);
 
   const navigate = useNavigate();
@@ -152,7 +152,7 @@ function Appointment(props) {
       headerName: "user",
       width: 130,
       renderCell: (params) => {
-        const d = user.user?.find((v) => v.id == params.row.user_id)?.name;
+        const d = patientdata.patient?.find((v) => v.id == params.row.user_id)?.name;
         console.log(user.user_id, params.row.id, d);
         return d;
       },
@@ -174,9 +174,9 @@ function Appointment(props) {
     { field: "date", headerName: "date", width: 130 },
     { field: "time", headerName: "time", width: 130 ,
        renderCell: (params) => {
-        const d = timeslot.timeslot?.find((v) => v.id == params.row.user_id)?.name;
-        console.log(timeslot.user_id, params.row.id, d);
-        return d;
+        const d = timeslot.timeslot?.find((v) => v.user_id == params.row.doctor_id);
+        console.log(timeslot, params.row.doctor_id, d);
+        return d?.starttime + '-' + d?.endtime;
       },
     },
     {
@@ -384,6 +384,7 @@ function Appointment(props) {
                   margin="dense"
                   id="time"
                   name="time"
+                  label="time"
                   fullWidth
                   select
                   variant="standard"

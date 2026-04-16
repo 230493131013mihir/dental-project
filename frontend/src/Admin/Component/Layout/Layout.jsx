@@ -28,6 +28,7 @@ import ImportExportIcon from "@mui/icons-material/ImportExport";
 import CleaningServicesIcon from "@mui/icons-material/CleaningServices";
 import PersonIcon from "@mui/icons-material/Person";
 import { NavLink } from "react-router-dom";
+import DashboardIcon from '@mui/icons-material/Dashboard';
 
 const drawerWidth = 240;
 
@@ -122,6 +123,7 @@ export default function Layout({ children }) {
   };
 
   const alllinks = [
+    { icon: <DashboardIcon />, label: "Dashboard", to: "/admin/" },
     { icon: <AddLocationIcon />, label: "Branch", to: "/admin/branch" },
     { icon: <LocalHospitalIcon />, label: "Department", to: "/admin/department" },
     { icon: <MedicationLiquidIcon />, label: "Insfrastructure", to: "/admin/insfrastructure"},
@@ -130,7 +132,7 @@ export default function Layout({ children }) {
     { icon: <CleaningServicesIcon />, label: "User", to: "/admin/user" },
     // { icon: <AttachMoneyIcon />, label: "Salary", to: "/admin/salary" },
     // { icon: <AccountCircleIcon />, label: "Expence", to: "/admin/expence" },
-    { icon: <AccountCircleIcon />, label: "Services", to: "/admin/services" },
+    // { icon: <AccountCircleIcon />, label: "Services", to: "/admin/services" },
 
       { icon: <CleaningServicesIcon />, label: "Timeslot", to: "/admin/Timeslot" },
     // { icon: <AttachMoneyIcon />, label: "Treatment", to: "/admin/Treatment" },
