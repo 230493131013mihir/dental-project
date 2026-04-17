@@ -1,24 +1,26 @@
 import React from "react";
 import { object, string } from "yup";
 import { useFormik } from "formik";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { register } from "../../redux/slice/authenthication.slice";
 import { NavLink } from "react-router-dom";
 
-function RegisterDetails(props) {
+function RegisterDetails() {
+  const dispatch = useDispatch();
 
- const dispatch = useDispatch();
-
-
-  let userschema = object({
+  // ✅ Validation Schema
+  const userschema = object({
     name: string().required("Please enter your name"),
-    password: string().required("please enter your password"),
-    email: string().required("Please Select email id"),
+    email: string()
+      .required("Please enter email")
+      .email("Invalid email format"),
+    password: string().required("Please enter your password"),
     phone: string()
       .required("Please enter phone number")
       .matches(/^[0-9]{10}$/, "Mobile number must be 10 digits"),
   });
 
+  // ✅ Formik Setup
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -26,215 +28,136 @@ function RegisterDetails(props) {
       phone: "",
       password: "",
     },
-
     validationSchema: userschema,
+    onSubmit: async (values, { resetForm }) => {
+  try {
+    const res = await dispatch(register(values));
 
-    onSubmit: (values, { resetForm }) => {
-      dispatch(register(values))
-      handleClose();
+    if (res.meta.requestStatus === "fulfilled") {
+      alert("🦷 Welcome to EliteDent! Your registration was successful.");
       resetForm();
-    },
+    } else {
+      alert("Registration failed. Please try again.");
+    }
+  } catch (error) {
+    alert("Something went wrong.");
+  }
+},
   });
-
-  console.log(formik.errors, formik.touched);
 
   return (
     <main>
       <section>
         <div className="container">
           <div
-  className="row"
-  style={{
-    justifyContent: "space-between",
-    marginTop: "70px",
-    alignItems: "center",
-  }}
->
-  {/* IMAGE */}
-  <div className="col-5">
-    <img
-      src="images/register.png"
-      alt=""
-      style={{
-        width: "100%",
-        height: "520px",
-        objectFit: "cover",
-        borderRadius: "25px",
-      }}
-    />
-  </div>
+            className="row"
+            style={{
+              justifyContent: "space-between",
+              marginTop: "70px",
+              alignItems: "center",
+            }}
+          >
+            {/* IMAGE */}
+            <div className="col-5">
+              <img
+                src="images/register.png"
+                alt=""
+                style={{
+                  width: "100%",
+                  height: "520px",
+                  objectFit: "cover",
+                  borderRadius: "25px",
+                }}
+              />
+            </div>
 
-  {/* REGISTER FORM */}
-  <div className="col-6">
-    <div
-      style={{
-        background: "#f9fbfc",
-        padding: "45px",
-        borderRadius: "30px",
-        boxShadow: "0 20px 60px rgba(0,0,0,0.06)",
-        fontFamily: "Poppins, sans-serif",
-        border: "1px solid #eef2f3",
-      }}
-    >
-      <form onSubmit={formik.handleSubmit}>
-        <h3
-          style={{
-            marginBottom: "30px",
-            fontSize: "26px",
-            fontWeight: "600",
-            color: "#333",
-            textAlign: "center",
-            letterSpacing: "0.5px",
-          }}
-        >
-          Create Account ✨
-        </h3>
+            {/* FORM */}
+            <div className="col-6">
+              <div
+                style={{
+                  background: "#f9fbfc",
+                  padding: "45px",
+                  borderRadius: "30px",
+                  boxShadow: "0 20px 60px rgba(0,0,0,0.06)",
+                  border: "1px solid #eef2f3",
+                }}
+              >
+                <form 
+                onSubmit={formik.handleSubmit}>
+                  <h3 style={{ textAlign: "center", marginBottom: "30px" }}>
+                    Create Account ✨
+                  </h3>
 
-        <div className="row">
-          {/* NAME */}
-          <div className="col-12" style={{ marginBottom: "18px" }}>
-            <input
-              type="text"
-              placeholder="Full Name"
-              name="name"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.name}
-              style={{
-                width: "100%",
-                padding: "14px",
-                borderRadius: "12px",
-                border: "none",
-                background: "#ffffff",
-                boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
-                fontSize: "14px",
-                outline: "none",
-              }}
-            />
+                  {/* NAME */}
+                  <div style={{ marginBottom: "15px" }}>
+                    <input
+                      type="text"
+                      name="name"
+                      placeholder="Full Name"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.name}
+                      style={inputStyle(formik, "name")}
+                    />
+                    {showError(formik, "name")}
+                  </div>
+
+                  {/* EMAIL */}
+                  <div style={{ marginBottom: "15px" }}>
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="Email Address"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.email}
+                      style={inputStyle(formik, "email")}
+                    />
+                    {showError(formik, "email")}
+                  </div>
+
+                  {/* PASSWORD */}
+                  <div style={{ marginBottom: "15px" }}>
+                    <input
+                      type="password"
+                      name="password"
+                      placeholder="Password"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.password}
+                      style={inputStyle(formik, "password")}
+                    />
+                    {showError(formik, "password")}
+                  </div>
+
+                  {/* PHONE */}
+                  <div style={{ marginBottom: "20px" }}>
+                    <input
+                      type="text"
+                      name="phone"
+                      placeholder="Phone Number"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.phone}
+                      style={inputStyle(formik, "phone")}
+                    />
+                    {showError(formik, "phone")}
+                  </div>
+
+                  {/* SUBMIT */}
+                  <button type="submit" style={buttonStyle}>
+                    Join EliteDent Family 🦷
+                  </button>
+                </form>
+
+                {/* LOGIN LINK */}
+                <p style={{ marginTop: "20px", textAlign: "center" }}>
+                  Already have an account?{" "}
+                  <NavLink to="/login">Login</NavLink>
+                </p>
+              </div>
+            </div>
           </div>
-
-          {/* EMAIL */}
-          <div className="col-12" style={{ marginBottom: "18px" }}>
-            <input
-              type="email"
-              placeholder="Email Address"
-              name="email"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.email}
-              style={{
-                width: "100%",
-                padding: "14px",
-                borderRadius: "12px",
-                border: "none",
-                background: "#ffffff",
-                boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
-                fontSize: "14px",
-                outline: "none",
-              }}
-            />
-          </div>
-
-          {/* PASSWORD */}
-          <div className="col-12" style={{ marginBottom: "18px" }}>
-            <input
-              type="password"
-              placeholder="Password"
-              name="password"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.password}
-              style={{
-                width: "100%",
-                padding: "14px",
-                borderRadius: "12px",
-                border: "none",
-                background: "#ffffff",
-                boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
-                fontSize: "14px",
-                outline: "none",
-              }}
-            />
-          </div>
-
-          {/* PHONE */}
-          <div className="col-12" style={{ marginBottom: "25px" }}>
-            <input
-              type="text"
-              placeholder="Phone Number"
-              name="phone"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.phone}
-              style={{
-                width: "100%",
-                padding: "14px",
-                borderRadius: "12px",
-                border: "none",
-                background: "#ffffff",
-                boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
-                fontSize: "14px",
-                outline: "none",
-              }}
-            />
-          </div>
-
-          {/* BUTTON */}
-          <div className="col-12">
-            <input
-              type="submit"
-              value="Create Account"
-              style={{
-                width: "100%",
-                padding: "14px",
-                borderRadius: "14px",
-                border: "none",
-                background:
-                  "linear-gradient(135deg, #6dd5ed, #2193b0)", // 🔥 DIFFERENT COLOR
-                color: "#fff",
-                fontWeight: "600",
-                fontSize: "15px",
-                cursor: "pointer",
-                transition: "0.3s",
-              }}
-              onMouseOver={(e) => {
-                e.target.style.transform = "scale(1.03)";
-                e.target.style.boxShadow =
-                  "0 10px 25px rgba(33,147,176,0.3)";
-              }}
-              onMouseOut={(e) => {
-                e.target.style.transform = "scale(1)";
-                e.target.style.boxShadow = "none";
-              }}
-            />
-          </div>
-        </div>
-      </form>
-
-      {/* LOGIN LINK */}
-      <p
-        style={{
-          marginTop: "20px",
-          textAlign: "center",
-          fontSize: "14px",
-          color: "#666",
-        }}
-      >
-        Already have an account?{" "}
-        <NavLink  
-          to={"/login"}
-          style={{
-            color: "#2193b0",
-            fontWeight: "600",
-            textDecoration: "none",
-          }}
-        >
-          Login
-        </NavLink>
-      </p>
-    </div>
-  </div>
-</div>
         </div>
       </section>
     </main>
@@ -243,3 +166,41 @@ function RegisterDetails(props) {
 
 export default RegisterDetails;
 
+//
+// ✅ Helper Functions
+//
+
+const showError = (formik, field) => {
+  return (
+    (formik.touched[field] || formik.submitCount > 0) &&
+    formik.errors[field] && (
+      <p style={{ color: "red", fontSize: "12px", marginTop: "5px" }}>
+        {formik.errors[field]}
+      </p>
+    )
+  );
+};
+
+const inputStyle = (formik, field) => ({
+  width: "100%",
+  padding: "14px",
+  borderRadius: "12px",
+  outline: "none",
+  fontSize: "14px",
+  border:
+    (formik.touched[field] || formik.submitCount > 0) &&
+    formik.errors[field]
+      ? "1px solid red"
+      : "1px solid #ddd",
+});
+
+const buttonStyle = {
+  width: "100%",
+  padding: "14px",
+  borderRadius: "14px",
+  border: "none",
+  background: "linear-gradient(135deg, #6dd5ed, #2193b0)",
+  color: "#fff",
+  fontWeight: "600",
+  cursor: "pointer",
+};

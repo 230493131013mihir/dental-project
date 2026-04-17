@@ -24,18 +24,21 @@ function Login(props) {
 
     validationSchema: userschema,
 
-    onSubmit: async (values, { resetForm }) => {
-      console.log(values);
-      const res =  await dispatch(login(values));
-    
-      console.log(res);
+onSubmit: async (values, { resetForm }) => {
+  try {
+    const res = await dispatch(login(values));
 
-      if (res.payload) {
-        navigate("/");
-      }
-      
+    if (res.meta.requestStatus === "fulfilled") {
+      alert("🦷 Welcome back! Login successful. Keep smiling 😁");
+      navigate("/");
       resetForm();
-    },
+    } else {
+      alert("Invalid email or password ❌");
+    }
+  } catch (error) {
+    alert("Something went wrong. Please try again.");
+  }
+},
   });
 
   console.log(formik.errors, formik.touched);
@@ -86,7 +89,7 @@ function Login(props) {
                 color: "#026df8",
               }}
             >
-              Welcome Back
+              Welcome Back to EliteDent 🦷
             </h3>
 
             {/* EMAIL */}
@@ -177,7 +180,7 @@ function Login(props) {
             <div>
               <input
                 type="submit"
-                value="Login"
+                value="Login to Your Smile 😁"
                 style={{
                   width: "100%",
                   padding: "14px",

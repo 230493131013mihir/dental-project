@@ -61,10 +61,20 @@ function Appointment(props) {
     },
 
     validationSchema: userschema,
-    onSubmit: (values, { resetForm }) => {
-      dispatch(bookAppointment(values));
+    onSubmit: async (values, { resetForm }) => {
+  try {
+    const res = await dispatch(bookAppointment(values));
+
+    if (res.meta.requestStatus === "fulfilled") {
+      alert("🦷 Appointment booked successfully! We look forward to your visit 😁");
       resetForm();
-    },
+    } else {
+      alert("Failed to book appointment. Please try again.");
+    }
+  } catch (error) {
+    alert("Something went wrong. Please try again.");
+  }
+},
   });
 
   const navigate = useNavigate();

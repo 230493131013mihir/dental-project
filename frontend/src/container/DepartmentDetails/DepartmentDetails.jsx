@@ -170,10 +170,10 @@ function DepartmentDetails(props) {
 <h2
   style={{
     marginTop: "50px",
-    marginBottom: "20px",
-    color: "#020617",
-    fontWeight: "600",
+    marginBottom: "25px",
     textAlign: "center",
+    fontSize: "28px",
+    fontWeight: "700",
   }}
 >
   Our Infrastructure
@@ -182,48 +182,91 @@ function DepartmentDetails(props) {
 <div
   style={{
     display: "grid",
-    gridTemplateColumns: "repeat(3, 1fr)", // FIXED SIZE
-    gap: "20px",
+    gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+    gap: "25px",
   }}
 >
   {fInfra.map((v) => (
     <div
       key={v.id}
       style={{
-        borderRadius: "15px",
+        borderRadius: "18px",
         overflow: "hidden",
         background: "#fff",
-        boxShadow: "0 6px 20px rgba(0,0,0,0.15)",
+        boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
         transition: "0.3s",
+        display: "flex",
+        flexDirection: "column",
       }}
-      onMouseEnter={(e) =>
-        (e.currentTarget.style.transform = "translateY(-5px)")
-      }
-      onMouseLeave={(e) =>
-        (e.currentTarget.style.transform = "translateY(0)")
-      }
     >
-      {/* IMAGE */}
-      <img
-        src={"http://localhost:3000/" + v.insfrastructure_img}
-        alt=""
+      {/* 🔥 IMAGE BOX (PERFECT FIX) */}
+      <div
         style={{
           width: "100%",
-          height: "200px",
-          objectFit: "cover",
+          aspectRatio: "4 / 3",   // 🔥 THIS FIXES EVERYTHING
+          overflow: "hidden",
+          background: "#e2e8f0",
         }}
-      />
+      >
+        <img
+          src={"http://localhost:3000/" + v.insfrastructure_img}
+          alt=""
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: "center",
+            display: "block",
+          }}
+        />
+      </div>
 
       {/* TEXT */}
-      <div style={{ padding: "15px" }}>
-        <h4 style={{ margin: 0, color: "#020617" }}>
-          {v.name}
-        </h4>
+     <div
+  style={{
+    padding: "16px 18px",
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+  }}
+>
+  {/* NAME */}
+  <h4
+    style={{
+      margin: "0",
+      fontSize: "17px",
+      fontWeight: "600",
+      color: "#0f172a",
+      lineHeight: "1.4",
+      marginBottom: "8px",
 
-        <p style={{ fontSize: "14px", color: "#475569" }}>
-          {v.description}
-        </p>
-      </div>
+      display: "-webkit-box",
+      WebkitLineClamp: 2,          // 🔥 LIMIT 2 LINES
+      WebkitBoxOrient: "vertical",
+      overflow: "hidden",
+    }}
+  >
+    {v.name}
+  </h4>
+
+  {/* DESCRIPTION */}
+  <p
+    style={{
+      fontSize: "13.5px",
+      color: "#64748b",
+      lineHeight: "1.6",
+      margin: "0",
+
+      display: "-webkit-box",
+      WebkitLineClamp: 3,          // 🔥 LIMIT 3 LINES
+      WebkitBoxOrient: "vertical",
+      overflow: "hidden",
+    }}
+  >
+    {v.description}
+  </p>
+</div>
     </div>
   ))}
 </div>
