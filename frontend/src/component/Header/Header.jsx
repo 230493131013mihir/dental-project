@@ -59,11 +59,19 @@ function Header(props) {
               <li>
                 <a href="#faq">Faq</a>
               </li>
-              <li>
-                <a href="#con">
-                  Contact <i className="fa-sharp fa-solid fa-down" />
-                </a>
-              </li>
+             <li style={{ listStyle: "none" }}>
+  <a
+    href="tel:+919876543210"
+    style={{
+      textDecoration: "none",
+      color: "#333",
+      fontWeight: "500"
+    }}
+  >
+    Contact 
+    {/* <i className="fa-solid fa-phone"></i> */}
+  </a>
+</li>
               {/* <li><a href="javascript:void(0);">Pricing</a></li> */}
               {/* <li>
             <NavLink to={"/register"}>Register</NavLink>
