@@ -43,6 +43,9 @@ export const bookAppointment = createAsyncThunk(
         { ...values, user_id: localStorage.getItem("user_id") },
       );
 
+      console.log("fffffasd0", responce.data.data);
+      
+
       return responce.data.data;
     } catch (error) {}
   },
@@ -69,7 +72,7 @@ export const appointmentSlice = createSlice({
   initialState,
   extraReducers: (builder) => {
     builder.addCase(bookAppointment.fulfilled, (state, action) => {
-      state.appointment = action.payload;
+        state.appointment.push(action.payload);
     });
     builder.addCase(getMyAppointment.fulfilled, (state, action) => {
       state.myAppointment = action.payload;

@@ -4,7 +4,7 @@ const getAppointment = async (req, res) => {
   try {
     const [rows] = await pool.query("SELECT * FROM appointment");
 
-    console.log(rows);
+    console.log("aqaqaq",rows);
     res.status(200).json({
       success: true,
       data: rows,
@@ -72,7 +72,7 @@ const bookAppointment = async (req, res) => {
 
     const [rows, fields, result] = await pool.query(
       "INSERT INTO appointment(branch_id, department_id, user_id,doctor_id, name, phone , date, time ) VALUES(?,?,?,?,?,?,?,?)",
-      [branch_id, department_id, user_id, doctor_id, name, phone, date, time],
+      [branch_id, department_id, user_id ?? 0, doctor_id, name, phone, date, time],
     );
 
     const appointpatientD = await pool.query(

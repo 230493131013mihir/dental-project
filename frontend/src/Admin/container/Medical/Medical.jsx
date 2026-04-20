@@ -27,6 +27,7 @@ import MenuItem from "@mui/material/MenuItem";
 
 function Medical(props) {
   const [open, setOpen] = React.useState(false);
+  const [searchText, setSearchText] = useState("");
 
   const [update, setUpdate] = useState(false);
   console.log(update);
@@ -109,7 +110,7 @@ function Medical(props) {
       handleClose();
       resetForm();
 
-window.location.reload();
+      window.location.reload();
     },
   });
 
@@ -220,6 +221,24 @@ window.location.reload();
     (m) => m.id === formik.values.medicine_id,
   );
 
+  const filteredRows = medical.medical?.filter((row) => {
+    const search = searchText.toLowerCase();
+
+    const doctorName =
+      user.user?.find((u) => u.id == row.doctor_id)?.name || "";
+
+    const medicineName =
+      medicine.medicine?.find((m) => m.id == row.medicine_id)?.name || "";
+
+    return (
+      row.name?.toLowerCase().includes(search) ||
+      row.phone?.toLowerCase().includes(search) ||
+      doctorName.toLowerCase().includes(search) ||
+      medicineName.toLowerCase().includes(search) ||
+      row.status?.toLowerCase().includes(search)
+    );
+  });
+
   return (
     <div>
       {/* Header */}
@@ -235,6 +254,16 @@ window.location.reload();
           Add Medicine
         </Button> */}
       </Box>
+
+      <TextField
+        label="Search..."
+        variant="outlined"
+        size="small"
+        fullWidth
+        sx={{ marginBottom: 2 }}
+        value={searchText}
+        onChange={(e) => setSearchText(e.target.value)}
+      />
 
       <React.Fragment>
         <Dialog open={open} onClose={handleClose}>
@@ -356,7 +385,8 @@ window.location.reload();
               {selectedMedicine && (
                 <div style={{ marginTop: "10px" }}>
                   <p>
-                    <b>Stock:</b> {selectedMedicine.stock - selectedMedicine.sell_qty}
+                    <b>Stock:</b>{" "}
+                    {selectedMedicine.stock - selectedMedicine.sell_qty}
                   </p>
                   <p>
                     <b>Amount/pill:</b> ₹{selectedMedicine.price}
@@ -444,7 +474,7 @@ window.location.reload();
       </React.Fragment>
 
       <DataGrid
-        rows={medical.medical}
+        rows={filteredRows}
         columns={columns}
         initialState={{ pagination: { paginationModel } }}
         pageSizeOptions={[5, 10]}

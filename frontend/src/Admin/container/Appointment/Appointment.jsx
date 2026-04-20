@@ -28,6 +28,8 @@ import { getTimeslot } from "../../../redux/slice/timeslot.slice";
 
 function Appointment(props) {
   const [open, setOpen] = React.useState(false);
+  const [searchDate, setSearchDate] = useState("");
+  const [searchDoctor, setSearchDoctor] = useState("");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -110,10 +112,11 @@ function Appointment(props) {
     onSubmit: (values, { resetForm }) => {
       dispatch(bookAppointment(values));
       resetForm();
+      handleClose();
     },
   });
 
-  console.log(formik.errors, formik.touched); 
+  console.log(formik.errors, formik.touched);
   console.log(branch.branch, department.department, formik.values.branch_id);
 
   const navigate = useNavigate();
@@ -152,7 +155,9 @@ function Appointment(props) {
       headerName: "user",
       width: 130,
       renderCell: (params) => {
-        const d = patientdata.patient?.find((v) => v.id == params.row.user_id)?.name;
+        const d = patientdata.patient?.find(
+          (v) => v.id == params.row.user_id,
+        )?.name;
         console.log(user.user_id, params.row.id, d);
         return d;
       },
@@ -161,22 +166,27 @@ function Appointment(props) {
       field: "doctor_id",
       headerName: "Doctor",
       width: 130,
-     renderCell: (params) => {
-        const d = user.user?.find(v => v.id == params.row.doctor_id)?.name
+      renderCell: (params) => {
+        const d = user.user?.find((v) => v.id == params.row.doctor_id)?.name;
 
         console.log(user.doctor_id, params.row.id, d);
 
-        return d
-      }
+        return d;
+      },
     },
     { field: "name", headerName: "name", width: 130 },
     { field: "phone", headerName: "phone", width: 130 },
-    { field: "date", headerName: "date", width: 130 },
-    { field: "time", headerName: "time", width: 130 ,
-       renderCell: (params) => {
-        const d = timeslot.timeslot?.find((v) => v.user_id == params.row.doctor_id);
+    { field: "date", headerName: "date", width: 130, renderCell: (params) => (new Date(params.row.date)?.toLocaleDateString()) },
+    {
+      field: "time",
+      headerName: "time",
+      width: 130,
+      renderCell: (params) => {
+        const d = timeslot.timeslot?.find(
+          (v) => v.user_id == params.row.doctor_id,
+        );
         console.log(timeslot, params.row.doctor_id, d);
-        return d?.starttime + '-' + d?.endtime;
+        return d?.starttime + "-" + d?.endtime;
       },
     },
     {
@@ -202,6 +212,18 @@ function Appointment(props) {
 
   const paginationModel = { page: 0, pageSize: 5 };
 
+  const filteredAppointments = appointment?.appointment?.filter((item) => {
+    console.log("new Date(item?.date).toLocaleDateString() === searchDate",new Date(item?.date).toLocaleDateString() , new Date(searchDate)?.toLocaleDateString());
+    
+    const matchDate = searchDate
+      ? new Date(item?.date).toLocaleDateString() == new Date(searchDate)?.toLocaleDateString()
+      : true;
+
+    const matchDoctor = searchDoctor ? item.doctor_id == searchDoctor : true;
+
+    return matchDate && matchDoctor;
+  });
+
   return (
     <div>
       <Box
@@ -216,6 +238,40 @@ function Appointment(props) {
           Add Appointment
         </Button>
       </Box>
+      <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
+        <TextField
+          type="date"
+          label="Search by Date"
+          InputLabelProps={{ shrink: true }}
+          value={searchDate}
+          onChange={(e) => setSearchDate(e.target.value)}
+        />
+
+        <TextField
+          select
+          label="Search by Doctor"
+          value={searchDoctor}
+          onChange={(e) => setSearchDoctor(e.target.value)}
+          sx={{ minWidth: 200 }}
+        >
+          <MenuItem value="">All</MenuItem>
+          {user.user
+            ?.filter((v) => v.role_id === "Doctor")
+            ?.map((v) => (
+              <MenuItem key={v.id} value={v.id}>
+                {v.name}
+              </MenuItem>
+            ))}
+        </TextField>
+      </Box>
+      <Button
+        onClick={() => {
+          setSearchDate("");
+          setSearchDoctor("");
+        }}
+      >
+        Clear Filters
+      </Button>
       {
         <React.Fragment>
           <Dialog open={open} onClose={handleClose}>
@@ -425,7 +481,7 @@ function Appointment(props) {
       }
 
       <DataGrid
-        rows={appointment.appointment}
+        rows={filteredAppointments}
         columns={columns}
         initialState={{ pagination: { paginationModel } }}
         pageSizeOptions={[5, 10]}
