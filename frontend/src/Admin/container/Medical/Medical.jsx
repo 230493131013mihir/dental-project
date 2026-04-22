@@ -24,15 +24,22 @@ import DialogContent from "@mui/material/DialogContent";
 import TextField from "@mui/material/TextField";
 import DialogActions from "@mui/material/DialogActions";
 import MenuItem from "@mui/material/MenuItem";
+import { QRCodeCanvas } from "qrcode.react";
 
 function Medical(props) {
   const [open, setOpen] = React.useState(false);
+  const [paymentOpen, setPaymentOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
 
   const [update, setUpdate] = useState(false);
   console.log(update);
 
   const dispatch = useDispatch();
+  const upiId = "yourupiid@okaxis"; // 🔴 change this
+
+const getUpiLink = () => {
+  return `upi://pay?pa=${upiId}&pn=Clinic&am=${formik.values.medicine_amount}&cu=INR`;
+};
 
   useEffect(() => {
     dispatch(getMedical());
@@ -91,32 +98,73 @@ function Medical(props) {
       medicine_quantity: "",
       medicine_amount: "",
       status: "",
+      payment_status: "",   
     },
 
     validationSchema: userschema,
 
-    onSubmit: async (values, { resetForm }) => {
-      console.log(values);
+onSubmit: async (values, { resetForm }) => {
+  console.log(values);
 
-      if (update) {
-        console.log("update data");
-        await dispatch(updateMedical(values));
-      } else {
-        await dispatch(addMedical(values));
-      }
+  // 🔥 ADD THIS AT TOP
+  if (!values.payment_status) {
+    alert("Please complete payment first");
+    return;
+  }
 
-      dispatch(getMedicine());
+  // ✅ YOUR EXISTING CODE (NO CHANGE)
+  if (update) {
+    console.log("update data");
+    await dispatch(updateMedical(values));
+  } else {
+    await dispatch(addMedical(values));
+  }
 
-      handleClose();
-      resetForm();
+  dispatch(getMedicine());
 
-      window.location.reload();
-    },
+  handleClose();
+  resetForm();
+
+  window.location.reload();
+},
   });
 
   console.log(formik.errors, formik.touched);
 
   console.log("qqqqq", formik.errors);
+  const handlePayment = async () => {
+  const amount = formik.values.medicine_amount;
+
+  if (!amount) {
+    alert("Enter amount first");
+    return;
+  }
+
+  const options = {
+    key: "YOUR_RAZORPAY_KEY", // 🔴 replace with your key
+    amount: amount * 100,
+    currency: "INR",
+    name: "Clinic Payment",
+    description: "Medicine Payment",
+    handler: function (response) {
+      console.log("Payment Success:", response);
+
+      formik.setFieldValue("payment_status", "paid");
+
+      alert("Payment Successful ✅");
+    },
+    prefill: {
+      name: formik.values.name,
+      contact: formik.values.phone,
+    },
+    theme: {
+      color: "#1976d2",
+    },
+  };
+
+  const rzp = new window.Razorpay(options);
+  rzp.open();
+};
 
   const columns = [
     {
@@ -437,6 +485,13 @@ function Medical(props) {
                     : ""
                 }
               />
+  <Button
+  variant="contained"
+  color="success"
+  onClick={() => setPaymentOpen(true)}
+>
+  PAY VIA UPI
+</Button>
               <TextField
                 error={formik.errors.status && formik.touched.status}
                 margin="dense"
@@ -465,6 +520,13 @@ function Medical(props) {
             </form>
           </DialogContent>
           <DialogActions>
+            <Button
+  variant="contained"
+  color="success"
+  onClick={handlePayment}
+>
+  Pay via UPI
+</Button>
             <Button onClick={handleClose}>Cancel</Button>
             <Button type="submit" form="medical-form">
               Submit
@@ -472,6 +534,32 @@ function Medical(props) {
           </DialogActions>
         </Dialog>
       </React.Fragment>
+      <Dialog open={paymentOpen} onClose={() => setPaymentOpen(false)}>
+  <DialogContent style={{ textAlign: "center" }}>
+    <h3>Scan & Pay</h3>
+
+    <QRCodeCanvas
+      value={getUpiLink()}
+      size={200}
+    />
+
+    <p>Amount: ₹{formik.values.medicine_amount}</p>
+    <p>UPI ID: {upiId}</p>
+
+    <Button
+      variant="contained"
+      color="success"
+      sx={{ mt: 2 }}
+      onClick={() => {
+        formik.setFieldValue("payment_status", "paid");
+        setPaymentOpen(false);
+        alert("Payment marked as Paid ✅");
+      }}
+    >
+      I Have Paid
+    </Button>
+  </DialogContent>
+</Dialog>
 
       <DataGrid
         rows={filteredRows}
