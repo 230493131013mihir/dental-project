@@ -91,6 +91,10 @@
     max-width: 100%;
   }
 
+  section {
+    overflow-x: hidden;
+  }
+
   .col-1 {
     width: 8.33%;
     padding: 0 12px;
@@ -152,8 +156,25 @@
   }
 
   .hero-details h1 {
-    font-size: 40px;
-    line-height: 55px;
+    font-size: 38px;
+    line-height: 48px;
+  }
+
+  .hero {
+    padding-top: 35px;
+  }
+
+  .hero-details {
+    padding-top: 35px;
+  }
+
+  .hero-image {
+    margin-left: 0;
+  }
+
+  .hero-image img {
+    height: auto;
+    object-fit: contain;
   }
 
   .hero-cta {
@@ -166,7 +187,7 @@
 
   .heading h2 {
     font-size: 30px;
-    line-height: 45px;
+    line-height: 40px;
   }
 
   .heading p {
@@ -221,22 +242,41 @@
     flex-direction: column;
     text-align: center;
   }
-/*===== Header ===== */
 
- .top-header{
-flex-direction: column;
-row-gap:20px;
-}
+  .choose-img {
+    padding-left: 0;
+    margin-top: 25px;
+  }
 
-.menu{
-flex-wrap:wrap;
-justify-content:center;
-}
+  .booking .appointment {
+    padding: 28px 18px;
+  }
 
-.menu li{
-padding:8px 10px;
-} 
+  .book-image img,
+  .treatment-img img,
+  .faq-image img,
+  .testimonial .test-image img {
+    width: 100%;
+    height: auto;
+  }
 
+  .home-login-card-inner {
+    width: 100%;
+  }
+
+  .faq .sos-call .call-us {
+    align-items: center;
+  }
+
+  .sos-call .call-text a {
+    font-size: 18px;
+    line-height: 28px;
+    word-break: break-word;
+  }
+
+  .blog {
+    padding-bottom: 80px;
+  }
 /* ===== Team ===== */
 
 .team .doctorimg img{

@@ -33,7 +33,7 @@ function Header(props) {
           <div className="logo">
             <NavLink to="/">
               <img
-                src="images/logo4.svg"
+                src="images/logo5.png"
                 alt="Main Logo"
                 style={{ width: "250px", height: "100px" }}
               />

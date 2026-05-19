@@ -337,12 +337,12 @@ function Home(props) {
       <section className="treatment">
         <div className="containerfluid">
           <div className="row treatment-row">
-            <div className="col-lg-6">
+            <div className="col-12 col-lg-6">
               <div className="treatment-img">
                 <img src="images/treatment-bg.jpg" alt />
               </div>
             </div>
-            <div className="col-lg-6">
+            <div className="col-12 col-lg-6">
               <div className="treatment-content">
                 <div className="heading">
                   <span className="badge">
@@ -460,7 +460,7 @@ function Home(props) {
       <section className="choose">
         <div className="container">
           <div className="row">
-            <div className="col-xl-5">
+            <div className="col-12 col-xl-5">
               <div className="heading">
                 <span className="badge">
                   <i>●</i> Why Choose Us
@@ -473,7 +473,7 @@ function Home(props) {
                 </p>
               </div>
             </div>
-            <div className="col-xl-6">
+            <div className="col-12 col-xl-6">
               <div className="choose-img">
                 <img src="images/choose-img1.jpg" alt="Choose Image" />
                 <div className="play-btn">
@@ -483,7 +483,7 @@ function Home(props) {
                 </div>
               </div>
             </div>
-            <div className="col-sm-6 col-lg-3">
+            <div className="col-12 col-sm-6 col-lg-3">
               <div className="process process-1">
                 <div className="process-icon1">
                   <i className="fa-solid fa-stopwatch" />
@@ -492,7 +492,7 @@ function Home(props) {
                 <p>Receive top-quality medical care advanced treatment</p>
               </div>
             </div>
-            <div className="col-sm-6 col-lg-3">
+            <div className="col-12 col-sm-6 col-lg-3">
               <div className="process process-2">
                 <div className="process-icon1">
                   <i className="fa-solid fa-crosshairs" />
@@ -501,7 +501,7 @@ function Home(props) {
                 <p>Patients first personalized and compassionate care</p>
               </div>
             </div>
-            <div className="col-sm-6 col-lg-3">
+            <div className="col-12 col-sm-6 col-lg-3">
               <div className="process process-3">
                 <div className="process-icon1">
                   <i className="fa-solid fa-user-doctor" />
@@ -510,7 +510,7 @@ function Home(props) {
                 <p>Experience doctor providing specialized quality</p>
               </div>
             </div>
-            <div className="col-sm-6 col-lg-3">
+            <div className="col-12 col-sm-6 col-lg-3">
               <div className="process process-4">
                 <div className="process-icon1">
                   <i className="fa-solid fa-headset" />
@@ -526,7 +526,7 @@ function Home(props) {
       <section className="booking">
         <div className="container">
           <div className="row">
-            <div className="col-lg-6">
+            <div className="col-12 col-lg-6">
               <div className="heading">
                 <span className="badge">
                   <i>●</i> Booking
@@ -543,13 +543,13 @@ function Home(props) {
               </div>
             </div>
 
-            <div className="col-lg-6">
+            <div className="col-12 col-lg-6">
               {auth?.patient ? (
                 <div className="appointment">
                   <form onSubmit={formik.handleSubmit} id="appointment-form">
                     <h3>Make an Appointment</h3>
                     <div className="row">
-                      <div className="col-6">
+                      <div className="col-12 col-sm-6">
                         <select
                           name="branch_id"
                           onChange={formik.handleChange}
@@ -570,7 +570,7 @@ function Home(props) {
                           ""
                         )}
                       </div>
-                      <div className="col-6">
+                      <div className="col-12 col-sm-6">
                         <select
                           name="department_id"
                           onChange={formik.handleChange}
@@ -602,7 +602,7 @@ function Home(props) {
                             </span>
                           )}
                       </div>
-                      <div className="col-6">
+                      <div className="col-12 col-sm-6">
                         <input
                           type="text"
                           placeholder="Patient Name"
@@ -617,7 +617,7 @@ function Home(props) {
                           ""
                         )}
                       </div>
-                      <div className="col-6">
+                      <div className="col-12 col-sm-6">
                         <input
                           type="phone"
                           placeholder="Phone Number"
@@ -632,7 +632,7 @@ function Home(props) {
                           ""
                         )}
                       </div>
-                      <div className="col-6">
+                      <div className="col-12 col-sm-6">
                         <input
                           type="date"
                           name="date"
@@ -651,7 +651,7 @@ function Home(props) {
                           ""
                         )}
                       </div>
-                      <div className="col-6">
+                      <div className="col-12 col-sm-6">
                         <select
                           name="time"
                           onChange={formik.handleChange}
@@ -695,21 +695,10 @@ function Home(props) {
                 </div>
               ) : (
                 <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    width: "100%",
-                    minHeight: "100%",
-                  }}
+                  className="home-login-card-wrap"
                 >
                   {/* col-6 style */}
-                  <div
-                    style={{
-                      width: "50%",
-                      minWidth: "320px",
-                    }}
-                  >
+                  <div className="home-login-card-inner">
                     <div
                       style={{
                         background: "linear-gradient(135deg, #e0f7fa, #ffffff)",
@@ -790,7 +779,7 @@ function Home(props) {
               </div>
             </div>
             {doctors?.slice(0,8)?.map((v) => (
-              <div className="col-sm-6 col-xl-3">
+              <div className="col-12 col-sm-6 col-xl-3">
                 <div className="doctorimg">
                   <img src={"http://localhost:3000/" + v?.user_img} alt />
                   <div className="link">
@@ -831,7 +820,7 @@ function Home(props) {
       <section className="testimonial" id="tsti">
         <div className="container">
           <div className="row">
-            <div className="col-lg-6">
+            <div className="col-12 col-lg-6">
               <div className="heading">
                 <span className="badge">
                   <i>●</i> Testimonials
@@ -1043,7 +1032,7 @@ function Home(props) {
                 ))}
               </Swiper>
             </div>
-            <div className="col-lg-6">
+            <div className="col-12 col-lg-6">
               <div className="test-image">
                 <img src="images/doctormeet.jpg" alt="Testimonial Image" />
               </div>
@@ -1062,7 +1051,7 @@ function Home(props) {
       <section className="faq" id="faq">
         <div className="container">
           <div className="row">
-            <div className="col-5">
+            <div className="col-12 col-lg-5">
               <div className="faq-image">
                 <img src="images/oldmeet.webp" alt="FAQ Image" />
               </div>
@@ -1078,7 +1067,7 @@ function Home(props) {
                 </div>
               </div>
             </div>
-            <div className="col-7">
+            <div className="col-12 col-lg-7">
               <div className="faq-content">
                 <div className="heading">
                   <span className="badge">
@@ -1160,7 +1149,7 @@ function Home(props) {
 
           <div className="row" style={{ display: "flex" }}>
             {blog.blog?.map((v) => (
-              <div className="col-4">
+              <div className="col-12 col-md-6 col-lg-4">
                 <div className="blog-card">
                   <div className="blog-img">
                     <img src={"http://localhost:3000/" + v.blog_img} />
