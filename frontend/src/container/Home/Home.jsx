@@ -360,21 +360,6 @@ function Home(props) {
                     plans,{" "}
                   </p>
                 </div>
-                <div className="treatment-box">
-                  <div className="treatment-btn">
-                    {/* <a href="javascript:void(0);" className="btn">
-                      Appointment
-                    </a> */}
-                  </div>
-                  <div className="treatment-author" />
-                  <div className="call-image">
-                    <img src="images/author-img1.jpg" alt="authore image" />
-                  </div>
-                  <div className="call-text">
-                    <h5>Anjelina Watson</h5>
-                    <span className="position">Managing Director</span>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -1079,9 +1064,16 @@ function Home(props) {
                     healthcare services for informed decision-making.
                   </p>
                 </div>
-                <div className="faq-accordion">
+                <div
+                  className="faq-accordion"
+                  style={{
+                    maxHeight: "360px",
+                    overflowY: "auto",
+                    paddingRight: "10px",
+                  }}
+                >
                   {faq.faq?.map((v) => (
-                    <div className="question quest-1 open">
+                    <div className="question quest-1 open" key={v.id}>
                       <div className="acc-header">
                         <h4>{v.question}</h4>
                         {/* <i className="fa-solid fa-angle-up" /> */}
