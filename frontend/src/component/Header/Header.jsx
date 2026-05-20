@@ -40,8 +40,19 @@ function Header(props) {
         backgroundColor: "white",
       }}
     >
-      <div className="container">
-        <div className="top-header">
+      {/* <div className="container"> */}
+      <div style={{ width: "100%" }}>
+        {/* <div className="top-header"></div> */}
+        <div
+  className="top-header"
+  style={{
+    width: "100%",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "0 20px",
+  }}
+>
           <div className="logo">
             <NavLink to="/">
               <img
