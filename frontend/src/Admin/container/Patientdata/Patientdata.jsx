@@ -92,7 +92,12 @@ function Patientdata(props) {
     const columns = [
     { field: "name", headerName: "Name", width: 150 },
     { field: "email", headerName: "Email", width: 200 },
-    { field: "password", headerName: "Password", width: 150 },
+    {
+      field: "password",
+      headerName: "Password",
+      width: 150,
+      renderCell: () => "••••••••",
+    },
     { field: "phone", headerName: "Phone", width: 150 },
     {
       field: "action",

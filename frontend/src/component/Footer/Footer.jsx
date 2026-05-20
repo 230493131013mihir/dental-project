@@ -1,6 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-function Footer(props) {
+function Footer() {
+    const [email, setEmail] = useState("");
+
+    const handleSubscribe = () => {
+      if (!email.trim()) {
+        alert("Please enter your email address.");
+        return;
+      }
+
+      alert("Thank you! We will contact you soon.");
+      setEmail("");
+    };
+
     return (
     <footer>
   <div className="container">
@@ -19,8 +31,20 @@ function Footer(props) {
               Affordable dental care for the whole family.
               Book your appointment and shine with confidence!"</p>
             <form action>
-              <input type="text" name="email" placeholder="Enter Email" className="footer-email" />
-              <input type="button" defaultValue="Submit Now" className="btn footer-btn" />
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter Email"
+                className="footer-email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <input
+                type="button"
+                defaultValue="Submit Now"
+                className="btn footer-btn"
+                onClick={handleSubscribe}
+              />
             </form></div>
         </div>
       </div>

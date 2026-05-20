@@ -7,7 +7,7 @@ const initialState = {
   error: false,
 };
 
-export const register = createAsyncThunk("branch/register", async (data) => {
+export const register = createAsyncThunk("branch/register", async (data, { rejectWithValue }) => {
   try {
     const responce = await axios.post(
       "http://localhost:3000/patient/RegisterDetails",
@@ -17,6 +17,9 @@ export const register = createAsyncThunk("branch/register", async (data) => {
     return responce.data.data;
   } catch (error) {
     console.log(error);
+    return rejectWithValue(
+      error.response?.data?.message || "Registration failed."
+    );
   }
 });
 

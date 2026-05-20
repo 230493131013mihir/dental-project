@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { getMedicine } from "../../../redux/slice/medicine.slice";
 import { useLocation } from "react-router-dom";
 import { getTreatment } from "../../../redux/slice/treatment.slice";
+import { getMyAppointment } from "../../../redux/slice/appointment.slice";
+import { getTimeslot } from "../../../redux/slice/timeslot.slice";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -29,10 +31,14 @@ function MyAppointmentEdit(props) {
   useEffect(() => {
     dispatch(getMedicine());
     dispatch(getTreatment());
+    dispatch(getMyAppointment());
+    dispatch(getTimeslot());
   }, []);
 
   const medicineData = useSelector((state) => state.medicine);
   const treData = useSelector((state) => state.treatment);
+  const appointmentData = useSelector((state) => state.appointment);
+  const timeslotData = useSelector((state) => state.timeslot);
 
   const fTreData = Array.isArray(treData.treatment)
     ? treData.treatment.filter((v) => v.appointment_id == appointment_id)
@@ -77,6 +83,27 @@ function MyAppointmentEdit(props) {
     0
   );
 
+  const appointmentDetails = appointmentData.myAppointment?.find(
+    (appointment) => appointment.id == appointment_id
+  );
+
+  const appointmentSlot = timeslotData.timeslot?.find(
+    (slot) => slot.id == appointmentDetails?.time
+  );
+
+  const formatDate = (date) => {
+    if (!date) return "";
+    return new Date(date).toLocaleDateString();
+  };
+
+  const formatDateTime = (date) => {
+    const appointmentTime = appointmentSlot
+      ? `${appointmentSlot.starttime}-${appointmentSlot.endtime}`
+      : "";
+
+    return [formatDate(date), appointmentTime].filter(Boolean).join(" ");
+  };
+
   // ✅ PDF FUNCTION (CORRECT POSITION)
   const generatePDF = () => {
     const tableBody = [];
@@ -103,7 +130,7 @@ function MyAppointmentEdit(props) {
 // ]);
 
 tableBody.push([
-  { text: "Date", style: "tableHeader" },
+  { text: "Date & Time", style: "tableHeader" },
   { text: "Prescription", style: "tableHeader" },
   { text: "Amount", style: "tableHeader" },
   { text: "Medicine", style: "tableHeader" },
@@ -135,7 +162,7 @@ tableBody.push([
     groupedData.forEach((v) => {
   v.medicines.forEach((m) => {
     tableBody.push([
-      v.date,
+      formatDateTime(v.date),
       v.prescription,
       v.treatement_amount,
       medicineData.medicine?.find(
@@ -270,7 +297,7 @@ tableBody.push([
         <Table >
           <TableHead style={{ background: "#f5f7fa" }}>
             <TableRow>
-              <TableCell>Date</TableCell>
+              <TableCell>Date & Time</TableCell>
               <TableCell>Prescription</TableCell>
               <TableCell>Amount</TableCell>
               <TableCell>Medicine</TableCell>
@@ -288,7 +315,7 @@ tableBody.push([
                     {index === 0 && (
                       <>
                         <TableCell rowSpan={v.medicines.length}>
-                          {v.date}
+                          {formatDateTime(v.date)}
                         </TableCell>
 
                         <TableCell rowSpan={v.medicines.length}>

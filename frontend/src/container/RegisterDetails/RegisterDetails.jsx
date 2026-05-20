@@ -300,7 +300,12 @@ function RegisterDetails() {
       setLoading(true);
 
       try {
-        await dispatch(register(values));
+        const result = await dispatch(register(values));
+        if (result.meta.requestStatus === "rejected") {
+          alert(result.payload || result.error?.message || "Registration failed!");
+          setLoading(false);
+          return;
+        }
         alert("✅ Registration successful!");
         resetForm();
       } catch (err) {

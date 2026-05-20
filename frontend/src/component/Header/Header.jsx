@@ -1,23 +1,35 @@
 import React from "react";
-import { NavLink, Route, Routes } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/slice/authenthication.slice";
 import { useEffect } from "react";
-import { getMyAppointment } from "../../redux/slice/appointment.slice";
+import {
+  clearMyAppointment,
+  getMyAppointment,
+} from "../../redux/slice/appointment.slice";
 
 function Header(props) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const authenthication = useSelector((state) => state.authenthication);
 
   console.log(authenthication);
 
   useEffect(() => {
-    dispatch(getMyAppointment());
-  }, []);
+    if (authenthication.patient) {
+      dispatch(getMyAppointment());
+    }
+  }, [authenthication.patient, dispatch]);
 
   const myApt = useSelector((state) => state.appointment);
 
   console.log(myApt.myAppointment);
+
+  const handleLogout = async () => {
+    await dispatch(logout());
+    dispatch(clearMyAppointment());
+    navigate("/");
+  };
 
   return (
     <header
@@ -60,7 +72,14 @@ function Header(props) {
                 <a href="#faq">Faq</a>
               </li>
               <li>
-                <a href="#con">
+                <a
+                  href="#con"
+                  onClick={() =>
+                    alert(
+                      "Contact us at +91 98765 43210 or visit our dental clinic during working hours."
+                    )
+                  }
+                >
                   Contact <i className="fa-sharp fa-solid fa-down" />
                 </a>
               </li>
@@ -71,7 +90,7 @@ function Header(props) {
 
               <li>
                 {authenthication.patient ? (
-                  <a onClick={() => dispatch(logout())}>Logout</a>
+                  <a onClick={handleLogout}>Logout</a>
                 ) : (
                   <NavLink to={"/login"}>Login</NavLink>
                 )}

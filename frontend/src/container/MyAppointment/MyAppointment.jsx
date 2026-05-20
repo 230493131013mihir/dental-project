@@ -168,7 +168,7 @@ import { getDepartment } from "../../redux/slice/department.slice";
 import { getTreatment } from "../../redux/slice/treatment.slice";
 import { getTimeslot } from "../../redux/slice/timeslot.slice";
 
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import IconButton from "@mui/material/IconButton";
 
@@ -185,6 +185,7 @@ function MyAppointment() {
   }, []);
 
   const myApt = useSelector((state) => state.appointment);
+  const authenthication = useSelector((state) => state.authenthication);
   const branch = useSelector((state) => state.branch);
   const department = useSelector((state) => state.department);
   const timeslot = useSelector((state) => state.timeslot);
@@ -192,6 +193,10 @@ function MyAppointment() {
   const sData = myApt.myAppointment
     ?.slice()
     .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  if (!authenthication.patient) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <div
@@ -350,13 +355,13 @@ function MyAppointment() {
                     ⏰{" "}
                     {
                       timeslot.timeslot?.find(
-                        (t) => t.user_id == v.time
+                        (t) => t.id == v.time
                       )?.starttime
                     }
                     -
                     {
                       timeslot.timeslot?.find(
-                        (t) => t.user_id == v.time
+                        (t) => t.id == v.time
                       )?.endtime
                     }
                   </span>

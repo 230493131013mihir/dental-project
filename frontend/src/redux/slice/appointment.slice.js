@@ -70,9 +70,17 @@ export const addTreatment = createAsyncThunk(
 export const appointmentSlice = createSlice({
   name: "appointment",
   initialState,
+  reducers: {
+    clearMyAppointment: (state) => {
+      state.myAppointment = [];
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(bookAppointment.fulfilled, (state, action) => {
+      if (action.payload) {
         state.appointment.push(action.payload);
+        state.myAppointment.push(action.payload);
+      }
     });
     builder.addCase(getMyAppointment.fulfilled, (state, action) => {
       state.myAppointment = action.payload;
@@ -87,5 +95,7 @@ export const appointmentSlice = createSlice({
     });
   },
 });
+
+export const { clearMyAppointment } = appointmentSlice.actions;
 
 export default appointmentSlice.reducer;

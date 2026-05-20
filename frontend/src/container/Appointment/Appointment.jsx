@@ -61,9 +61,14 @@ function Appointment(props) {
     },
 
     validationSchema: userschema,
-    onSubmit: (values, { resetForm }) => {
-      dispatch(bookAppointment(values));
-      resetForm();
+    onSubmit: async (values, { resetForm }) => {
+      const result = await dispatch(bookAppointment(values));
+
+      if (result.payload) {
+        alert("Your appointment is successfully booked");
+        resetForm();
+        navigate("/");
+      }
     },
   });
 
