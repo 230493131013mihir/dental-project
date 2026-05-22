@@ -33,6 +33,14 @@ const getDashboard = async (req, res) => {
       WHERE is_active = 1;
     `);
 
+    const [payments] = await pool.query(`
+      SELECT
+        COUNT(id) AS totalPayments,
+        SUM(amount) AS paymentRevenue
+      FROM payment
+      WHERE status = 'paid';
+    `);
+
     res.json({
       success: true,
       data: {
@@ -41,6 +49,8 @@ const getDashboard = async (req, res) => {
         totalMedicine: totalMedicine[0]?.totalMedicine || 0,
         totalRevenue: revenue[0]?.total_revenue || 0,
         medicineRevenue: medicineRevenue[0]?.medicine_revenue || 0,
+        totalPayments: payments[0]?.totalPayments || 0,
+        paymentRevenue: payments[0]?.paymentRevenue || 0,
       },
     });
 

@@ -42,9 +42,28 @@ export const login = createAsyncThunk("branch/login", async (data) => {
   }
 });
 
+export const staffLogin = createAsyncThunk("branch/staffLogin", async (data) => {
+  try {
+    const responce = await axios.post(
+      "http://localhost:3000/user/login",
+      data,
+    );
+
+    if (responce.data.data) {
+      localStorage.setItem("user_id", responce.data.data.id);
+      localStorage.setItem("auth_type", "staff");
+    }
+
+    return responce.data.data;
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 export const logout = createAsyncThunk("branch/logout", async (data) => {
   try {
     localStorage.removeItem("user_id");
+    localStorage.removeItem("auth_type");
     return null;
   } catch (error) {
     console.log(error);
@@ -60,6 +79,10 @@ export const authenthicationSlice = createSlice({
       state.patient = action.payload;
     });
     builder.addCase(login.fulfilled, (state, action) => {
+      console.log(action.payload);
+      state.patient = action.payload;
+    });
+    builder.addCase(staffLogin.fulfilled, (state, action) => {
       console.log(action.payload);
       state.patient = action.payload;
     });

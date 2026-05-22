@@ -213,10 +213,60 @@ const addTreatment = async (req, res) => {
       treatement_amount,
       medicines,
       appointment_id,
+      actor_user_id,
     } = req.body;
 
     if (!Array.isArray(medicines) || medicines.length === 0) {
       return res.status(400).json({ message: "Medicines must be a non-empty array" });
+    }
+
+    if (!appointment_id) {
+      return res.status(400).json({
+        success: false,
+        message: "Appointment is required",
+      });
+    }
+
+    if (!actor_user_id) {
+      return res.status(401).json({
+        success: false,
+        message: "Please login as staff before adding prescription",
+      });
+    }
+
+    const [[appointment]] = await connection.query(
+      "SELECT id, doctor_id FROM appointment WHERE id=?",
+      [appointment_id]
+    );
+
+    if (!appointment) {
+      return res.status(404).json({
+        success: false,
+        message: "Appointment not found",
+      });
+    }
+
+    const [[actor]] = await connection.query(
+      "SELECT id, role_id FROM user WHERE id=?",
+      [actor_user_id]
+    );
+
+    if (!actor) {
+      return res.status(401).json({
+        success: false,
+        message: "Please login as staff before adding prescription",
+      });
+    }
+
+    const isAdmin = actor.role_id === "Admin";
+    const isAssignedDoctor =
+      actor.role_id === "Doctor" && actor.id == appointment.doctor_id;
+
+    if (!isAdmin && !isAssignedDoctor) {
+      return res.status(403).json({
+        success: false,
+        message: "Only the assigned doctor can edit this prescription",
+      });
     }
 
     // 2. Start Transaction

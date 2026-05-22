@@ -90,6 +90,9 @@ function User(props) {
     qualification: string().required("Please Select qualification"),
     dob: date().required("Please Select date"),
     email: string().required("Please Select type"),
+    password: update
+      ? string()
+      : string().required("Please enter login password"),
     user_img: mixed().required("Please Select image"),
     salary: string().required("Please enter salary"),
   });
@@ -104,6 +107,7 @@ function User(props) {
       qualification: "",
       dob: "",
       email: "",
+      password: "",
       user_img: "",
       salary: "",
     },
@@ -211,6 +215,10 @@ function User(props) {
     {
       value: "",
       label: "-- Select role --",
+    },
+    {
+      value: "Admin",
+      label: "Admin",
     },
     {
       value: "Doctor",
@@ -371,6 +379,24 @@ function User(props) {
                 helperText={
                   formik.errors.email && formik.touched.email
                     ? formik.errors.email
+                    : ""
+                }
+              />
+              <TextField
+                error={formik.errors.password && formik.touched.password}
+                margin="dense"
+                id="password"
+                name="password"
+                label={update ? "New Password (optional)" : "Login Password"}
+                type="password"
+                fullWidth
+                variant="standard"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.password || ""}
+                helperText={
+                  formik.errors.password && formik.touched.password
+                    ? formik.errors.password
                     : ""
                 }
               />

@@ -7,6 +7,7 @@ import { useLocation } from "react-router-dom";
 import { getTreatment } from "../../../redux/slice/treatment.slice";
 import { getMyAppointment } from "../../../redux/slice/appointment.slice";
 import { getTimeslot } from "../../../redux/slice/timeslot.slice";
+import { getUser } from "../../../redux/slice/user.slice";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -16,6 +17,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
+import BadgeIcon from "@mui/icons-material/Badge";
 
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
@@ -33,12 +35,14 @@ function MyAppointmentEdit(props) {
     dispatch(getTreatment());
     dispatch(getMyAppointment());
     dispatch(getTimeslot());
+    dispatch(getUser());
   }, []);
 
   const medicineData = useSelector((state) => state.medicine);
   const treData = useSelector((state) => state.treatment);
   const appointmentData = useSelector((state) => state.appointment);
   const timeslotData = useSelector((state) => state.timeslot);
+  const userData = useSelector((state) => state.user);
 
   const fTreData = Array.isArray(treData.treatment)
     ? treData.treatment.filter((v) => v.appointment_id == appointment_id)
@@ -90,6 +94,10 @@ function MyAppointmentEdit(props) {
   const appointmentSlot = timeslotData.timeslot?.find(
     (slot) => slot.id == appointmentDetails?.time
   );
+  const assignedDoctor = userData.user?.find(
+    (user) => user.id == appointmentDetails?.doctor_id
+  );
+  const doctorName = assignedDoctor?.name || "Assigned Doctor";
 
   const formatDate = (date) => {
     if (!date) return "";
@@ -218,7 +226,7 @@ tableBody.push([
     },
 
     {
-      text: "Clinic Name • Doctor Name",
+      text: `Clinic Name - ${doctorName}`,
       style: "subTitle",
       margin: [0, 0, 0, 10],
     },
@@ -276,6 +284,22 @@ tableBody.push([
 
   return (
     <div className="container" style={{ marginTop: "120px" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "8px",
+          marginBottom: "20px",
+          color: "#0f172a",
+          fontWeight: "700",
+          fontSize: "18px",
+        }}
+      >
+        <BadgeIcon sx={{ color: "#0ea5e9" }} />
+        {doctorName}
+      </div>
+
       <TableContainer
         component={Paper}
         style={{
@@ -372,3 +396,4 @@ tableBody.push([
 }
 
 export default MyAppointmentEdit; 
+

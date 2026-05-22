@@ -167,10 +167,12 @@ import { getBranch } from "../../redux/slice/branch.slice";
 import { getDepartment } from "../../redux/slice/department.slice";
 import { getTreatment } from "../../redux/slice/treatment.slice";
 import { getTimeslot } from "../../redux/slice/timeslot.slice";
+import { getUser } from "../../redux/slice/user.slice";
 
 import { Navigate, useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import IconButton from "@mui/material/IconButton";
+import BadgeIcon from "@mui/icons-material/Badge";
 
 function MyAppointment() {
   const dispatch = useDispatch();
@@ -182,6 +184,7 @@ function MyAppointment() {
     dispatch(getDepartment());
     dispatch(getTreatment());
     dispatch(getTimeslot());
+    dispatch(getUser());
   }, []);
 
   const myApt = useSelector((state) => state.appointment);
@@ -189,6 +192,7 @@ function MyAppointment() {
   const branch = useSelector((state) => state.branch);
   const department = useSelector((state) => state.department);
   const timeslot = useSelector((state) => state.timeslot);
+  const user = useSelector((state) => state.user);
 
   const sData = myApt.myAppointment
     ?.slice()
@@ -327,6 +331,26 @@ function MyAppointment() {
                       (d) => d.id == v.department_id
                     )?.name
                   }
+                </p>
+
+                <p
+                  style={{
+                    margin: "6px 0",
+                    color: "#334155",
+                    fontSize: "15px",
+                    fontWeight: "600",
+                  }}
+                >
+                  <BadgeIcon
+                    sx={{
+                      fontSize: 17,
+                      color: "#0ea5e9",
+                      mr: 0.7,
+                      verticalAlign: "text-bottom",
+                    }}
+                  />
+                  {user.user?.find((doctor) => doctor.id == v.doctor_id)
+                    ?.name || "Doctor not assigned"}
                 </p>
 
                 {/* DIVIDER */}

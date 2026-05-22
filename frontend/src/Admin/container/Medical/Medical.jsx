@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addMedical,
@@ -24,22 +25,19 @@ import DialogContent from "@mui/material/DialogContent";
 import TextField from "@mui/material/TextField";
 import DialogActions from "@mui/material/DialogActions";
 import MenuItem from "@mui/material/MenuItem";
-import { QRCodeCanvas } from "qrcode.react";
+import Alert from "@mui/material/Alert";
 
 function Medical(props) {
   const [open, setOpen] = React.useState(false);
-  const [paymentOpen, setPaymentOpen] = useState(false);
+  const [paymentMessage, setPaymentMessage] = useState("");
+  const [paymentLoading, setPaymentLoading] = useState(false);
+  const [receipt, setReceipt] = useState(null);
   const [searchText, setSearchText] = useState("");
 
   const [update, setUpdate] = useState(false);
   console.log(update);
 
   const dispatch = useDispatch();
-  const upiId = "yourupiid@okaxis"; // 🔴 change this
-
-const getUpiLink = () => {
-  return `upi://pay?pa=${upiId}&pn=Clinic&am=${formik.values.medicine_amount}&cu=INR`;
-};
 
   useEffect(() => {
     dispatch(getMedical());
@@ -98,7 +96,10 @@ const getUpiLink = () => {
       medicine_quantity: "",
       medicine_amount: "",
       status: "",
-      payment_status: "",   
+      payment_status: "",
+      payment_method: "razorpay",
+      razorpay_order_id: "",
+      razorpay_payment_id: "",
     },
 
     validationSchema: userschema,
@@ -106,13 +107,13 @@ const getUpiLink = () => {
 onSubmit: async (values, { resetForm }) => {
   console.log(values);
 
-  // 🔥 ADD THIS AT TOP
+  // ?? ADD THIS AT TOP
   if (!values.payment_status) {
     alert("Please complete payment first");
     return;
   }
 
-  // ✅ YOUR EXISTING CODE (NO CHANGE)
+  // ? YOUR EXISTING CODE (NO CHANGE)
   if (update) {
     console.log("update data");
     await dispatch(updateMedical(values));
@@ -132,40 +133,167 @@ onSubmit: async (values, { resetForm }) => {
   console.log(formik.errors, formik.touched);
 
   console.log("qqqqq", formik.errors);
-  const handlePayment = async () => {
-  const amount = formik.values.medicine_amount;
+  const loadRazorpayScript = () =>
+    new Promise((resolve) => {
+      if (window.Razorpay) {
+        resolve(true);
+        return;
+      }
 
-  if (!amount) {
-    alert("Enter amount first");
-    return;
-  }
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
 
-  const options = {
-    key: "YOUR_RAZORPAY_KEY", // 🔴 replace with your key
-    amount: amount * 100,
-    currency: "INR",
-    name: "Clinic Payment",
-    description: "Medicine Payment",
-    handler: function (response) {
-      console.log("Payment Success:", response);
+  const buildReceipt = (payment) => ({
+    receiptNo: payment.receipt || payment.razorpay_order_id,
+    paymentId: payment.razorpay_payment_id,
+    patientName: formik.values.name,
+    phone: formik.values.phone,
+    amount: formik.values.medicine_amount,
+    method:
+      formik.values.payment_method === "cash"
+        ? "Cash"
+        : "Online - Razorpay",
+    date: new Date().toLocaleString(),
+    medicine:
+      medicine.medicine?.find((item) => item.id == formik.values.medicine_id)
+        ?.name || "",
+    quantity: formik.values.medicine_quantity,
+  });
 
-      formik.setFieldValue("payment_status", "paid");
+  const downloadReceipt = () => {
+    if (!receipt) return;
 
-      alert("Payment Successful ✅");
-    },
-    prefill: {
-      name: formik.values.name,
-      contact: formik.values.phone,
-    },
-    theme: {
-      color: "#1976d2",
-    },
+    const receiptHtml = `
+      <html>
+        <head>
+          <title>Payment Receipt</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 32px; color: #111827; }
+            .receipt { max-width: 560px; margin: 0 auto; border: 1px solid #d1d5db; padding: 24px; border-radius: 8px; }
+            h1 { margin: 0 0 8px; font-size: 24px; }
+            .muted { color: #6b7280; margin-bottom: 24px; }
+            .row { display: flex; justify-content: space-between; border-bottom: 1px solid #e5e7eb; padding: 10px 0; }
+            .total { font-size: 20px; font-weight: 700; }
+            .thanks { margin-top: 24px; font-weight: 700; color: #047857; }
+          </style>
+        </head>
+        <body>
+          <div class="receipt">
+            <h1>Dental Clinic</h1>
+            <div class="muted">Payment Receipt</div>
+            <div class="row"><span>Receipt No</span><strong>${receipt.receiptNo}</strong></div>
+            <div class="row"><span>Payment ID</span><strong>${receipt.paymentId}</strong></div>
+            <div class="row"><span>Patient</span><strong>${receipt.patientName}</strong></div>
+            <div class="row"><span>Phone</span><strong>${receipt.phone}</strong></div>
+            <div class="row"><span>Medicine</span><strong>${receipt.medicine}</strong></div>
+            <div class="row"><span>Quantity</span><strong>${receipt.quantity}</strong></div>
+            <div class="row"><span>Method</span><strong>${receipt.method}</strong></div>
+            <div class="row"><span>Date</span><strong>${receipt.date}</strong></div>
+            <div class="row total"><span>Total Paid</span><strong>₹${receipt.amount}</strong></div>
+            <div class="thanks">Thank you for your payment.</div>
+          </div>
+        </body>
+      </html>
+    `;
+
+    const blob = new Blob([receiptHtml], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `receipt-${receipt.receiptNo}.html`;
+    link.click();
+    URL.revokeObjectURL(url);
   };
 
-  const rzp = new window.Razorpay(options);
-  rzp.open();
-};
+  const handlePayment = async () => {
+    const amount = Number(formik.values.medicine_amount);
 
+    if (!amount) {
+      alert("Enter amount first");
+      return;
+    }
+
+    setPaymentLoading(true);
+    setPaymentMessage("");
+
+    try {
+      if (formik.values.payment_method === "cash") {
+        const offlineRes = await axios.post("http://localhost:3000/payment/offline", {
+          amount,
+          name: formik.values.name,
+          phone: formik.values.phone,
+          purpose: "Medicine payment",
+          method: "Cash",
+        });
+
+        const payment = offlineRes.data.data;
+        formik.setFieldValue("payment_status", "paid");
+        formik.setFieldValue("razorpay_order_id", payment.razorpay_order_id);
+        formik.setFieldValue("razorpay_payment_id", payment.razorpay_payment_id);
+        setReceipt(buildReceipt(payment));
+        setPaymentMessage("Thank you. Cash payment recorded successfully.");
+        return;
+      }
+
+      const isLoaded = await loadRazorpayScript();
+
+      if (!isLoaded) {
+        alert("Razorpay checkout failed to load. Please try again.");
+        return;
+      }
+
+      const orderRes = await axios.post("http://localhost:3000/payment/createOrder", {
+        amount,
+        name: formik.values.name,
+        phone: formik.values.phone,
+        purpose: "Medicine payment",
+      });
+
+      const { key_id, order } = orderRes.data.data;
+
+      const options = {
+        key: key_id,
+        amount: order.amount,
+        currency: order.currency,
+        name: "Dental Clinic",
+        description: "Medicine Payment",
+        order_id: order.id,
+        handler: async (response) => {
+          const verifyRes = await axios.post(
+            "http://localhost:3000/payment/verify",
+            response,
+          );
+
+          if (verifyRes.data.success) {
+            const payment = verifyRes.data.data;
+            formik.setFieldValue("payment_status", "paid");
+            formik.setFieldValue("razorpay_order_id", response.razorpay_order_id);
+            formik.setFieldValue("razorpay_payment_id", response.razorpay_payment_id);
+            setReceipt(buildReceipt(payment));
+            setPaymentMessage("Thank you. Payment verified successfully.");
+          }
+        },
+        prefill: {
+          name: formik.values.name,
+          contact: formik.values.phone,
+        },
+        theme: {
+          color: "#1976d2",
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (error) {
+      alert(error.response?.data?.message || "Payment failed. Please try again.");
+    } finally {
+      setPaymentLoading(false);
+    }
+  };
   const columns = [
     {
       field: "appointment_id",
@@ -437,7 +565,7 @@ onSubmit: async (values, { resetForm }) => {
                     {selectedMedicine.stock - selectedMedicine.sell_qty}
                   </p>
                   <p>
-                    <b>Amount/pill:</b> ₹{selectedMedicine.price}
+                    <b>Amount/pill:</b> ?{selectedMedicine.price}
                   </p>
                 </div>
               )}
@@ -485,12 +613,33 @@ onSubmit: async (values, { resetForm }) => {
                     : ""
                 }
               />
+              {paymentMessage && (
+                <Alert severity="success" style={{ marginTop: "12px" }}>
+                  {paymentMessage}
+                </Alert>
+              )}
+              <TextField
+                id="payment_method"
+                name="payment_method"
+                fullWidth
+                select
+                variant="standard"
+                label="Payment Method"
+                value={formik.values.payment_method}
+                onChange={formik.handleChange}
+                style={{ marginTop: "12px" }}
+              >
+                <MenuItem value="razorpay">
+                  Online: Card / UPI / Netbanking / Wallet
+                </MenuItem>
+                <MenuItem value="cash">Cash at counter</MenuItem>
+              </TextField>
   <Button
   variant="contained"
   color="success"
-  onClick={() => setPaymentOpen(true)}
+  onClick={handlePayment} disabled={paymentLoading || formik.values.payment_status === "paid"}
 >
-  PAY VIA UPI
+  {formik.values.payment_method === "cash" ? "Record Cash Payment" : "Pay Online"}
 </Button>
               <TextField
                 error={formik.errors.status && formik.touched.status}
@@ -524,9 +673,15 @@ onSubmit: async (values, { resetForm }) => {
   variant="contained"
   color="success"
   onClick={handlePayment}
+  disabled={paymentLoading || formik.values.payment_status === "paid"}
 >
-  Pay via UPI
+  {formik.values.payment_status === "paid" ? "Payment Done" : "Pay with Razorpay"}
 </Button>
+            {receipt && (
+              <Button variant="outlined" onClick={downloadReceipt}>
+                Download Receipt
+              </Button>
+            )}
             <Button onClick={handleClose}>Cancel</Button>
             <Button type="submit" form="medical-form">
               Submit
@@ -534,33 +689,6 @@ onSubmit: async (values, { resetForm }) => {
           </DialogActions>
         </Dialog>
       </React.Fragment>
-      <Dialog open={paymentOpen} onClose={() => setPaymentOpen(false)}>
-  <DialogContent style={{ textAlign: "center" }}>
-    <h3>Scan & Pay</h3>
-
-    <QRCodeCanvas
-      value={getUpiLink()}
-      size={200}
-    />
-
-    <p>Amount: ₹{formik.values.medicine_amount}</p>
-    <p>UPI ID: {upiId}</p>
-
-    <Button
-      variant="contained"
-      color="success"
-      sx={{ mt: 2 }}
-      onClick={() => {
-        formik.setFieldValue("payment_status", "paid");
-        setPaymentOpen(false);
-        alert("Payment marked as Paid ✅");
-      }}
-    >
-      I Have Paid
-    </Button>
-  </DialogContent>
-</Dialog>
-
       <DataGrid
         rows={filteredRows}
         columns={columns}

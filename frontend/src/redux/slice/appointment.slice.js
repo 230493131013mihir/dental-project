@@ -57,7 +57,7 @@ export const addTreatment = createAsyncThunk(
     try {
       const responce = await axios.post(
         "http://localhost:3000/appointment/addTreatment",
-        values,
+        { ...values, actor_user_id: localStorage.getItem("user_id") },
       );
 
       return responce.data.data;

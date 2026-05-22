@@ -30,6 +30,7 @@ export const addUser = createAsyncThunk(
       formData.append("name", values.name);
       formData.append("dob", values.dob);
       formData.append("email", values.email);
+      formData.append("password", values.password || "");
       formData.append("qualification", values.qualification);
       formData.append("address", values.address);
        formData.append("salary", values.salary);
@@ -57,6 +58,7 @@ export const updateUser = createAsyncThunk(
       formData.append("name", values.name);
       formData.append("dob", values.dob);
       formData.append("email", values.email);
+      formData.append("password", values.password || "");
       formData.append("qualification", values.qualification);
       formData.append("address", values.address);
        formData.append("salary", values.salary);

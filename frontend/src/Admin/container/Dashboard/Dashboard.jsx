@@ -1,11 +1,13 @@
 import React, { useEffect } from "react";
-import { Card, CardContent, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, Typography } from "@mui/material";
 import PeopleIcon from "@mui/icons-material/People";
 import EventIcon from "@mui/icons-material/Event";
 import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
+import PaymentsIcon from "@mui/icons-material/Payments";
 import { useDispatch, useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
+import { useNavigate } from "react-router-dom";
 
 import {
   PieChart,
@@ -28,6 +30,7 @@ import {
 
 const Dashboard = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(fetchDashboard());
@@ -86,6 +89,18 @@ const Dashboard = () => {
       icon: <CurrencyRupeeIcon />,
       color: "#d32f2f",
     },
+    {
+      title: "Paid Payments",
+      value: dashboard?.dashboard?.totalPayments || 0,
+      icon: <PaymentsIcon />,
+      color: "#00897b",
+    },
+    {
+      title: "Payment Revenue",
+      value: `₹${dashboard?.dashboard?.paymentRevenue || 0}`,
+      icon: <CurrencyRupeeIcon />,
+      color: "#5e35b1",
+    },
   ];
 
   const COLORS = ["#1976d2", "#2e7d32", "#ed6c02"];
@@ -143,7 +158,14 @@ const Dashboard = () => {
   const pieData = dashboard?.branchRevenue?.map(item => ({
   name: item.branch_name,
   value: Number(item.total_amount) // convert to number
-}));
+})) || [];
+
+  const quickActions = [
+    { label: "Appointments", to: "/admin/appointment" },
+    { label: "Medical Payments", to: "/admin/medical" },
+    { label: "Patients", to: "/admin/patient" },
+    { label: "Users", to: "/admin/user" },
+  ];
 
   return (
     <div style={{ padding: "20px", minHeight: "100vh", background: "#f4f6f8" }}>
@@ -152,13 +174,25 @@ const Dashboard = () => {
         variant="h5"
         style={{ fontWeight: 700, marginBottom: "20px" }}
       >
-        Dashboard Overview
+        Admin Dashboard
       </Typography>
 
+      <Box sx={{ display: "flex", gap: 1.5, flexWrap: "wrap", mb: 3 }}>
+        {quickActions.map((action) => (
+          <Button
+            key={action.to}
+            variant="outlined"
+            onClick={() => navigate(action.to)}
+          >
+            {action.label}
+          </Button>
+        ))}
+      </Box>
+
       {/* STATS CARDS */}
-      <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: "20px" }}>
         {stats.map((item, i) => (
-          <div key={i} style={{ minWidth: "200px", flex: 1 }}>
+          <div key={i}>
             <Card
               style={cardStyle}
               onMouseEnter={(e) => hoverEffect(e, true)}

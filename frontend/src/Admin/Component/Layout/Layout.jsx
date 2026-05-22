@@ -7,6 +7,7 @@ import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
 import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -28,7 +29,11 @@ import ImportExportIcon from "@mui/icons-material/ImportExport";
 import CleaningServicesIcon from "@mui/icons-material/CleaningServices";
 import PersonIcon from "@mui/icons-material/Person";
 import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import LogoutIcon from "@mui/icons-material/Logout";
+import { useDispatch } from "react-redux";
+import { logout } from "../../../redux/slice/authenthication.slice";
 
 const drawerWidth = 240;
 
@@ -113,6 +118,8 @@ const Drawer = styled(MuiDrawer, {
 export default function Layout({ children }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -120,6 +127,11 @@ export default function Layout({ children }) {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const handleLogout = async () => {
+    await dispatch(logout());
+    navigate("/admin/login");
   };
 
   const alllinks = [
@@ -174,6 +186,10 @@ export default function Layout({ children }) {
           <Typography variant="h6" noWrap component="div">
             Dental Clinic
           </Typography>
+          <Box sx={{ flexGrow: 1 }} />
+          <Button color="inherit" startIcon={<LogoutIcon />} onClick={handleLogout}>
+            Logout
+          </Button>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>

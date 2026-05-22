@@ -1,9 +1,41 @@
 const pool = require("../db/mysql");
 const fs = require("fs");
+const crypto = require("crypto");
+
+const hashPassword = (password) => {
+  const salt = crypto.randomBytes(16).toString("hex");
+  const hash = crypto.scryptSync(password, salt, 64).toString("hex");
+  return `scrypt:${salt}:${hash}`;
+};
+
+const verifyPassword = (password, storedPassword) => {
+  if (!storedPassword) return false;
+
+  if (!storedPassword.startsWith("scrypt:")) {
+    return storedPassword === password;
+  }
+
+  const [, salt, hash] = storedPassword.split(":");
+  const passwordHash = crypto.scryptSync(password, salt, 64);
+  const storedHash = Buffer.from(hash, "hex");
+
+  return (
+    storedHash.length === passwordHash.length &&
+    crypto.timingSafeEqual(storedHash, passwordHash)
+  );
+};
+
+const removePassword = (user) => {
+  if (!user) return user;
+  const { password, ...safeUser } = user;
+  return safeUser;
+};
 
 const getUser = async (req, res) => {
   try {
-    const [rows] = await pool.query("SELECT * FROM user");
+    const [rows] = await pool.query(
+      "SELECT id, branch_id, department_id, role_id, name, dob, email, qualification, address, salary, user_img, is_active, created_at, updated_at FROM user"
+    );
 
     console.log(rows);
     res.status(200).json({
@@ -32,6 +64,7 @@ const addUser = async (req, res) => {
       name,
       dob,
       email,
+      password,
       qualification,
       address,
       salary,
@@ -39,8 +72,10 @@ const addUser = async (req, res) => {
 
     console.log(req.file);
 
+    const hashedPassword = hashPassword(password || "123456");
+
     const [rows] = await pool.query(
-      "INSERT INTO user(branch_id,department_id,role_id,name,dob,email,qualification,address,salary,user_img) VALUES(?,?,?,?,?,?,?,?,?,?)",
+      "INSERT INTO user(branch_id,department_id,role_id,name,dob,email,password,qualification,address,salary,user_img) VALUES(?,?,?,?,?,?,?,?,?,?,?)",
       [
         branch_id,
         department_id,
@@ -48,6 +83,7 @@ const addUser = async (req, res) => {
         name,
         dob,
         email,
+        hashedPassword,
         qualification,
         address,
         salary,
@@ -83,6 +119,7 @@ const updateUser = async (req, res) => {
       name,
       dob,
       email,
+      password,
       qualification,
       address,
       salary,
@@ -116,22 +153,28 @@ const updateUser = async (req, res) => {
                 fileImg = rows[0].user_img;
               }
 
-    await pool.query(
-      "UPDATE user SET branch_id=?,department_id=?,role_id=?,name=?,dob=?,email=?,qualification=?,address=?,salary=?,user_img=? WHERE id=?",
-      [
+    const values = [
         branch_id,
         department_id,
         role_id,
         name,
         dob,
         email,
-        qualification,
-        address,
-        salary,
-        fileImg,
-        userId,
-      ]
-    );
+    ];
+
+    let updateQuery =
+      "UPDATE user SET branch_id=?,department_id=?,role_id=?,name=?,dob=?,email=?";
+
+    if (password) {
+      updateQuery += ",password=?";
+      values.push(hashPassword(password));
+    }
+
+    updateQuery +=
+      ",qualification=?,address=?,salary=?,user_img=? WHERE id=?";
+    values.push(qualification, address, salary, fileImg, userId);
+
+    await pool.query(updateQuery, values);
 
     res.status(200).json({
       success: true,
@@ -193,9 +236,49 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const [rows] = await pool.query("SELECT * FROM user WHERE email=?", [
+      email,
+    ]);
+    const user = rows.find((item) => verifyPassword(password, item.password));
+
+    if (!user) {
+      return res.status(200).json({
+        success: false,
+        data: null,
+        message: "Email/password wrong.",
+      });
+    }
+
+    if (!user.password.startsWith("scrypt:")) {
+      await pool.query("UPDATE user SET password=? WHERE id=?", [
+        hashPassword(password),
+        user.id,
+      ]);
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: removePassword(user),
+      message: "Login successfully.",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      data: null,
+      message: "Login failed " + error.message,
+    });
+  }
+};
+
 module.exports = {
   getUser,
   addUser,
   updateUser,
   deleteUser,
+  login,
 };

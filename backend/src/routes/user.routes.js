@@ -1,6 +1,6 @@
 
 const express = require('express')
-const { addUser, getUser, updateUser, deleteUser } = require('../controller/user.controller')
+const { addUser, getUser, updateUser, deleteUser, login } = require('../controller/user.controller')
 const upload = require('../middleware/upload')
 const router = express.Router()
 
@@ -9,6 +9,7 @@ const router = express.Router()
 router.get('/getUser', getUser)
 
 // POST
+router.post('/login', login)
 router.post('/addUser',upload.single('user_img'), addUser)
 
 // PUT (Update)

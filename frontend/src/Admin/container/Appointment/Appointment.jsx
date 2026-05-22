@@ -20,8 +20,10 @@ import { getBranch } from "../../../redux/slice/branch.slice";
 import { getDepartment } from "../../../redux/slice/department.slice";
 import { getUser } from "../../../redux/slice/user.slice";
 import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import LockIcon from "@mui/icons-material/Lock";
 import { useNavigate } from "react-router-dom";
 import { getPatients } from "../../../redux/slice/patient.slice";
 import { getTimeslot } from "../../../redux/slice/timeslot.slice";
@@ -69,6 +71,10 @@ function Appointment(props) {
 
   const user = useSelector((state) => state.user);
   const patientdata = useSelector((state) => state.patient);
+  const authenthication = useSelector((state) => state.authenthication);
+  const loggedUser = authenthication.patient;
+  const loggedUserIsAdmin = loggedUser?.role_id == "Admin";
+  const loggedUserIsDoctor = loggedUser?.role_id == "Doctor";
 
   console.log(patientdata.patient);
   console.log(user.user);
@@ -193,8 +199,14 @@ function Appointment(props) {
       field: "action",
       headerName: "Action",
       width: 130,
-      renderCell: (params) => (
+      renderCell: (params) => {
+        const canEdit =
+          loggedUserIsAdmin ||
+          (loggedUserIsDoctor && loggedUser?.id == params.row.doctor_id);
+
+        return (
         <>
+          {canEdit ? (
           <IconButton
             aria-label="Edit"
             onClick={() =>
@@ -205,8 +217,18 @@ function Appointment(props) {
           >
             <ModeEditIcon />
           </IconButton>
+          ) : (
+            <Tooltip title="Only the assigned doctor can edit this prescription">
+              <span>
+                <IconButton aria-label="Locked" disabled>
+                  <LockIcon />
+                </IconButton>
+              </span>
+            </Tooltip>
+          )}
         </>
-      ),
+        );
+      },
     },
   ];
 

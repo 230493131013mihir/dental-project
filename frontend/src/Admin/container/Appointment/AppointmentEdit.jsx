@@ -6,8 +6,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { date, object, string, array } from "yup";
 import { getMedicine } from "../../../redux/slice/medicine.slice";
 import { useLocation } from "react-router-dom";
-import { addTreatment } from "../../../redux/slice/appointment.slice";
+import { addTreatment, getAppointment } from "../../../redux/slice/appointment.slice";
 import { getTreatment } from "../../../redux/slice/treatment.slice";
+import { getUser } from "../../../redux/slice/user.slice";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -16,10 +17,12 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import Alert from "@mui/material/Alert";
+import BadgeIcon from "@mui/icons-material/Badge";
 
 function AppointmentEdit() {
   const { state } = useLocation();
-  const { appointment_id } = state;
+  const appointment_id = state?.appointment_id;
 
   console.log("appointment_id:", appointment_id);
 
@@ -28,10 +31,28 @@ function AppointmentEdit() {
   useEffect(() => {
     dispatch(getMedicine());
     dispatch(getTreatment());
+    dispatch(getAppointment());
+    dispatch(getUser());
   }, []);
 
   const medicineData = useSelector((state) => state.medicine);
   const treData = useSelector((state) => state.treatment);
+  const appointmentData = useSelector((state) => state.appointment);
+  const userData = useSelector((state) => state.user);
+  const authenthication = useSelector((state) => state.authenthication);
+
+  const appointmentDetails = appointmentData.appointment?.find(
+    (appointment) => appointment.id == appointment_id,
+  );
+  const assignedDoctor = userData.user?.find(
+    (user) => user.id == appointmentDetails?.doctor_id,
+  );
+  const loggedUser = authenthication.patient;
+  const loggedUserIsAdmin = loggedUser?.role_id == "Admin";
+  const loggedUserIsDoctor = loggedUser?.role_id == "Doctor";
+  const canEditPrescription =
+    loggedUserIsAdmin ||
+    (appointmentDetails && loggedUser?.id == appointmentDetails.doctor_id);
 
   console.log(medicineData);
 
@@ -97,6 +118,15 @@ function AppointmentEdit() {
     0,
   );
 
+  if (!appointment_id) {
+    return (
+      <Alert severity="error" style={{ margin: "30px auto", maxWidth: 900 }}>
+        Appointment details were not found. Please open this page from the
+        appointment list.
+      </Alert>
+    );
+  }
+
   return (
     <div
       style={{
@@ -118,6 +148,28 @@ function AppointmentEdit() {
         Treatment
       </h2>
 
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "8px",
+          marginBottom: "18px",
+          color: "#0f172a",
+          fontWeight: "700",
+        }}
+      >
+        <BadgeIcon sx={{ color: "#0ea5e9" }} />
+        {assignedDoctor?.name || "Assigned doctor"}
+      </div>
+
+      {!canEditPrescription && (
+        <Alert severity="warning" style={{ marginBottom: "18px" }}>
+          Only Dr. {assignedDoctor?.name || "the assigned doctor"} can edit this
+          prescription.
+        </Alert>
+      )}
+
       <Formik
         initialValues={{
           date: "",
@@ -133,6 +185,10 @@ function AppointmentEdit() {
         }}
         validationSchema={userschema}
         onSubmit={(values, { resetForm }) => {
+          if (!canEditPrescription) {
+            return;
+          }
+
           const finalData = {
             ...values,
             appointment_id: appointment_id,
@@ -163,6 +219,7 @@ function AppointmentEdit() {
                 <TextField
                   type="date"
                   name="date"
+                  disabled={!canEditPrescription}
                   variant="standard"
                   style={{
                     width: "100%",
@@ -180,6 +237,7 @@ function AppointmentEdit() {
                 <TextField
                   name="prescription"
                   label="Treatment Prescription"
+                  disabled={!canEditPrescription}
                   multiline
                   rows={6}
                   variant="standard"
@@ -203,6 +261,7 @@ function AppointmentEdit() {
                   name="treatement_amount"
                   label="Treatment Amount"
                   type="number"
+                  disabled={!canEditPrescription}
                   variant="standard"
                   style={{
                     width: "100%",
@@ -241,6 +300,7 @@ function AppointmentEdit() {
                           <TextField
                             select
                             name={`medicines[${index}].medicine_id`}
+                            disabled={!canEditPrescription}
                             value={med.medicine_id}
                             onChange={handleChange}
                             variant="standard"
@@ -262,6 +322,7 @@ function AppointmentEdit() {
                             type="number"
                             label="Medicine Amount"
                             name={`medicines[${index}].medicine_amount`}
+                            disabled={!canEditPrescription}
                             value={med.medicine_amount}
                             onChange={handleChange}
                             variant="standard"
@@ -275,6 +336,7 @@ function AppointmentEdit() {
                             type="number"
                             label="Medicine Quantity"
                             name={`medicines[${index}].medicine_quantity`}
+                            disabled={!canEditPrescription}
                             value={med.medicine_quantity}
                             onChange={handleChange}
                             variant="standard"
@@ -290,6 +352,7 @@ function AppointmentEdit() {
                           >
                             <Button
                               type="button"
+                              disabled={!canEditPrescription}
                               onClick={() =>
                                 push({
                                   medicine_id: "",
@@ -312,6 +375,7 @@ function AppointmentEdit() {
                             {values.medicines.length > 1 && (
                               <Button
                                 type="button"
+                                disabled={!canEditPrescription}
                                 onClick={() => remove(index)}
                                 style={{
                                   minWidth: "40px",
@@ -336,6 +400,7 @@ function AppointmentEdit() {
 
             <Button
               type="submit"
+              disabled={!canEditPrescription}
               style={{
                 marginTop: "20px",
                 padding: "10px 25px",
