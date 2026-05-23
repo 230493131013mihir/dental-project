@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addMedical,
@@ -31,6 +30,10 @@ function Medical(props) {
   const [open, setOpen] = React.useState(false);
   const [paymentMessage, setPaymentMessage] = useState("");
   const [paymentLoading, setPaymentLoading] = useState(false);
+  const [demoPayment, setDemoPayment] = useState(null);
+  const [demoOtp, setDemoOtp] = useState("");
+  const [enteredOtp, setEnteredOtp] = useState("");
+  const [otpError, setOtpError] = useState("");
   const [receipt, setReceipt] = useState(null);
   const [searchText, setSearchText] = useState("");
 
@@ -65,6 +68,10 @@ function Medical(props) {
   const handleClose = () => {
     setOpen(false);
     setUpdate(false);
+    setDemoPayment(null);
+    setDemoOtp("");
+    setEnteredOtp("");
+    setOtpError("");
   };
 
   const handleEdit = (values) => {
@@ -97,7 +104,7 @@ function Medical(props) {
       medicine_amount: "",
       status: "",
       payment_status: "",
-      payment_method: "razorpay",
+      payment_method: "demo_upi",
       razorpay_order_id: "",
       razorpay_payment_id: "",
     },
@@ -133,20 +140,6 @@ onSubmit: async (values, { resetForm }) => {
   console.log(formik.errors, formik.touched);
 
   console.log("qqqqq", formik.errors);
-  const loadRazorpayScript = () =>
-    new Promise((resolve) => {
-      if (window.Razorpay) {
-        resolve(true);
-        return;
-      }
-
-      const script = document.createElement("script");
-      script.src = "https://checkout.razorpay.com/v1/checkout.js";
-      script.onload = () => resolve(true);
-      script.onerror = () => resolve(false);
-      document.body.appendChild(script);
-    });
-
   const buildReceipt = (payment) => ({
     receiptNo: payment.receipt || payment.razorpay_order_id,
     paymentId: payment.razorpay_payment_id,
@@ -154,9 +147,7 @@ onSubmit: async (values, { resetForm }) => {
     phone: formik.values.phone,
     amount: formik.values.medicine_amount,
     method:
-      formik.values.payment_method === "cash"
-        ? "Cash"
-        : "Online - Razorpay",
+      formik.values.payment_method === "demo_cash" ? "Demo Cash" : "Demo UPI",
     date: new Date().toLocaleString(),
     medicine:
       medicine.medicine?.find((item) => item.id == formik.values.medicine_id)
@@ -217,82 +208,56 @@ onSubmit: async (values, { resetForm }) => {
       return;
     }
 
-    setPaymentLoading(true);
+    const timestamp = Date.now();
+    const otp = String(Math.floor(100000 + Math.random() * 900000));
+    const orderId = `DEMO-MED-ORDER-${timestamp}`;
+    const paymentId = `DEMO-MED-PAY-${timestamp}`;
+
+    setDemoOtp(otp);
+    setEnteredOtp("");
+    setOtpError("");
+    setDemoPayment({
+      amount,
+      receipt: orderId,
+      razorpay_order_id: orderId,
+      razorpay_payment_id: paymentId,
+    });
     setPaymentMessage("");
+  };
 
-    try {
-      if (formik.values.payment_method === "cash") {
-        const offlineRes = await axios.post("http://localhost:3000/payment/offline", {
-          amount,
-          name: formik.values.name,
-          phone: formik.values.phone,
-          purpose: "Medicine payment",
-          method: "Cash",
-        });
-
-        const payment = offlineRes.data.data;
-        formik.setFieldValue("payment_status", "paid");
-        formik.setFieldValue("razorpay_order_id", payment.razorpay_order_id);
-        formik.setFieldValue("razorpay_payment_id", payment.razorpay_payment_id);
-        setReceipt(buildReceipt(payment));
-        setPaymentMessage("Thank you. Cash payment recorded successfully.");
-        return;
-      }
-
-      const isLoaded = await loadRazorpayScript();
-
-      if (!isLoaded) {
-        alert("Razorpay checkout failed to load. Please try again.");
-        return;
-      }
-
-      const orderRes = await axios.post("http://localhost:3000/payment/createOrder", {
-        amount,
-        name: formik.values.name,
-        phone: formik.values.phone,
-        purpose: "Medicine payment",
-      });
-
-      const { key_id, order } = orderRes.data.data;
-
-      const options = {
-        key: key_id,
-        amount: order.amount,
-        currency: order.currency,
-        name: "Dental Clinic",
-        description: "Medicine Payment",
-        order_id: order.id,
-        handler: async (response) => {
-          const verifyRes = await axios.post(
-            "http://localhost:3000/payment/verify",
-            response,
-          );
-
-          if (verifyRes.data.success) {
-            const payment = verifyRes.data.data;
-            formik.setFieldValue("payment_status", "paid");
-            formik.setFieldValue("razorpay_order_id", response.razorpay_order_id);
-            formik.setFieldValue("razorpay_payment_id", response.razorpay_payment_id);
-            setReceipt(buildReceipt(payment));
-            setPaymentMessage("Thank you. Payment verified successfully.");
-          }
-        },
-        prefill: {
-          name: formik.values.name,
-          contact: formik.values.phone,
-        },
-        theme: {
-          color: "#1976d2",
-        },
-      };
-
-      const rzp = new window.Razorpay(options);
-      rzp.open();
-    } catch (error) {
-      alert(error.response?.data?.message || "Payment failed. Please try again.");
-    } finally {
-      setPaymentLoading(false);
+  const verifyDemoPayment = () => {
+    if (enteredOtp !== demoOtp) {
+      setOtpError("Invalid demo OTP. Please enter the OTP shown above.");
+      return;
     }
+
+    setPaymentLoading(true);
+    formik.setFieldValue("payment_status", "paid");
+    formik.setFieldValue("razorpay_order_id", demoPayment.razorpay_order_id);
+    formik.setFieldValue("razorpay_payment_id", demoPayment.razorpay_payment_id);
+    setReceipt(buildReceipt(demoPayment));
+    setPaymentMessage("Thank you. Demo medicine payment verified successfully.");
+    setDemoPayment(null);
+    setPaymentLoading(false);
+  };
+
+  const buildSmsMessage = () => {
+    const medicineName =
+      medicine.medicine?.find((item) => item.id == formik.values.medicine_id)
+        ?.name || "your medicine";
+
+    return `Good day ${formik.values.name}. Your medicine payment of Rs. ${formik.values.medicine_amount} for ${medicineName} has been verified successfully. Thank you for visiting Dental Clinic. We wish you a healthy smile.`;
+  };
+
+  const openSmsComposer = () => {
+    if (!formik.values.phone) {
+      alert("Patient phone number is missing.");
+      return;
+    }
+
+    window.location.href = `sms:${formik.values.phone}?body=${encodeURIComponent(
+      buildSmsMessage()
+    )}`;
   };
   const columns = [
     {
@@ -442,7 +407,7 @@ onSubmit: async (values, { resetForm }) => {
       />
 
       <React.Fragment>
-        <Dialog open={open} onClose={handleClose}>
+        <Dialog open={open} onClose={handleClose} disableEnforceFocus>
           <DialogContent>
             <form onSubmit={formik.handleSubmit} id="medical-form">
               <TextField
@@ -618,6 +583,16 @@ onSubmit: async (values, { resetForm }) => {
                   {paymentMessage}
                 </Alert>
               )}
+              {formik.values.payment_status === "paid" && (
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={openSmsComposer}
+                  style={{ marginTop: "12px", marginRight: "10px" }}
+                >
+                  Send Good Day SMS
+                </Button>
+              )}
               <TextField
                 id="payment_method"
                 name="payment_method"
@@ -629,17 +604,15 @@ onSubmit: async (values, { resetForm }) => {
                 onChange={formik.handleChange}
                 style={{ marginTop: "12px" }}
               >
-                <MenuItem value="razorpay">
-                  Online: Card / UPI / Netbanking / Wallet
-                </MenuItem>
-                <MenuItem value="cash">Cash at counter</MenuItem>
+                <MenuItem value="demo_upi">Demo UPI payment</MenuItem>
+                <MenuItem value="demo_cash">Demo cash payment</MenuItem>
               </TextField>
   <Button
   variant="contained"
   color="success"
   onClick={handlePayment} disabled={paymentLoading || formik.values.payment_status === "paid"}
 >
-  {formik.values.payment_method === "cash" ? "Record Cash Payment" : "Pay Online"}
+  {formik.values.payment_status === "paid" ? "Payment Done" : "Demo Pay"}
 </Button>
               <TextField
                 error={formik.errors.status && formik.touched.status}
@@ -675,7 +648,7 @@ onSubmit: async (values, { resetForm }) => {
   onClick={handlePayment}
   disabled={paymentLoading || formik.values.payment_status === "paid"}
 >
-  {formik.values.payment_status === "paid" ? "Payment Done" : "Pay with Razorpay"}
+  {formik.values.payment_status === "paid" ? "Payment Done" : "Verify Demo Payment"}
 </Button>
             {receipt && (
               <Button variant="outlined" onClick={downloadReceipt}>
@@ -697,8 +670,183 @@ onSubmit: async (values, { resetForm }) => {
         checkboxSelection
         sx={{ border: 0 }}
       />
+      {demoPayment && (
+        <div style={modalBackdropStyle}>
+          <div style={modalStyle}>
+            <div style={demoBadgeStyle}>Demo only</div>
+            <h3 style={modalTitleStyle}>Verify Medical Payment</h3>
+            <p style={modalTextStyle}>
+              This is a fake medicine payment flow. No real money is charged
+              and no payment details are collected.
+            </p>
+
+            <div style={summaryStyle}>
+              <span>Medicine amount</span>
+              <strong>Rs. {demoPayment.amount}</strong>
+            </div>
+            <div style={summaryStyle}>
+              <span>Method</span>
+              <strong>
+                {formik.values.payment_method === "demo_cash"
+                  ? "Demo Cash"
+                  : "Demo UPI"}
+              </strong>
+            </div>
+            <div style={otpBoxStyle}>
+              <span>Demo OTP</span>
+              <strong>{demoOtp}</strong>
+            </div>
+
+            <input
+              type="text"
+              inputMode="numeric"
+              maxLength="6"
+              placeholder="Enter OTP"
+              autoFocus
+              value={enteredOtp}
+              onChange={(e) => {
+                setEnteredOtp(e.target.value.replace(/\D/g, ""));
+                setOtpError("");
+              }}
+              style={otpInputStyle}
+            />
+            {otpError && <span style={otpErrorStyle}>{otpError}</span>}
+
+            <div style={modalActionsStyle}>
+              <button
+                type="button"
+                onClick={() => {
+                  setDemoPayment(null);
+                  setDemoOtp("");
+                  setEnteredOtp("");
+                  setOtpError("");
+                }}
+                style={cancelButtonStyle}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={paymentLoading}
+                onClick={verifyDemoPayment}
+                style={{
+                  ...verifyButtonStyle,
+                  opacity: paymentLoading ? 0.75 : 1,
+                }}
+              >
+                {paymentLoading ? "Verifying..." : "Verify OTP"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
+const modalBackdropStyle = {
+  position: "fixed",
+  inset: 0,
+  background: "rgba(15, 23, 42, 0.62)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  padding: "20px",
+  zIndex: 9999,
+};
+
+const modalStyle = {
+  width: "min(100%, 460px)",
+  background: "#ffffff",
+  borderRadius: "16px",
+  padding: "28px",
+  boxShadow: "0 24px 70px rgba(15, 23, 42, 0.28)",
+};
+
+const demoBadgeStyle = {
+  display: "inline-flex",
+  padding: "6px 12px",
+  borderRadius: "999px",
+  background: "#dcfce7",
+  color: "#166534",
+  fontSize: "13px",
+  fontWeight: 700,
+  marginBottom: "14px",
+};
+
+const modalTitleStyle = {
+  margin: "0 0 10px",
+  color: "#0f172a",
+  fontSize: "26px",
+};
+
+const modalTextStyle = {
+  margin: "0 0 18px",
+  color: "#475569",
+  lineHeight: 1.6,
+};
+
+const summaryStyle = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  padding: "12px 0",
+  borderBottom: "1px solid #e2e8f0",
+  color: "#334155",
+};
+
+const otpBoxStyle = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  margin: "18px 0 14px",
+  padding: "14px",
+  borderRadius: "12px",
+  background: "#eff6ff",
+  color: "#1e3a8a",
+};
+
+const otpInputStyle = {
+  width: "100%",
+  padding: "13px 14px",
+  borderRadius: "10px",
+  border: "1px solid #cbd5e1",
+  fontSize: "18px",
+  letterSpacing: "4px",
+  textAlign: "center",
+  outline: "none",
+};
+
+const otpErrorStyle = {
+  marginTop: "8px",
+  color: "#dc2626",
+  fontSize: "13px",
+};
+
+const modalActionsStyle = {
+  display: "flex",
+  gap: "12px",
+  marginTop: "22px",
+};
+
+const cancelButtonStyle = {
+  flex: 1,
+  padding: "12px",
+  borderRadius: "10px",
+  border: "1px solid #cbd5e1",
+  background: "#ffffff",
+  color: "#334155",
+  fontWeight: 700,
+};
+
+const verifyButtonStyle = {
+  flex: 2,
+  padding: "12px",
+  borderRadius: "10px",
+  border: "none",
+  background: "linear-gradient(135deg, #0ea5e9, #14b8a6)",
+  color: "#ffffff",
+  fontWeight: 800,
+};
 
 export default Medical;

@@ -135,24 +135,54 @@ const Dashboard = () => {
 
   console.log(dashboard);
 
+  const formatAppointmentDate = (value) => {
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return value || "-";
+    }
+
+    return date.toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
+  const getAppointmentTimeValue = (item) => {
+    const dateValue = new Date(item.date || "").getTime();
+    const [hours = 0, minutes = 0] = String(item.starttime || "00:00")
+      .split(":")
+      .map(Number);
+
+    return (dateValue || 0) + (hours * 60 + minutes) * 60000;
+  };
+
   const rows =
-    dashboard?.appointments?.map((item, index) => ({
-      id: index + 1,
-      patient_name: item.patient_name,
-      phone: item.phone,
-      date: item.date,
-      branch: item.branch_name,
-      department: item.department_name,
-      time: `${item.starttime} - ${item.endtime}`,
-    })) || [];
+    dashboard?.appointments
+      ?.slice()
+      .sort((a, b) => {
+        return getAppointmentTimeValue(b) - getAppointmentTimeValue(a);
+      })
+      .map((item, index) => ({
+        id: item.id || index + 1,
+        sequence: index + 1,
+        patient_name: item.patient_name,
+        phone: item.phone,
+        date: formatAppointmentDate(item.date),
+        branch: item.branch_name,
+        department: item.department_name,
+        time: `${item.starttime} - ${item.endtime}`,
+      })) || [];
 
   const columns = [
-    { field: "patient_name", headerName: "Name", flex: 1 },
-    { field: "phone", headerName: "Phone No", flex: 1 },
-    { field: "date", headerName: "Date", flex: 1 },
-    { field: "branch", headerName: "Branch", flex: 1 },
-    { field: "department", headerName: "Department", flex: 1 },
-    { field: "time", headerName: "Time", flex: 1 },
+    { field: "sequence", headerName: "#", width: 70 },
+    { field: "patient_name", headerName: "Patient", flex: 1.15, minWidth: 180 },
+    { field: "phone", headerName: "Phone No", flex: 0.9, minWidth: 130 },
+    { field: "date", headerName: "Date", flex: 0.9, minWidth: 130 },
+    { field: "branch", headerName: "Branch", flex: 1, minWidth: 140 },
+    { field: "department", headerName: "Department", flex: 1.25, minWidth: 190 },
+    { field: "time", headerName: "Time", flex: 0.9, minWidth: 130 },
   ];
 
   const pieData = dashboard?.branchRevenue?.map(item => ({
@@ -293,17 +323,88 @@ const Dashboard = () => {
         }}
       >
         {/* NEW APPOINTMENT */}
-        <div style={{ flex: 1 }}>
-          <Card>
+        <div style={{ flex: 1, minWidth: "320px" }}>
+          <Card
+            style={{
+              borderRadius: "18px",
+              border: "1px solid #e5edf7",
+              boxShadow: "0 18px 45px rgba(15, 23, 42, 0.08)",
+              overflow: "hidden",
+            }}
+          >
             <CardContent>
-              <Typography variant="h6" gutterBottom>
-                New Appointment
-              </Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  mb: 2,
+                }}
+              >
+                <Box>
+                  <Typography
+                    variant="h6"
+                    sx={{ fontWeight: 800, color: "#0f172a" }}
+                  >
+                    New Appointments
+                  </Typography>
+                  <Typography sx={{ color: "#64748b", fontSize: 14 }}>
+                    Latest appointments shown first in proper sequence
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    px: 1.5,
+                    py: 0.7,
+                    borderRadius: "999px",
+                    background: "#e0f2fe",
+                    color: "#0369a1",
+                    fontWeight: 800,
+                    fontSize: 13,
+                  }}
+                >
+                  {rows.length} total
+                </Box>
+              </Box>
 
               <div style={{ height: 350, width: "100%" }}>
                 <DataGrid
                   rows={rows}
                   columns={columns}
+                  initialState={{
+                    pagination: {
+                      paginationModel: { page: 0, pageSize: 5 },
+                    },
+                  }}
+                  pageSizeOptions={[5, 10, 25]}
+                  disableRowSelectionOnClick
+                  sx={{
+                    border: "1px solid #e2e8f0",
+                    borderRadius: "12px",
+                    overflow: "hidden",
+                    color: "#1e293b",
+                    "& .MuiDataGrid-columnHeaders": {
+                      background: "#f8fafc",
+                      borderBottom: "1px solid #dbe7f3",
+                    },
+                    "& .MuiDataGrid-columnHeaderTitle": {
+                      fontWeight: 800,
+                      color: "#0f172a",
+                    },
+                    "& .MuiDataGrid-row": {
+                      transition: "background 0.2s ease",
+                    },
+                    "& .MuiDataGrid-row:hover": {
+                      background: "#f0f9ff",
+                    },
+                    "& .MuiDataGrid-cell": {
+                      borderBottom: "1px solid #edf2f7",
+                    },
+                    "& .MuiDataGrid-footerContainer": {
+                      background: "#ffffff",
+                      borderTop: "1px solid #e2e8f0",
+                    },
+                  }}
                   pageSize={5} // ✅ 5 rows per page
                   rowsPerPageOptions={[5]} // ✅ only show 5 option
                   pagination

@@ -1,24 +1,28 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink, useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getBranch } from "../../redux/slice/branch.slice";
 import { getDepartment } from "../../redux/slice/department.slice";
 import { date, number, object, string } from "yup";
 import { useFormik } from "formik";
 import { bookAppointment } from "../../redux/slice/appointment.slice";
-import MenuItem from "@mui/material/MenuItem";
 import { getUser } from "../../redux/slice/user.slice";
 import { getTimeslot } from "../../redux/slice/timeslot.slice";
 
-function Appointment(props) {
+function Appointment() {
   const dispatch = useDispatch();
+  const [paymentStep, setPaymentStep] = useState(null);
+  const [demoOtp, setDemoOtp] = useState("");
+  const [enteredOtp, setEnteredOtp] = useState("");
+  const [otpError, setOtpError] = useState("");
+  const [isBooking, setIsBooking] = useState(false);
 
   useEffect(() => {
     dispatch(getBranch());
     dispatch(getDepartment());
     dispatch(getUser());
     dispatch(getTimeslot());
-  }, []);
+  }, [dispatch]);
 
   const appointment = useSelector((state) => state.appointment);
   console.log(appointment);
@@ -48,6 +52,8 @@ function Appointment(props) {
     time: string().required("Please Select your time"),
   });
 
+  const appointmentFee = paymentStep?.payment_amount || 300;
+
   const formik = useFormik({
     initialValues: {
       branch_id: "",
@@ -61,14 +67,18 @@ function Appointment(props) {
     },
 
     validationSchema: userschema,
-    onSubmit: async (values, { resetForm }) => {
-      const result = await dispatch(bookAppointment(values));
-
-      if (result.payload) {
-        alert("Your appointment is successfully booked");
-        resetForm();
-        navigate("/");
-      }
+    onSubmit: async (values) => {
+      const otp = String(Math.floor(100000 + Math.random() * 900000));
+      setDemoOtp(otp);
+      setEnteredOtp("");
+      setOtpError("");
+      setPaymentStep({
+        ...values,
+        payment_amount: values.department_id ? 500 : 300,
+        payment_method: "demo_upi",
+        payment_status: "pending",
+        demo_transaction_id: `DEMO-${Date.now()}`,
+      });
     },
   });
 
@@ -346,8 +356,208 @@ function Appointment(props) {
           </div>
         </div>
       </section>
+
+      {paymentStep && (
+        <div style={modalBackdropStyle}>
+          <div style={modalStyle}>
+            <div style={demoBadgeStyle}>Demo only</div>
+            <h3 style={modalTitleStyle}>Verify Demo Payment</h3>
+            <p style={modalTextStyle}>
+              This is a fake payment flow for testing appointments. No real
+              money is charged and no payment details are collected.
+            </p>
+
+            <div style={summaryStyle}>
+              <span>Appointment fee</span>
+              <strong>Rs. {appointmentFee}</strong>
+            </div>
+            <div style={summaryStyle}>
+              <span>Method</span>
+              <strong>Demo UPI</strong>
+            </div>
+            <div style={otpBoxStyle}>
+              <span>Demo OTP</span>
+              <strong>{demoOtp}</strong>
+            </div>
+
+            <input
+              type="text"
+              inputMode="numeric"
+              maxLength="6"
+              placeholder="Enter OTP"
+              value={enteredOtp}
+              onChange={(e) => {
+                setEnteredOtp(e.target.value.replace(/\D/g, ""));
+                setOtpError("");
+              }}
+              style={otpInputStyle}
+            />
+            {otpError && <span style={otpErrorStyle}>{otpError}</span>}
+
+            <div style={modalActionsStyle}>
+              <button
+                type="button"
+                onClick={() => {
+                  setPaymentStep(null);
+                  setDemoOtp("");
+                  setEnteredOtp("");
+                  setOtpError("");
+                }}
+                style={cancelButtonStyle}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={isBooking}
+                onClick={async () => {
+                  if (enteredOtp !== demoOtp) {
+                    setOtpError(
+                      "Invalid demo OTP. Please enter the OTP shown above."
+                    );
+                    return;
+                  }
+
+                  setIsBooking(true);
+                  const result = await dispatch(
+                    bookAppointment({
+                      ...paymentStep,
+                      payment_status: "paid",
+                      payment_verified: true,
+                      payment_amount: appointmentFee,
+                    })
+                  );
+                  setIsBooking(false);
+
+                  if (result.payload) {
+                    alert(
+                      "Your appointment is booked with demo payment verified."
+                    );
+                    formik.resetForm();
+                    setPaymentStep(null);
+                    navigate("/");
+                  } else {
+                    setOtpError("Appointment booking failed. Please try again.");
+                  }
+                }}
+                style={{
+                  ...verifyButtonStyle,
+                  opacity: isBooking ? 0.75 : 1,
+                }}
+              >
+                {isBooking ? "Booking..." : "Verify OTP & Book"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
+
+const modalBackdropStyle = {
+  position: "fixed",
+  inset: 0,
+  background: "rgba(15, 23, 42, 0.62)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  padding: "20px",
+  zIndex: 9999,
+};
+
+const modalStyle = {
+  width: "min(100%, 460px)",
+  background: "#ffffff",
+  borderRadius: "16px",
+  padding: "28px",
+  boxShadow: "0 24px 70px rgba(15, 23, 42, 0.28)",
+};
+
+const demoBadgeStyle = {
+  display: "inline-flex",
+  padding: "6px 12px",
+  borderRadius: "999px",
+  background: "#dcfce7",
+  color: "#166534",
+  fontSize: "13px",
+  fontWeight: 700,
+  marginBottom: "14px",
+};
+
+const modalTitleStyle = {
+  margin: "0 0 10px",
+  color: "#0f172a",
+  fontSize: "26px",
+};
+
+const modalTextStyle = {
+  margin: "0 0 18px",
+  color: "#475569",
+  lineHeight: 1.6,
+};
+
+const summaryStyle = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  padding: "12px 0",
+  borderBottom: "1px solid #e2e8f0",
+  color: "#334155",
+};
+
+const otpBoxStyle = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  margin: "18px 0 14px",
+  padding: "14px",
+  borderRadius: "12px",
+  background: "#eff6ff",
+  color: "#1e3a8a",
+};
+
+const otpInputStyle = {
+  width: "100%",
+  padding: "13px 14px",
+  borderRadius: "10px",
+  border: "1px solid #cbd5e1",
+  fontSize: "18px",
+  letterSpacing: "4px",
+  textAlign: "center",
+  outline: "none",
+};
+
+const otpErrorStyle = {
+  marginTop: "8px",
+  color: "#dc2626",
+  fontSize: "13px",
+};
+
+const modalActionsStyle = {
+  display: "flex",
+  gap: "12px",
+  marginTop: "22px",
+};
+
+const cancelButtonStyle = {
+  flex: 1,
+  padding: "12px",
+  borderRadius: "10px",
+  border: "1px solid #cbd5e1",
+  background: "#ffffff",
+  color: "#334155",
+  fontWeight: 700,
+};
+
+const verifyButtonStyle = {
+  flex: 2,
+  padding: "12px",
+  borderRadius: "10px",
+  border: "none",
+  background: "linear-gradient(135deg, #0ea5e9, #14b8a6)",
+  color: "#ffffff",
+  fontWeight: 800,
+};
 
 export default Appointment;
