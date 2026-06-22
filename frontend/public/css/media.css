@@ -87,77 +87,109 @@
 
 /* 0-575 none */
 @media screen and (max-width: 576px) {
+  body {
+    overflow-x: hidden;
+  }
+
   .container {
     max-width: 100%;
+    padding: 0 16px;
   }
 
   section {
     overflow-x: hidden;
   }
 
-  .col-1 {
-    width: 8.33%;
-    padding: 0 12px;
-  }
-
-  .col-2 {
-    width: 16.66%;
-    padding: 0 12px;
-  }
-
-  .col-3 {
-    width: 25%;
-    padding: 0 12px;
-  }
-
-  .col-4 {
-    width: 33.33%;
-    padding: 0 12px;
-  }
-
-  .col-5 {
-    width: 41.66%;
-    padding: 0 12px;
-  }
-
-  .col-6 {
-    width: 50%;
-    padding: 0 12px;
-  }
-
-  .col-7 {
-    width: 58.33%;
-    padding: 0 12px;
-  }
-
-  .col-8 {
-    width: 66.66%;
-    padding: 0 12px;
-  }
-
-  .col-9 {
-    width: 75%;
-    padding: 0 12px;
-  }
-
-  .col-10 {
-    width: 83.33%;
-    padding: 0 12px;
-  }
-
-  .col-11 {
-    width: 91.66%;
-    padding: 0 12px;
-  }
-
-  .col-12 {
+  .col-1,
+  .col-2,
+  .col-3,
+  .col-4,
+  .col-5,
+  .col-6,
+  .col-7,
+  .col-8,
+  .col-9,
+  .col-10,
+  .col-11,
+  .col-12,
+  .col-sm-6,
+  .col-lg-3,
+  .col-lg-5,
+  .col-lg-6 {
     width: 100%;
     padding: 0 12px;
   }
 
+  header {
+    position: sticky !important;
+    top: 0;
+  }
+
+  .top-header {
+    min-height: 74px;
+    padding: 8px 14px !important;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .header-logo-img {
+    width: 150px;
+    height: 58px;
+  }
+
+  .mobile-menu-toggle {
+    display: block;
+    margin-left: auto;
+  }
+
+  .top-header nav,
+  .top-header .header-button {
+    display: none;
+    width: 100%;
+  }
+
+  .top-header.mobile-open nav,
+  .top-header.mobile-open .header-button {
+    display: block;
+  }
+
+  .menu {
+    width: 100%;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 0 6px;
+    border-top: 1px solid #e2e8f0;
+    background: #ffffff;
+  }
+
+  .menu li {
+    width: 100%;
+    padding: 0;
+  }
+
+  .menu li a {
+    width: 100%;
+    padding: 11px 12px;
+    font-size: 16px;
+    line-height: 20px;
+    border-radius: 8px;
+  }
+
+  .menu li a:hover {
+    background: #f1fcf9;
+  }
+
+  .header-button .btn {
+    width: 100%;
+    text-align: center;
+    margin: 4px 0 10px;
+    padding: 12px 16px;
+    font-size: 16px;
+  }
+
   .hero-details h1 {
-    font-size: 38px;
-    line-height: 48px;
+    font-size: 34px;
+    line-height: 42px;
   }
 
   .hero {
@@ -276,6 +308,272 @@
 
   .blog {
     padding-bottom: 80px;
+  }
+
+  footer {
+    text-align: left;
+    overflow: hidden;
+  }
+
+  .footer-top {
+    padding: 38px 0 28px;
+    row-gap: 22px;
+  }
+
+  .bottom-footer .heading h2 {
+    font-size: 30px;
+    line-height: 40px;
+  }
+
+  .heading .footer-para {
+    font-size: 16px;
+    line-height: 26px;
+  }
+
+  footer form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .footer-email,
+  .footer-btn {
+    width: 100%;
+    margin-right: 0;
+  }
+
+  .footer-bottom {
+    padding: 45px 0 34px;
+    row-gap: 28px;
+  }
+
+  .quick {
+    padding-left: 12px;
+  }
+
+  .footer-widget .widget-content img {
+    max-width: 180px;
+  }
+
+  .widget-icon {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .widget-icon a {
+    margin-right: 0;
+  }
+
+  .icon1 {
+    align-items: flex-start;
+  }
+
+  .header-contact-bar {
+    display: none;
+  }
+
+  .site-header {
+    position: sticky !important;
+  }
+
+  .top-header {
+    min-height: 74px;
+    padding: 8px 14px !important;
+  }
+
+  .top-header nav,
+  .top-header .header-button {
+    display: none;
+  }
+
+  .top-header.mobile-open nav,
+  .top-header.mobile-open .header-button {
+    display: block;
+  }
+
+  .mega-menu {
+    position: static;
+    width: 100%;
+    box-shadow: none;
+    border: 0;
+    padding: 0 0 6px 10px;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    display: none;
+  }
+
+  .top-header.mobile-open .has-mega .mega-menu {
+    display: block;
+  }
+
+  .clove-hero {
+    padding: 100px 0 50px;
+  }
+
+  .clove-hero-grid,
+  .clove-booking-grid,
+  .clove-trust-grid,
+  .clove-faq-grid,
+  .clove-split {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .clove-hero-copy h1 {
+    font-size: 38px;
+    line-height: 46px;
+  }
+
+  .clove-callback-card,
+  .clove-book-form {
+    padding: 22px;
+  }
+
+  .clove-stats-grid,
+  .clove-help-grid,
+  .clove-treatment-grid,
+  .clove-doctor-grid,
+  .clove-blog-grid,
+  .clove-plan-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .clove-stat {
+    border-right: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+    padding-bottom: 12px;
+  }
+
+  .clove-finder,
+  .clove-help,
+  .clove-trust,
+  .clove-booking,
+  .clove-treatments,
+  .clove-plans,
+  .clove-doctors,
+  .clove-reviews,
+  .clove-insights,
+  .clove-faq {
+    padding: 60px 0;
+  }
+
+  .clove-help-action,
+  .clove-hero-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .clove-trust-image img,
+  .clove-booking img {
+    height: auto;
+  }
+
+  .clove-form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .clove-ai-card {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .clove-ai-card > i {
+    margin: 0 auto;
+  }
+
+  .auth-shell,
+  .directory-hero {
+    padding-top: 100px;
+  }
+
+  .auth-grid,
+  .auth-grid.reverse,
+  .directory-grid,
+  .branch-detail-card {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-card {
+    padding: 24px;
+  }
+
+  .auth-card h1,
+  .branch-detail-content h1,
+  .directory-hero h1 {
+    font-size: 34px;
+    line-height: 42px;
+  }
+
+  .auth-visual img,
+  .branch-detail-card > img {
+    height: auto;
+    min-height: 0;
+  }
+
+  .branch-detail-content {
+    padding: 24px;
+  }
+
+  .branch-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .branch-actions .btn,
+  .branch-back {
+    width: 100%;
+    text-align: center;
+  }
+
+  .appointment-hero {
+    padding: 100px 0 60px;
+  }
+
+  .appointment-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .appointment-art img {
+    min-height: 0;
+    height: auto;
+  }
+
+  .appointment-panel {
+    padding: 22px;
+  }
+
+  .appointment-panel h3 {
+    font-size: 30px;
+    line-height: 38px;
+  }
+
+  .common-slot-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .database-treatment-grid,
+  .my-appointment-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .database-treatment-card {
+    grid-template-columns: 1fr;
+  }
+
+  .database-treatment-card img {
+    width: 100%;
+    height: 180px;
+  }
+
+  .plan-modal-actions,
+  .my-appointment-meta {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+  }
+
+  .my-appointment-hero h1 {
+    font-size: 34px;
   }
 /* ===== Team ===== */
 
@@ -430,6 +728,74 @@ margin-top:30px;
 
   .treatment-content {
     padding-left: 10px;
+  }
+
+  .header-contact-bar {
+    display: none;
+  }
+
+  .clove-hero-grid,
+  .clove-booking-grid,
+  .clove-trust-grid,
+  .clove-faq-grid,
+  .clove-split {
+    grid-template-columns: 1fr;
+  }
+
+  .clove-hero {
+    padding-top: 120px;
+  }
+
+  .clove-hero-copy h1 {
+    font-size: 48px;
+    line-height: 58px;
+  }
+
+  .clove-stats-grid,
+  .clove-help-grid,
+  .clove-treatment-grid,
+  .clove-doctor-grid,
+  .clove-blog-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .clove-plan-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-grid,
+  .auth-grid.reverse,
+  .directory-grid,
+  .branch-detail-card {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-card h1,
+  .branch-detail-content h1,
+  .directory-hero h1 {
+    font-size: 38px;
+    line-height: 48px;
+  }
+
+  .auth-visual img {
+    height: 520px;
+  }
+
+  .branch-detail-card > img {
+    min-height: 420px;
+  }
+
+  .appointment-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .common-slot-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .database-treatment-grid,
+  .my-appointment-grid {
+    grid-template-columns: 1fr;
   }
 /* ===== Header ===== */
 
@@ -623,9 +989,62 @@ margin-top:40px;
 
 /* ===== FAQ ===== */
 
-.faq .faq-content{
+  .faq .faq-content{
 padding-left:20px;
 }
+
+  .header-contact-bar {
+    display: block;
+  }
+
+  .clove-hero-grid,
+  .clove-booking-grid,
+  .clove-trust-grid,
+  .clove-faq-grid,
+  .clove-split {
+    grid-template-columns: 1fr;
+  }
+
+  .clove-hero-copy h1 {
+    font-size: 56px;
+    line-height: 66px;
+  }
+
+  .clove-stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .clove-treatment-grid,
+  .clove-doctor-grid,
+  .clove-blog-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .auth-grid,
+  .auth-grid.reverse,
+  .branch-detail-card {
+    grid-template-columns: 1fr;
+  }
+
+  .directory-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .appointment-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .common-slot-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .database-treatment-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .my-appointment-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 
 
 
@@ -769,6 +1188,46 @@ height:340px;
 .footer-email{
 width:250px;
 }
+
+  .clove-hero-grid,
+  .clove-booking-grid,
+  .clove-trust-grid,
+  .clove-faq-grid,
+  .clove-split {
+    grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+  }
+
+  .clove-stats-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  .clove-help-grid,
+  .clove-treatment-grid,
+  .clove-doctor-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .clove-blog-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .clove-plan-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .auth-grid,
+  .auth-grid.reverse,
+  .branch-detail-card {
+    grid-template-columns: minmax(320px, 0.9fr) minmax(320px, 1fr);
+  }
+
+  .directory-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .appointment-shell {
+    grid-template-columns: minmax(320px, 0.9fr) minmax(320px, 1.1fr);
+  }
 
 }
 

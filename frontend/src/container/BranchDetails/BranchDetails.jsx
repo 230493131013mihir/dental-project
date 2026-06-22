@@ -2,154 +2,69 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useParams } from "react-router-dom";
 import { getBranch } from "../../redux/slice/branch.slice";
+import { API_BASE_URL } from "../../config/api";
 
-function BranchDetails(props) {
+const getImageUrl = (path) => {
+  if (!path) return "/images/place.jpg";
+  if (path.startsWith("http") || path.startsWith("images/")) return path;
+  return `${API_BASE_URL}/${path}`;
+};
+
+function BranchDetails() {
   const dispatch = useDispatch();
+  const { id } = useParams();
 
   useEffect(() => {
     dispatch(getBranch());
-  }, []);
+  }, [dispatch]);
 
   const branchData = useSelector((state) => state.branch);
+  const branch = branchData.branch.find((item) => item.id == id);
 
-  const { id } = useParams();
-
-  console.log(id, branchData.branch);
-
-  const bD = branchData.branch.find((v) => v.id == id);
-
-  console.log(bD);
+  if (!branch) {
+    return (
+      <main className="directory-page">
+        <section className="directory-section">
+          <div className="container">
+            <div className="empty-state">
+              <i className="fa-solid fa-location-dot" />
+              <h2>Branch not found</h2>
+              <p>This branch may still be loading or it is not available.</p>
+              <NavLink to="/branch" className="btn">Back to Branches</NavLink>
+            </div>
+          </div>
+        </section>
+      </main>
+    );
+  }
 
   return (
-    <div
-  className="container"
-  style={{
-    marginTop: "120px",
-    marginBottom: "120px",
-    display: "flex",
-    justifyContent: "center",
-  }}
->
-  <div
-    style={{
-      width: "100%",
-      maxWidth: "1100px",
-      borderRadius: "20px",
-      background: "#ffffff", // light background
-      boxShadow: "0 10px 40px rgba(0,0,0,0.2)",
-      overflow: "hidden",
-      display: "flex",
-      flexWrap: "wrap",
-    }}
-  >
-    {/* LEFT IMAGE */}
-    <div style={{ flex: "1 1 45%" }}>
-      <img
-        src={"http://localhost:3000/" + bD.branch_img}
-        alt="Branch"
-        style={{
-          width: "100%",
-          height: "100%",
-          minHeight: "350px",
-          objectFit: "cover",
-        }}
-      />
-    </div>
+    <main className="directory-page">
+      <section className="branch-detail">
+        <div className="container">
+          <div className="branch-detail-card reveal-up">
+            <img src={getImageUrl(branch.branch_img)} alt={branch.name} />
+            <div className="branch-detail-content">
+              <span className="badge"><i className="fa-solid fa-clinic-medical" /> Branch Details</span>
+              <h1>{branch.name}</h1>
+              <p>{branch.description}</p>
 
-    {/* RIGHT CONTENT */}
-    <div
-      style={{
-        flex: "1 1 55%",
-        padding: "30px",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-      }}
-    >
-      {/* Title */}
-      <h2
-        style={{
-          fontSize: "26px",
-          marginBottom: "10px",
-          color: "#020617", // dark text
-          fontWeight: "600",
-        }}
-      >
-        {bD.name}
-      </h2>
+              <div className="branch-info-list">
+                <div><i className="fa-solid fa-envelope" /> <span>{branch.email || "Email not added"}</span></div>
+                <div><i className="fa-solid fa-phone" /> <span>{branch.mobile_no || "Phone not added"}</span></div>
+                <div><i className="fa-solid fa-map-location-dot" /> <span>{branch.address}</span></div>
+              </div>
 
-      {/* Description */}
-      <p
-        style={{
-          fontSize: "16px",
-          color: "#334155",
-          marginBottom: "20px",
-          lineHeight: "1.6",
-        }}
-      >
-        {bD.description}
-      </p>
-
-      {/* Email */}
-      <div style={{ marginBottom: "10px", color: "#0f172a", fontSize: "16px" }}>
-        📧 {bD.email}
-      </div>
-
-      {/* Phone */}
-      <div style={{ marginBottom: "10px", color: "#0f172a", fontSize: "16px" }}>
-        📞 {bD.mobile_no}
-      </div>
-
-      {/* Address */}
-      <div style={{ marginBottom: "20px", color: "#0f172a", fontSize: "16px" }}>
-        📍 {bD.address}
-      </div>
-
-      {/* Buttons */}
-      <div
-        style={{
-          display: "flex",
-          gap: "15px",
-          marginTop: "10px",
-        }}
-      >
-        <a
-          href={`tel:${bD.mobile_no}`}
-          style={{
-            padding: "10px 20px",
-            borderRadius: "10px",
-            background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
-            color: "#fff",
-            textDecoration: "none",
-            fontWeight: "500",
-            transition: "0.3s",
-          }}
-          onMouseEnter={(e) => (e.target.style.transform = "scale(1.05)")}
-          onMouseLeave={(e) => (e.target.style.transform = "scale(1)")}
-        >
-          Contact Branch
-        </a>
-
-        <NavLink
-          to="/branch"
-          style={{
-            padding: "10px 20px",
-            borderRadius: "10px",
-            border: "1px solid #94a3b8",
-            color: "#334155",
-            textDecoration: "none",
-            fontWeight: "500",
-            transition: "0.3s",
-          }}
-          onMouseEnter={(e) => (e.target.style.background = "#f1f5f9")}
-          onMouseLeave={(e) => (e.target.style.background = "transparent")}
-        >
-          Back
-        </NavLink>
-      </div>
-    </div>
-  </div>
-</div>
+              <div className="branch-actions">
+                {branch.mobile_no ? <a href={`tel:${branch.mobile_no}`} className="btn">Contact Branch</a> : null}
+                <NavLink to="/appointment" className="btn branch-secondary">Book Appointment</NavLink>
+                <NavLink to="/branch" className="branch-back">Back to Branches</NavLink>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }
 

@@ -17,9 +17,16 @@ import  faqSlice  from './slice/FAQ.slice'
 import testimonialSlice from './slice/testimonial.slice'
 import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
 import { persistStore, persistReducer } from 'redux-persist'
+import {
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+  REHYDRATE,
+} from 'redux-persist'
 import patientSlice  from './slice/patient.slice'
 import  medicalSlice  from './slice/medical.slice'
-import Dashboard from '../Admin/container/Dashboard/Dashboard'
 
 // import patientdataSlice  from './slice/patientdata.slice'
 import dashboardSlice from './slice/dashboard.slice';
@@ -59,7 +66,12 @@ const persistedReducer = persistReducer(persistConfig,reducers);
 const store = configureStore(
   {
     reducer: persistedReducer,
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        serializableCheck: {
+          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        },
+      }),
 
   }
 )

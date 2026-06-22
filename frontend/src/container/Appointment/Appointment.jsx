@@ -3,11 +3,25 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getBranch } from "../../redux/slice/branch.slice";
 import { getDepartment } from "../../redux/slice/department.slice";
-import { date, number, object, string } from "yup";
+import { number, object, string } from "yup";
 import { useFormik } from "formik";
-import { bookAppointment } from "../../redux/slice/appointment.slice";
+import { bookAppointment, getAppointment } from "../../redux/slice/appointment.slice";
 import { getUser } from "../../redux/slice/user.slice";
-import { getTimeslot } from "../../redux/slice/timeslot.slice";
+
+const COMMON_TIMESLOTS = [
+  { id: "09:00-11:00", label: "09:00 AM - 11:00 AM" },
+  { id: "12:00-02:00", label: "12:00 PM - 02:00 PM" },
+  { id: "04:00-06:00", label: "04:00 PM - 06:00 PM" },
+];
+
+const SLOT_LIMIT = 3;
+
+const isSunday = (value) => {
+  if (!value) return false;
+  return new Date(`${value}T00:00:00`).getDay() === 0;
+};
+
+const today = new Date().toISOString().split("T")[0];
 
 function Appointment() {
   const dispatch = useDispatch();
@@ -21,7 +35,7 @@ function Appointment() {
     dispatch(getBranch());
     dispatch(getDepartment());
     dispatch(getUser());
-    dispatch(getTimeslot());
+    dispatch(getAppointment());
   }, [dispatch]);
 
   const appointment = useSelector((state) => state.appointment);
@@ -32,23 +46,22 @@ function Appointment() {
   const branch = useSelector((state) => state.branch);
   const department = useSelector((state) => state.department);
   const user = useSelector((state) => state.user);
-  const timeslot = useSelector((state) => state.timeslot);
 
   console.log(department.department);
   console.log(branch.branch);
   console.log(user.user);
-  console.log(timeslot.timeslot);
-
   let userschema = object({
     branch_id: number().required("please select your branch"),
     department_id: number().required("Please Select department"),
 
-      doctor_id: string().required("Please Select doctor"),
+    doctor_id: string().required("Please Select doctor"),
     name: string().required("Please enter your name"),
     phone: string()
       .required("Please enter phone number")
       .matches(/^[0-9]{10}$/, "Mobile number must be 10 digits"),
-    date: date().required("Please Select your date"),
+    date: string()
+      .required("Please Select your date")
+      .test("not-sunday", "Sunday is a holiday. Please select another date.", (value) => !isSunday(value)),
     time: string().required("Please Select your time"),
   });
 
@@ -68,6 +81,20 @@ function Appointment() {
 
     validationSchema: userschema,
     onSubmit: async (values) => {
+      const selectedSlot = COMMON_TIMESLOTS.find((slot) => slot.id === values.time);
+      const currentCount = getSlotBookingCount(values.time);
+
+      if (isSunday(values.date)) {
+        alert("Sunday is a holiday. Please select another date.");
+        return;
+      }
+
+      if (currentCount >= SLOT_LIMIT) {
+        alert("This appointment slot is full. Please select another slot.");
+        return;
+      }
+
+      // eslint-disable-next-line react-hooks/purity
       const otp = String(Math.floor(100000 + Math.random() * 900000));
       setDemoOtp(otp);
       setEnteredOtp("");
@@ -77,7 +104,9 @@ function Appointment() {
         payment_amount: values.department_id ? 500 : 300,
         payment_method: "demo_upi",
         payment_status: "pending",
+        // eslint-disable-next-line react-hooks/purity
         demo_transaction_id: `DEMO-${Date.now()}`,
+        time_label: selectedSlot?.label || values.time,
       });
     },
   });
@@ -89,43 +118,59 @@ function Appointment() {
     navigate("/login");
   }
 
-  console.log(
-    new Date(formik.values.date)?.getTime() ,
-    timeslot.timeslot.find(v => v.id === 7)?.handlepatient > timeslot.timeslot.find(v => v.id === 7)?.appointpatient
-  );
+  const existingAppointments = Array.isArray(appointment.appointment)
+    ? appointment.appointment
+    : [];
+
+  const getSlotBookingCount = (slotId) =>
+    existingAppointments.filter(
+      (item) =>
+        String(item.branch_id) === String(formik.values.branch_id) &&
+        String(item.department_id) === String(formik.values.department_id) &&
+        String(item.doctor_id) === String(formik.values.doctor_id) &&
+        String(item.date).slice(0, 10) === String(formik.values.date) &&
+        String(item.time) === String(slotId),
+    ).length;
+
+  const selectedDateIsSunday = isSunday(formik.values.date);
+  const selectedDoctorName =
+    user.user?.find((doctor) => String(doctor.id) === String(formik.values.doctor_id))?.name ||
+    "selected doctor";
+
   return (
-    <main>
-      <section style={{ marginTop: "120px" }}>
+    <main className="appointment-page">
+      <section className="appointment-hero">
         <div className="container">
-          <div
-            className="appointment"
-            style={{
-              maxWidth: "900px",
-              margin: "40px auto",
-              padding: "30px",
-              borderRadius: "20px",
-              background: "rgba(255,255,255,0.95)",
-              boxShadow: "0 10px 40px rgba(0,0,0,0.2)",
-            }}
-          >
+          <div className="appointment-shell reveal-up">
+            <div className="appointment-art">
+              <img src="images/booking-img.jpg" alt="Dental booking" />
+              <div className="appointment-rules-card">
+                <i className="fa-solid fa-calendar-check" />
+                <div>
+                  <strong>Common daily slots</strong>
+                  <span>3 slots per doctor, max {SLOT_LIMIT} bookings per slot. Sunday is holiday.</span>
+                </div>
+              </div>
+            </div>
+            <div className="appointment appointment-panel">
             <form onSubmit={formik.handleSubmit}>
-              <h3
-                style={{
-                  textAlign: "center",
-                  marginBottom: "25px",
-                  color: "#020617",
-                  fontWeight: "600",
-                }}
-              >
-                Make an Appointment
-              </h3>
+              <span className="badge"><i className="fa-solid fa-calendar-check" /> Appointment</span>
+              <h3>Book your dental visit</h3>
+              <p className="appointment-note">
+                Select a doctor and one of the three daily slots. Full slots are disabled automatically.
+              </p>
 
               <div className="row">
                 {/* Branch */}
                 <div className="col-6">
                   <select
                     name="branch_id"
-                    onChange={formik.handleChange}
+                    onChange={(event) => {
+                      formik.handleChange(event);
+                      formik.setFieldValue("department_id", "");
+                      formik.setFieldValue("doctor_id", "");
+                      formik.setFieldValue("time", "");
+                    }}
                     onBlur={formik.handleBlur}
                     value={formik.values.branch_id}
                     style={{
@@ -154,7 +199,11 @@ function Appointment() {
                 <div className="col-6">
                   <select
                     name="department_id"
-                    onChange={formik.handleChange}
+                    onChange={(event) => {
+                      formik.handleChange(event);
+                      formik.setFieldValue("doctor_id", "");
+                      formik.setFieldValue("time", "");
+                    }}
                     onBlur={formik.handleBlur}
                     value={formik.values.department_id}
                     style={{
@@ -186,7 +235,10 @@ function Appointment() {
                 <div className="col-6">
                   <select
                     name="doctor_id"
-                    onChange={formik.handleChange}
+                    onChange={(event) => {
+                      formik.handleChange(event);
+                      formik.setFieldValue("time", "");
+                    }}
                     onBlur={formik.handleBlur}
                     value={formik.values.doctor_id}
                     style={{
@@ -274,7 +326,11 @@ function Appointment() {
                   <input
                     type="date"
                     name="date"
-                    onChange={formik.handleChange}
+                    min={today}
+                    onChange={(event) => {
+                      formik.handleChange(event);
+                      formik.setFieldValue("time", "");
+                    }}
                     onBlur={formik.handleBlur}
                     value={formik.values.date}
                     style={{
@@ -296,28 +352,52 @@ function Appointment() {
 
                 {/* Time */}
                 <div className="col-12">
-                  <select
-                    name="time"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.time}
-                    style={{
-                      width: "100%",
-                      padding: "12px",
-                      borderRadius: "10px",
-                      border: "1px solid #cbd5f5",
-                      marginTop: "10px",
-                      background: "#f8fafc",
-                    }}
-                  >
-                    <option>--Select Timeslot--</option>
-                    {timeslot.timeslot 
-                      ?.filter((v1) => v1.user_id == formik.values.doctor_id)
-                      ?.filter((v2) => v2.handlepatient>v2.appointpatient && new Date(v2.date)?.getTime() == new Date(formik.values.date)?.getTime())
-                      ?.map((v) => (
-                        <option value={v.id}>{v.starttime} - {v.endtime}</option>
-                      ))}
-                  </select>
+                  <div className="common-slot-grid">
+                    {COMMON_TIMESLOTS.map((slot) => {
+                      const booked = getSlotBookingCount(slot.id);
+                      const isFull = booked >= SLOT_LIMIT;
+                      const isDisabled =
+                        !formik.values.branch_id ||
+                        !formik.values.department_id ||
+                        !formik.values.doctor_id ||
+                        !formik.values.date ||
+                        selectedDateIsSunday ||
+                        isFull;
+
+                      return (
+                        <button
+                          type="button"
+                          key={slot.id}
+                          className={`common-slot ${formik.values.time === slot.id ? "active" : ""} ${isFull ? "full" : ""}`}
+                          disabled={isDisabled}
+                          onClick={() => formik.setFieldValue("time", slot.id)}
+                        >
+                          <strong>{slot.label}</strong>
+                          <span>
+                            {selectedDateIsSunday
+                              ? "Sunday holiday"
+                              : isFull
+                                ? "Appointment full"
+                                : `${SLOT_LIMIT - booked} seat${SLOT_LIMIT - booked === 1 ? "" : "s"} left`}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {selectedDateIsSunday ? (
+                    <div className="slot-warning">
+                      Sunday is a holiday. Please select another date.
+                    </div>
+                  ) : formik.values.doctor_id && formik.values.date ? (
+                    <div className="slot-helper">
+                      Showing common slots for {selectedDoctorName}. Each slot accepts only {SLOT_LIMIT} appointments.
+                    </div>
+                  ) : (
+                    <div className="slot-helper">
+                      Select branch, department, doctor and date to activate slots.
+                    </div>
+                  )}
 
                   {formik.errors.time && formik.touched.time && (
                     <span style={{ color: "red", fontSize: "12px" }}>
@@ -353,6 +433,7 @@ function Appointment() {
                 </div>
               </div>
             </form>
+            </div>
           </div>
         </div>
       </section>
